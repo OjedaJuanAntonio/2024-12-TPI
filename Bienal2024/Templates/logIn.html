@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %} Iniciar Sesion {% endblock %}
+
+{% block content %}
+<style>
+    .inicio {
+        font-family: Arial, sans-serif;
+    }
+
+    .login-container {
+        max-width: 400px;
+        padding: 20px;
+        margin: 15%;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 20vh 20vh 20vh 20vh rgba(0, 0, 0, 0.1);
+    }
+
+    .login-title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn-gradient {
+ 
+        border: 2px solid black;
+        color: grey;
+        padding: 10px;
+        width: 50%;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .social-icons {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .social-icons a {
+        margin: 0 10px;
+        font-size: 20px;
+        color: #555;
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .login-footer a {
+        color: #007bff;
+        text-decoration: none;
+    }
+</style>
+<div class="inicio">
+    <div class="container">
+        <div class="login-container mx-auto">
+            <h2 class="login-title">Login</h2>
+            <form>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Type your username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Type your password">
+                </div>
+                <div class="text-right">
+                    <a href="#" class="text-muted">Olvidaste tu contraseña?</a>
+                </div>
+                <button type="submit" class="btn btn-gradient btn-block mt-3">LOGIN</button>
+            </form>
+
+            <div class="login-footer">
+                <p>No tienes cuenta?</p>
+                <a href="#" class="font-weight-bold">Crear Cuenta</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
