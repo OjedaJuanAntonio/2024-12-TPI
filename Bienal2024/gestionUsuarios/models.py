@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib import admin
-
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 class BBDD_Personas(admin.ModelAdmin):
     list_display=('DNI','Nombre','Apellido')

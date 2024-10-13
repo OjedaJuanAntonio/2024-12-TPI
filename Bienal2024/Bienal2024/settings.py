@@ -42,7 +42,25 @@ INSTALLED_APPS = [
     'gestionEventos',
     'gestionSponsors',
     'gestionVotos',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+# from datetime import timedelta
+
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+#     'ROTATE_REFRESH_TOKENS': False,
+#     'BLACKLIST_AFTER_ROTATION': True,
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,8 +100,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'bienal2024',  # Nombre de tu base de datos
-        'USER': 'postgres',      # Usuario de PostgreSQL (ajústalo según tu configuración)
-        'PASSWORD': '123456789',  # Contraseña del usuario
+        'USER': 'nahuel',      # Usuario de PostgreSQL (ajústalo según tu configuración)
+        'PASSWORD': '9087',  # Contraseña del usuario
         'HOST': 'localhost',     # Por lo general, es localhost
         'PORT': '5432',          # Puerto por defecto de PostgreSQL
     }
