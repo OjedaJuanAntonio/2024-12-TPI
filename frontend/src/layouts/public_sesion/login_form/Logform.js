@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input, VStack, Heading, Avatar, Text, Spinner, useToast } from '@chakra-ui/react';
 import 'animate.css';
+
+
+
 function LogForm() {
+    
   const [dni, setDni] = useState('');
   const [email, setEmail] = useState('');
   const [nombre, setNombre] = useState('');
@@ -13,23 +17,33 @@ function LogForm() {
 
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
-    if (file) {setProfilePhoto(URL.createObjectURL(file));}};
+    if (file) { setProfilePhoto(URL.createObjectURL(file));}};
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setIsLoading(true);
-    console.log("DNI:", dni);
-    console.log("Email:", email);
-    console.log("Nombre:", nombre);
-    console.log("Apellido:", apellido);
-    console.log("Teléfono:", telefono);
-    console.log("Foto de Perfil:", profilePhoto);
+  
 
+    const formData = {dni,email,nombre,apellido,telefono,profile_photo: profilePhoto };
+  
 
+    const jsonData = JSON.stringify(formData, null, 2);
+    console.log("Datos en formato JSON:", jsonData);
+
+   
     setTimeout(() => {
       setIsLoading(false); 
-      toast({ title: `¡Felicidades, ${nombre}!`, description: "Tu usuario fue registrado con éxito.", status: "success", duration: 5000, isClosable: true, position: "top",}); }, 2000);  
+      toast({
+        title: `¡Felicidades, ${nombre}!`,
+        description: "Tu usuario fue registrado con éxito.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }, 1500);  
   };
+
 
   return (
     <Box  className="animate__animated animate__zoomIn" maxW="md" mx="auto"p={4} borderWidth="1px"  borderRadius="lg"sx={{ backdropFilter: 'blur(15px)' }}>
