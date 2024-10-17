@@ -21,6 +21,17 @@ Creación de una aplicación web multiplataforma para gestionar la Bienal Intern
 - **Disponibilidad** en múltiples plataformas.
 
 ## Tecnologías Utilizadas
-- **Backend**: Django con Django Rest Framework.
-- **Frontend**: React y Tailwind CSS.
-- **Base de Datos**: PostgreSQL.
+- **Frontend**: Reactjs 
+
+## Dependencias del Frontend 
+- **@auth0/auth0-react**: Autenticación de usuarios con Auth0 para aplicaciones React.
+- **@chakra-ui/icons**: Conjunto de íconos para utilizar con Chakra UI.
+- **animate.css**: Librería de animaciones CSS.
+- **firebase**: Servicios de Firebase, como autenticación y base de datos (Temporal).
+- **react**: Biblioteca principal de React.
+- **react-dom**: Complemento de React para manipular los dominios.
+- **react-slick**: Componente de slider para React.
+- **react-spinners**: Conjunto de spinners para animaciones de carga.
+- **slick-carousel**: Biblioteca de carrousels.
+- **swiper**: Biblioteca para sliders.
+
