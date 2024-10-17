@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'; 
 import { getDocs, collection } from 'firebase/firestore'; 
-import { useLocation } from 'react-router-dom'; 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
@@ -9,7 +8,7 @@ import { SwipperEventcardList } from '../Swippers';
 
 function EventlistMain() {
     const [evento, setEventos] = useState([]);
-    const location = useLocation(); 
+
 
     useEffect(() => {
         const obtenerEventos = async () => {

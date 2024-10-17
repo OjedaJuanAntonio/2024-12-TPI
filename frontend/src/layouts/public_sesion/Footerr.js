@@ -11,6 +11,7 @@ function Footerr() {
 
         <Box width={{ base: '100%', md: '50%' }} mb={{ base: 4, md: 0 }}>
           <iframe 
+            title="Localizacion"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28327.271312574412!2d-59.00003899311525!3d-27.440949284939734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94450c5b839b242d%3A0x394981d825e78300!2sParque%20Intercultural%202%20de%20Febrero!5e0!3m2!1ses-419!2sar!4v1729123363700!5m2!1ses-419!2sar" 
             width="100%" 
             height="250" 
