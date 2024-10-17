@@ -1,29 +1,28 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectCoverflow, Pagination } from 'swiper/modules';
-import EventcardMain from './EventcardMain';
+import React, { useEffect, useState } from 'react'; 
+import { getDocs, collection } from 'firebase/firestore'; 
+import { useLocation } from 'react-router-dom'; 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
-
+import { db } from '../../../Firebase';
+import { SwipperEventcardList } from '../Swippers';
 
 function EventlistMain() {
+    const [evento, setEventos] = useState([]);
+    const location = useLocation(); 
+
+    useEffect(() => {
+        const obtenerEventos = async () => {
+            const consulta = await getDocs(collection(db, "Eventos")); 
+            const listaEventos = consulta.docs.map(doc => ({id: doc.id, ...doc.data()}));
+            setEventos(listaEventos);
+        }; obtenerEventos(); }, []);
+
     return (
       <>
-        <h2 style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '10px' }}>Proximos Eventos</h2>
-        <Swiper effect={'coverflow'} grabCursor={true} centeredSlides={true} slidesPerView={3} coverflowEffect={{rotate: 50,stretch: 0,depth: 100,modifier: 1,slideShadows: false, }}pagination={true}modules={[EffectCoverflow, Pagination]}className="mySwiper" style={{ margin: '0 auto' }}>
-          <SwiperSlide style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <EventcardMain />
-          </SwiperSlide>
-          <SwiperSlide style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <EventcardMain />
-          </SwiperSlide>
-          <SwiperSlide style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <EventcardMain />
-          </SwiperSlide>
-        </Swiper>
+        <SwipperEventcardList evento={evento}/>
       </>
     );
-  }
+}
 
 export default EventlistMain;

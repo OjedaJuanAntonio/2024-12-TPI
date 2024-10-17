@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../Navbar';
 import LogForm from './Logform';
-import loginBackground from '../../../assets/loginBackground.png'; 
-import { Spinner, Box } from '@chakra-ui/react';
+import Loginbackground from '../../../assets/Loginbackground.jpg'
+import { Box } from '@chakra-ui/react';
+import { HashLoader } from 'react-spinners';
+
 
 function Addnew() {
   const [loading, setLoading] = useState(true);
@@ -13,15 +14,14 @@ function Addnew() {
 
   return (
     <>
-      <Navbar />
+     
       {loading ? (
         <Box height="100vh"display="flex"justifyContent="center" alignItems="center" >
-          <Spinner size="xl" /> 
+          <HashLoader/>
         </Box>
       ) : (
-        
-        <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover',backgroundPosition: 'center', height: '100vh',display: 'flex',justifyContent: 'center',alignItems: 'center', }} >
-          <LogForm />
+        <div style={{ backgroundImage: `url(${Loginbackground})`,height: "90vh",padding:'80px'}}>
+            <LogForm />
         </div>
       )}
     </>

@@ -7,10 +7,11 @@
 
 # testing
 /coverage
-
+Firebase.js
+upload.js
 # production
 /build
-
+.env
 # misc
 .DS_Store
 .env.local

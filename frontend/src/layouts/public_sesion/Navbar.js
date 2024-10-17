@@ -6,20 +6,32 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import logo from '../../assets/logo.png'; 
 import Map from './user_profile/Navprofile';
 
-
 const Navbar = () => {
   const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  
   const handleLogout = () => logout({ returnTo: window.location.origin });
+
   return (
-    <Box style={{ backdropFilter: 'blur(15px)', position: 'relative', zIndex: 10 }} bg="rgba(255, 255, 255, 0.3)" px={4} >
+    <Box style={{ backdropFilter: 'blur(15px)', position: 'relative', zIndex: 10 }} bg="rgba(255, 255, 255, 0.3)" px={4}>
       <Flex h={16} alignItems="center" justifyContent="space-between">
-      <IconButton size="md"icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}aria-label="Toggle Menu"display={{ md: 'none' }}onClick={isOpen ? onClose : onOpen} mr={4}bg="rgba(255, 255, 255, 0.3)"  color="black"  _hover={{ bg: "rgba(255, 255, 255, 0.5)" }}  />
+        <IconButton
+          size="md"
+          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+          aria-label="Toggle Menu"
+          display={{ md: 'none' }}
+          onClick={isOpen ? onClose : onOpen}
+          mr={4}
+          bg="rgba(255, 255, 255, 0.3)"
+          color="black"
+          _hover={{ bg: "rgba(255, 255, 255, 0.5)" }}
+        />
+        
         <HStack spacing={8} alignItems="center" flexGrow={1}>
-         <Link to='/'><Image src={logo} alt="Bienal 2024 Logo" objectFit="contain" boxSize={'120px'}/></Link> 
+          <Link to='/'><Image src={logo} alt="Bienal 2024 Logo" objectFit="contain" boxSize={'120px'} /></Link>
           <HStack as="nav" spacing={4} display={{ base: 'none', md: 'flex' }}>
             <NavLink>Actividades</NavLink>
-            <NavLink>Esculturas</NavLink>
+            <Link to='/esculturas'><NavLink>Esculturas</NavLink></Link>
             <NavLink>Otras Ediciones</NavLink>
           </HStack>
         </HStack>
@@ -32,7 +44,7 @@ const Navbar = () => {
                 <MenuList>
                   <Text fontSize="md" px={4} py={2}>¡Hola, {user.given_name}!</Text>
                   <MenuGroup title='Perfil'>
-                    <MenuItem><Map/></MenuItem>
+                    <MenuItem><Map /></MenuItem>
                     <MenuItem onClick={handleLogout} color="red.500" fontStyle='oblique'>Cerrar Sesión</MenuItem>
                   </MenuGroup>
                   <MenuDivider />
@@ -42,9 +54,20 @@ const Navbar = () => {
                 </MenuList>
               </Menu>
             </Wrap>
-            
           ) : (
-            <Avatar size='md' src='https://bit.ly/broken-link' onClick={loginWithRedirect} />
+            <Wrap>
+              <Menu>
+                <MenuButton as={Avatar} src='https://bit.ly/broken-link' size='md' color="black"/>
+                <MenuList>
+                  <MenuGroup >
+                    <MenuItem onClick={loginWithRedirect}>Iniciar Sesión</MenuItem>
+                    <Link to="/createAccount">
+                      <MenuItem>Crear Cuenta</MenuItem>
+                    </Link>
+                  </MenuGroup>
+                </MenuList>
+              </Menu>
+            </Wrap>
           )}
         </Flex>
       </Flex>
@@ -63,7 +86,7 @@ const Navbar = () => {
 };
 
 const NavLink = ({ children }) => (
-   <Text  px={2} py={1} _hover={{ textDecoration: 'none', fontSize: '1.2em' }} transition="font-size 0.2s ease"  >
+  <Text px={2} py={1} _hover={{ textDecoration: 'none', fontSize: '1.2em' }} transition="font-size 0.2s ease">
     {children}
   </Text>
 );

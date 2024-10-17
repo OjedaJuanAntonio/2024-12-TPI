@@ -1,23 +1,26 @@
 import React from 'react';
-import {Box,Text,Center,Avatar,WrapItem,Wrap,} from '@chakra-ui/react';
+import { Box, Text, Center, Avatar, Button } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 
-function SculptorCardMain() {
-
-  return (
-    <Center>
-        <Box textAlign="center" maxW="200px"p={4} boxShadow="2xl" bg="white" spacing="20px" >
-            <Center>
-                <Wrap>
-                    <WrapItem>
-                        <Avatar size='2xl' name='Dan Abrahmov' src='https://bit.ly/dan-abramov'  border="3px solid black"  />
-                    </WrapItem>
-                </Wrap>
+function SculptorCardMain({ escultor, showAvatar }) {
+    const Escult = "Nombre de Ejemplo";
+    const NombreEsc = "tipo";
+    
+    return (
+        <Box textAlign="center" m={3} boxShadow="2xl">
+            <Center pt={4}>
+                <Avatar size="2xl" src={showAvatar ? undefined : escultor.Img_Profile} border="3px solid black" />
             </Center>
-            <Text fontWeight="bold" fontSize="lg" mt={2}>Joenas Brauers</Text>
-            <Text color="gray.500" fontSize="sm">Web Developer</Text>
+            <Text fontWeight="bold" fontSize="lg" mt={2}>{showAvatar ?   Escult: `${escultor.first_name} ${escultor.last_name}`}</Text>
+            <Text>{showAvatar ? NombreEsc : escultor.ip_address}</Text>
+            <Text fontSize="sm">{showAvatar ? undefined : escultor.last_name}</Text>
+            {!showAvatar && (
+                <Link to={`/escultor/${escultor.id}`} state={{ escultor }}>
+                    <Button m={2} colorScheme='teal' variant='link'>Ver más</Button>
+                </Link>
+            )}
         </Box>
-    </Center>
-  );
+    );
 }
 
 export default SculptorCardMain;

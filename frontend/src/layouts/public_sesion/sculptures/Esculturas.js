@@ -1,34 +1,19 @@
 import React from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Flex,
-  Heading,
-  IconButton,
-  Image,
-  Text,
-  Avatar,
-} from '@chakra-ui/react';
+import { Box,Button,Card,CardBody,CardFooter,CardHeader,Flex,Heading,IconButton,Image,Text,Avatar,} from '@chakra-ui/react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { BiLike,BiShare } from 'react-icons/bi';
 import { useAuth0 } from '@auth0/auth0-react';
+import Map from '../../Map';
 
 const Esculturas = () => {
-    const { isAuthenticated, loginWithRedirect } = useAuth0();
+    const { isAuthenticated } = useAuth0();
 
     const handleVote = () => {
-      if (isAuthenticated) {
-        alert("¡Voto registrado!");
-      } else {
-        alert("¡Debe iniciar sesion!");
-      }
-    };
+     isAuthenticated ? alert("¡Voto registrado!") : alert("¡Debe iniciar sesión!");};
+    
   return (
-    <Card maxW='md' m={4}> {/* Cambiado a 'md' y añadido margen */}
+    <>
+    <Card maxW='md' m={4}> 
       <CardHeader>
         <Flex spacing='4'>
           <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
@@ -73,6 +58,8 @@ const Esculturas = () => {
         </Button>
       </CardFooter>
     </Card>
+    <Map/>
+    </>
     
   );
 };
