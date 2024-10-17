@@ -22,6 +22,7 @@ Creación de una aplicación web multiplataforma para gestionar la Bienal Intern
 
 ## Tecnologías Utilizadas
 - **Frontend**: Reactjs 
+- **Backend**: Django con Django Rest Framework.
 
 ## Dependencias del Frontend 
 - **@auth0/auth0-react**: Autenticación de usuarios con Auth0 para aplicaciones React.
@@ -34,4 +35,5 @@ Creación de una aplicación web multiplataforma para gestionar la Bienal Intern
 - **react-spinners**: Conjunto de spinners para animaciones de carga.
 - **slick-carousel**: Biblioteca de carrousels.
 - **swiper**: Biblioteca para sliders.
+
 
