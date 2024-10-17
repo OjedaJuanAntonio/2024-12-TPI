@@ -3,17 +3,13 @@ from django.urls import path, re_path, include
 
 from django.contrib import admin
 from django.urls import path, re_path
-from gestionUsuarios.views import register, login, profile, logout
-from .views import home, login_view, register_view
+from gestionUsuarios.views import register, profile, logout
+from .views import home
 
 urlpatterns = [
     path('', home),
     path('home/', home),
-    path('admin/', admin.site.urls),
-    # re_path('register_view/', register_view, name= 'register_view'),
-    # re_path('login_view/', login_view, name= 'login_view'),
-    # re_path('register/', register, name= 'register'),
-    # re_path('login/', login, name= 'login'),
+    path('admin/', admin.site.urls),    
     re_path('profile/', profile, name='profile'),
     path('logout/', logout, name='logout'),
     path('', include('social_django.urls')),
