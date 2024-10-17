@@ -14,6 +14,12 @@ from django.shortcuts import render, redirect
 #serializador
 from .serializers import UserSerializer
 
+from django.shortcuts import render
+from django.contrib.auth import logout as django_logout
+from django.http import HttpResponseRedirect
+from decouple import config
+import json
+
 
 @api_view(['POST'])
 def register(request):
@@ -41,9 +47,33 @@ def login(request):
     return Response({'token': token.key, "user":serializer.data}, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
+# @api_view(['POST'])
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def profile(request):
+    user=request.user
+
+    auth0_user = user.social_auth.get(provider= 'auth0')
+    user_data={
+        'user_id':auth0_user.uid,
+        'name': user.first_name,
+        'picture': auth0_user.extra_data['picture']
+    }
+    
+    context = {
+        'user_data': json.dumps(user_data, indent=4),
+        'auth0': auth0_user
+    }
+    return render(request, 'profile.html',context)
     return Response("estas logueado con {}".format(request.user.username), status=status.HTTP_200_OK)
+
+
+def logout(request):
+    django_logout(request)
+
+    domain=config('AUTH0_DOMAIN')
+    client_id=config('AUTH0_CLIENT_ID')
+    return_to='http://localhost:8000/'
+
+    return HttpResponseRedirect(f"https://{domain}/v2/logout?client_id={client_id}&returnTo={return_to}")
     

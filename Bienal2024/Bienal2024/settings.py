@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
+    'social_django',
 ]
 
 REST_FRAMEWORK = {
@@ -61,6 +63,26 @@ REST_FRAMEWORK = {
 #     'ROTATE_REFRESH_TOKENS': False,
 #     'BLACKLIST_AFTER_ROTATION': True,
 # }
+
+SOCIAL_AUTH_TRAILING_SLASH=False
+SOCIAL_AUTH_AUTH0_DOMAIN=config('AUTH0_DOMAIN')
+SOCIAL_AUTH_AUTH0_KEY=config('AUTH0_CLIENT_ID')
+SOCIAL_AUTH_AUTH0_SECRET=config('AUTH0_CLIENT_SECRET')
+
+
+
+SOCIAL_AUTH_AUTH0_SCOPE=[
+    'openid',
+    'profile',
+    'email'
+]
+
+AUTHENTICATION_BACKENDS={
+    'social_core.backends.auth0.Auth0OAuth2',
+    'django.contrib.auth.backends.ModelBackend'
+}
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -107,6 +129,9 @@ DATABASES = {
     }
 }
 
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -148,3 +173,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL='/login/auth0'
+LOGIN_REDIRECT_URL='/'
+LOGOUT_REDIRECT_URL='/'
