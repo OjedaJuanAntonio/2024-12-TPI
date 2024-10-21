@@ -55,14 +55,17 @@ REST_FRAMEWORK = {
     ),
 }
 
-# from datetime import timedelta
 
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-#     'ROTATE_REFRESH_TOKENS': False,
-#     'BLACKLIST_AFTER_ROTATION': True,
-# }
+###          CONFIGURACION JWT          ###########
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+     'ROTATE_REFRESH_TOKENS': False,
+     'BLACKLIST_AFTER_ROTATION': True,
+ }
 
 SOCIAL_AUTH_TRAILING_SLASH=False
 SOCIAL_AUTH_AUTH0_DOMAIN=config('AUTH0_DOMAIN')
@@ -177,3 +180,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL='/login/auth0'
 LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='/'
+

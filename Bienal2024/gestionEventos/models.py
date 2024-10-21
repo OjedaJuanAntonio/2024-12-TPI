@@ -1,5 +1,5 @@
 from django.db import models
-from gestionUsuarios.models import Administrador  # Ajusta la ruta si es necesario
+from gestionUsuarios.models import Administrador
 
 class Evento(models.Model):
     Id_E = models.AutoField(primary_key=True)  # Cambiado a AutoField

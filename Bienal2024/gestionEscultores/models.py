@@ -1,28 +1,39 @@
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.db import models
-from gestionUsuarios.models import Persona  # Importa el modelo Persona desde la app correcta
+
+from django.contrib.auth.models import User  # Importa el modelo Persona desde la app correcta
 
 class Escultor(models.Model):
-    DNI_Esc = models.OneToOneField('gestionUsuarios.Persona', on_delete=models.CASCADE)
+    ID_Esc = models.OneToOneField(User, on_delete=models.CASCADE)
+    DNI_Esc = models.BigIntegerField(validators=[
+        MinValueValidator(1000000),  # Mínimo 7 dígitos
+        MaxValueValidator(9999999999)  # Máximo 10 dígitos
+        ])    
+    nombre = models.CharField(max_length=30)
+    apellido = models.CharField(max_length=30)
     Nacionalidad = models.CharField(max_length=40)
+    telefono = models.CharField(
+        max_length=15,
+        validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Formato de teléfono inválido.")]
+    )    
     Fecha_Nac = models.DateField()
     Biografia = models.TextField()
-    DNI_Adm = models.ForeignKey('gestionUsuarios.Administrador', on_delete=models.SET_NULL, null=True)  # Usar el nombre del modelo como cadena
+
 
 class Escultura(models.Model):
     ID_Escultura = models.AutoField(primary_key=True)
-    DNI_Esc = models.ForeignKey(Escultor, on_delete=models.CASCADE)
+    id = models.ForeignKey(Escultor, on_delete=models.CASCADE)
     Fecha_creacion = models.DateField()
-    Titulo = models.CharField(max_length=55)
+    Titulo = models.CharField(max_length=30)
     Intencion = models.TextField()
     Cant_votos = models.IntegerField()
-    Tematica = models.CharField(max_length=100)  # Asegúrate de que este campo está presente
-
+    Tematica = models.TextField(max_length=500)  # Asegúrate de que este campo está presente
 
 
 class MediaFile(models.Model):
     ID_Media = models.AutoField(primary_key=True)
-    File_Path = models.CharField(max_length=255)
-    File_Type = models.CharField(max_length=50)
+    File_Path = models.CharField(max_length=300)
+    File_Type = models.CharField(max_length=30)
     Escultura_ID = models.ForeignKey('gestionEscultores.Escultura', null=True, blank=True, on_delete=models.CASCADE)
     Evento_ID = models.ForeignKey('gestionEventos.Evento', null=True, blank=True, on_delete=models.CASCADE)
 

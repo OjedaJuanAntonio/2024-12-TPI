@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 import datetime
 
 def home(request):
@@ -8,5 +8,3 @@ def home(request):
 def register_view(request):
     return render(request, 'register.html')
 
-# def login_view(request):
-#     return render(request, 'logIn.html')

@@ -1,9 +1,9 @@
 from django.db import models
-from gestionUsuarios.models import Visitante  # Asegúrate de que la ruta sea correcta
+from django.contrib.auth.models import User# Asegúrate de que la ruta sea correcta
 from gestionEscultores.models import Escultura
 
 class Voto(models.Model):
-    visitante = models.ForeignKey(Visitante, on_delete=models.CASCADE)
+    visitante = models.ForeignKey(User, on_delete=models.CASCADE)
     escultura = models.ForeignKey(Escultura, on_delete=models.CASCADE)
     fecha_voto = models.DateTimeField(auto_now_add=True)
 
