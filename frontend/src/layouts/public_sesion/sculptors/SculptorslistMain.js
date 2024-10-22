@@ -20,19 +20,43 @@ function AutoPlay() {
             const listaEscultores = consultaSnapshot.docs.map(doc => ({id: doc.id,...doc.data() }));
             setEscultores(listaEscultores);
             setLoading(false);
-        }; obtenerEscultores();
+        }; 
+        obtenerEscultores();
     }, []);
 
-    const configuracion = { dots: true,infinite: true,slidesToShow: 4,slidesToScroll: 1,autoplay: true,speed: 2000,autoplaySpeed: 2000,cssEase: "linear"};
+    const configuracion = {
+        dots: true,
+        infinite: true,
+        slidesToShow: 4, // Mostrar 4 por defecto
+        slidesToScroll: 1,
+        autoplay: true,
+        speed: 2000,
+        autoplaySpeed: 2000,
+        cssEase: "linear",
+        responsive: [
+            {
+                breakpoint: 768, // Tamaño en píxeles para móviles
+                settings: {
+                    slidesToShow: 2, // Mostrar 2 en móviles
+                },
+            },
+            {
+                breakpoint: 1024, // Tamaño en píxeles para pantallas más grandes
+                settings: {
+                    slidesToShow: 3, // Mostrar 3 en tabletas o pantallas medianas
+                },
+            },
+        ],
+    };
 
     return (
-        <div className="contenedor-slider" style={{ margin: '8vh' }}>
+        <div className="contenedor-slider" style={{ margin: 0, padding: 0, width: '100%', overflow: 'hidden' }}>
             {loading ? (
-                <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+                <Box display="flex" height="200px" justifyContent="center" alignItems="center">
                     <Spinner size="xl" />
                 </Box>
             ) : (
-                <Slider {...configuracion}>
+                <Slider {...configuracion} style={{ width: '100%', padding: 0, margintop: 20 }}>
                     {location.pathname === "/" ? (
                         escultores.map(escultor => (
                             <div key={escultor.id} className="animate__animated animate__zoomIn">

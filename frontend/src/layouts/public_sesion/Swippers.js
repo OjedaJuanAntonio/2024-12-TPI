@@ -33,7 +33,7 @@ export function SwipperEventcardList({ evento }) {
             <Box textAlign="center" p={2} fontWeight="bold">
                 <Text fontSize="xl">Proximos Eventos</Text>
             </Box>   
-            <Swiper effect={'coverflow'} grabCursor={true} centeredSlides={true} slidesPerView={3} coverflowEffect={{ rotate: 50, stretch: 0, depth: 100, modifier: 1, slideShadows: false, }} pagination={true} modules={[EffectCoverflow, Pagination]} className="mySwiper" style={{ paddingBottom: '5vh ', paddingTop: '5vh' }}>
+            <Swiper effect={'coverflow'} grabCursor={true} centeredSlides={true} slidesPerView={3} coverflowEffect={{ rotate: 50, stretch: 0, depth: 100, modifier: 1, slideShadows: false, }} pagination={true} modules={[EffectCoverflow, Pagination]} className="mySwiper" style={{ paddingBottom: '5vh ' }}>
                 {evento.length > 0 ? (
                     evento.map(evento => (
                         <SwiperSlide key={evento.id} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

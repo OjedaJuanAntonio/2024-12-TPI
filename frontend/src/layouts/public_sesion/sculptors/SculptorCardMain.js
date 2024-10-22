@@ -11,9 +11,8 @@ function SculptorCardMain({ escultor, showAvatar }) {
             <Center pt={4}>
                 <Avatar size="2xl" src={showAvatar ? undefined : escultor.Img_Profile} border="3px solid black" />
             </Center>
-            <Text fontWeight="bold" fontSize="lg" mt={2}>{showAvatar ?   Escult: `${escultor.first_name} ${escultor.last_name}`}</Text>
+            <Text fontWeight="bold" fontSize="m" mt={2}>{showAvatar ?   Escult: `${escultor.first_name} ${escultor.last_name}`}</Text>
             <Text>{showAvatar ? NombreEsc : escultor.ip_address}</Text>
-            <Text fontSize="sm">{showAvatar ? undefined : escultor.last_name}</Text>
             {!showAvatar && (
                 <Link to={`/escultor/${escultor.id}`} state={{ escultor }}>
                     <Button m={2} colorScheme='teal' variant='link'>Ver más</Button>
