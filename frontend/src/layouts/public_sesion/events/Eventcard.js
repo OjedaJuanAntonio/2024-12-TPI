@@ -1,43 +1,70 @@
 import React from 'react';
-import { Card, CardHeader, CardBody, CardFooter, SimpleGrid, Heading, Text, Button } from '@chakra-ui/react';
+import { 
+    Card, 
+    CardHeader, 
+    Flex, 
+    Box, 
+    Heading, 
+    Text, 
+    CardBody, 
+    Image, 
+    CardFooter, 
+    Button 
+} from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { BiLike, BiChat, BiShare } from 'react-icons/bi';
 
-function Eventcard() {
+function Eventcard({ evento }) {
   return (
-    <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(200px, 1fr))">
-      <Card>
-        <CardHeader>
-          <Heading size="md">Customer dashboard</Heading>
-        </CardHeader>
-        <CardBody>
-          <Text>View a summary of all your customers over the last month.</Text>
-        </CardBody>
-        <CardFooter>
-          <Button>View here</Button>
-        </CardFooter>
-      </Card>
-      <Card>
-        <CardHeader>
-          <Heading size="md">Customer dashboard</Heading>
-        </CardHeader>
-        <CardBody>
-          <Text>View a summary of all your customers over the last month.</Text>
-        </CardBody>
-        <CardFooter>
-          <Button>View here</Button>
-        </CardFooter>
-      </Card>
-      <Card>
-        <CardHeader>
-          <Heading size="md">Customer dashboard</Heading>
-        </CardHeader>
-        <CardBody>
-          <Text>View a summary of all your customers over the last month.</Text>
-        </CardBody>
-        <CardFooter>
-          <Button>View here</Button>
-        </CardFooter>
-      </Card>
-    </SimpleGrid>
+    <Card maxW='md'>
+      <CardHeader>
+        <Flex spacing='4'>
+          <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
+            <Box>
+              <Heading size='sm'>{evento.event_name}</Heading>
+              <Text>{evento.creatorRole}</Text>
+            </Box>
+          </Flex>
+          <IconButton
+            variant='ghost'
+            colorScheme='gray'
+            aria-label='See menu'
+            icon={<BsThreeDotsVertical />}
+          />
+        </Flex>
+      </CardHeader>
+      <CardBody>
+        <Text>
+          {evento.info}
+        </Text>
+      </CardBody>
+      <Image
+        objectFit='cover'
+        src={evento.Img_Profile} // Corregido aquí
+        alt={evento.imageAlt}
+      />
+
+      <CardFooter
+        justify='space-between'
+        flexWrap='wrap'
+        sx={{
+          '& > button': {
+            minW: '136px',
+          },
+        }}
+      >
+        <Button flex='1' variant='ghost' leftIcon={<BiLike />}>
+          Like
+        </Button>
+        <Button flex='1' variant='ghost' leftIcon={<BiChat />}>
+          Comment
+        </Button>
+        <Button flex='1' variant='ghost' leftIcon={<BiShare />}>
+          Share
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
 

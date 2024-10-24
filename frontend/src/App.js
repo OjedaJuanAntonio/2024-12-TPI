@@ -7,8 +7,10 @@ import Addnew from './layouts/public_sesion/login_form/Addnew';
 import SculptorProfile from './layouts/public_sesion/sculptors/SculptorProfile';
 import Navbar from './layouts/public_sesion/Navbar';
 import Footerr from './layouts/public_sesion/Footerr';
-import Esculturas from './layouts/public_sesion/sculptures/Esculturas';
 import { HashLoader } from 'react-spinners';
+import Allevents from './layouts/public_sesion/events/Allevents';
+import Sculpturelist from './layouts/public_sesion/sculptures/Sculpturelist'
+import Votacion from './layouts/public_sesion/sculptures/Qrvotes';
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -38,7 +40,10 @@ function App() {
                         <Route path="/" element={<Main />} /> 
                         <Route path="/createAccount" element={<Addnew />} /> 
                         <Route path="/escultor/:id" element={<SculptorProfile />} />
-                        <Route path="/esculturas" element={<Esculturas />} />
+                        <Route path="/esculturas" element={<Sculpturelist/>} />
+                        <Route path="/actividades" element={<Allevents/>} />
+                        <Route path="/votar/:id" element={<Votacion />} />
+                
                     </Routes>
                     <Footerr />
                 </Auth0Provider>

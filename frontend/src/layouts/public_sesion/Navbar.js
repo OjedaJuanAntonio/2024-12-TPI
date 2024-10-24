@@ -3,7 +3,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
 import { Avatar, Wrap, Box, Flex, HStack, IconButton, useDisclosure, Text, Stack, Menu, MenuButton, MenuList, MenuItem, MenuGroup, MenuDivider, Image } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import logo from '../../assets/logo.png'; 
 import Map from './user_profile/Navprofile';
 
 const Navbar = () => {
@@ -13,7 +12,7 @@ const Navbar = () => {
   const handleLogout = () => logout({ returnTo: window.location.origin });
 
   return (
-    <Box style={{ backdropFilter: 'blur(15px)', position: 'relative', zIndex: 10 }} bg="rgba(255, 255, 255, 0.3)" px={4}>
+    <Box  bg="black" px={4}>
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <IconButton
           size="md"
@@ -23,14 +22,14 @@ const Navbar = () => {
           onClick={isOpen ? onClose : onOpen}
           mr={4}
           bg="rgba(255, 255, 255, 0.3)"
-          color="black"
+          color="white"
           _hover={{ bg: "rgba(255, 255, 255, 0.5)" }}
         />
         
-        <HStack spacing={8} alignItems="center" flexGrow={1}>
-          <Link to='/'><Image src={logo} alt="Bienal 2024 Logo" objectFit="contain" boxSize={'120px'} /></Link>
+        <HStack spacing={8} alignItems="center" flexGrow={1} color="white">
+          <Link to='/'><Image src='https://www.bienaldelchaco.org/2024/wp-content/uploads/2019/01/web-logo-130x50-3.png' alt="Bienal 2024 Logo" objectFit="contain" boxSize={'120px'} /></Link>
           <HStack as="nav" spacing={4} display={{ base: 'none', md: 'flex' }}>
-            <NavLink>Actividades</NavLink>
+          <Link to="/actividades"><NavLink>Actividades</NavLink></Link>
             <Link to='/esculturas'><NavLink>Esculturas</NavLink></Link>
             <NavLink>Otras Ediciones</NavLink>
           </HStack>
