@@ -3,12 +3,13 @@ from django.contrib.auth.models import User# Asegúrate de que la ruta sea corre
 from gestionEscultores.models import Escultura
 
 class Voto(models.Model):
-    visitante = models.ForeignKey(User, on_delete=models.CASCADE)
+    id_votante = models.ForeignKey(User, on_delete=models.CASCADE)
     escultura = models.ForeignKey(Escultura, on_delete=models.CASCADE)
     fecha_voto = models.DateTimeField(auto_now_add=True)
+    estrellas = models.IntegerField()
 
     class Meta:
-        unique_together = ('visitante', 'escultura')  # Asegura que un visitante solo pueda votar una vez por escultura
+        unique_together = ('id_votante', 'escultura')  # Asegura que un visitante solo pueda votar una vez por escultura
 
     def __str__(self):
-        return f"{self.visitante} votó por {self.escultura} el {self.fecha_voto}"
+        return f"{self.id_votante} votó por {self.escultura} el {self.fecha_voto}"

@@ -4,7 +4,6 @@ from django.db import models
 from django.contrib.auth.models import User  # Importa el modelo Persona desde la app correcta
 
 class Escultor(models.Model):
-    ID_Esc = models.OneToOneField(User, on_delete=models.CASCADE)
     DNI_Esc = models.BigIntegerField(validators=[
         MinValueValidator(1000000),  # Mínimo 7 dígitos
         MaxValueValidator(9999999999)  # Máximo 10 dígitos

@@ -6,7 +6,7 @@ from .models import Escultor, Escultura, MediaFile
 class EscultorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Escultor
-        fields = ['DNI_Esc', 'id', 'Nacionalidad', 'nombre', 'apellido', 'Fecha_Nac', 'Biografia', 'telefono']
+        fields = ['id', 'DNI_Esc', 'id', 'Nacionalidad', 'nombre', 'apellido', 'Fecha_Nac', 'Biografia', 'telefono']
 
 
 class EscultorRegSerializer(serializers.ModelSerializer):

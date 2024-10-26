@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'gestionEscultores',
     'gestionUsuarios',
     'gestionEventos',
@@ -46,7 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
-    'social_django',
+    'social_django'
 ]
 
 REST_FRAMEWORK = {
@@ -88,6 +89,7 @@ AUTHENTICATION_BACKENDS={
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -95,7 +97,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Puerto donde está corriendo tu React app
+]
+
 
 ROOT_URLCONF = 'Bienal2024.urls'
 
