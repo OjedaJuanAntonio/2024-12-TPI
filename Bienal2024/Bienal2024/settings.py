@@ -74,7 +74,7 @@ SOCIAL_AUTH_AUTH0_KEY=config('AUTH0_CLIENT_ID')
 SOCIAL_AUTH_AUTH0_SECRET=config('AUTH0_CLIENT_SECRET')
 
 
-
+        
 SOCIAL_AUTH_AUTH0_SCOPE=[
     'openid',
     'profile',

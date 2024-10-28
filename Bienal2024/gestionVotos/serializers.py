@@ -5,4 +5,4 @@ from .models import Voto
 class votoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Voto
-        fields = ['escultura', 'estrellas', 'votante', 'fecha_voto']
+        fields = ['escultura', 'estrellas', 'id_votante']

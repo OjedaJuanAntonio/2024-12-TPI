@@ -7,10 +7,14 @@ import FilterBar from './FiltterBar';
 import HashLoader from 'react-spinners/HashLoader'; 
 import 'animate.css'; 
 import QRCode from 'react-qr-code'
+import axios from 'axios';
 
 function Sculpturelist() {
     const [esculturas, setEsculturas] = useState([]); 
     const [loading, setLoading] = useState(true);
+
+
+
     const [ratings, setRatings] = useState({});
     const [votedStatus, setVotedStatus] = useState({}); // Almacena el estado de votación por escultura
     const [showQR, setShowQR] = useState(null); // Almacena la escultura para la cual se muestra el QR
@@ -18,14 +22,15 @@ function Sculpturelist() {
     useEffect(() => {
         const obtenerEsculturas = async () => {
             setLoading(true);
-            const consulta = await getDocs(collection(db, "Esculturas")); 
-            const listaEsculturas = consulta.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const consulta = await axios.get('http://127.0.0.1:8000/escultores/obt_escult/'); 
+            const listaEsculturas = consulta.data.map(escultura => ({ id: escultura.ID_Escultura, ...escultura }));
             setEsculturas(listaEsculturas); 
             setLoading(false);
         };
 
         obtenerEsculturas(); 
     }, []); 
+
 
     const truncateText = (text, limit) => {
         if (text.length > limit) {
@@ -72,11 +77,11 @@ useEffect(() => {
                 <SimpleGrid columns={{ base: 1, md: 2, lg: 3 ,xl:4 }} spacing={4}>
                     {esculturas.length > 0 ? (
                         esculturas.map((escultura) => (
-                            <Card key={escultura.id} maxW='sm' className="animate__animated animate__backInUp" boxShadow='lg'>
+                            <Card key={escultura.ID_Escultura} maxW='sm' className="animate__animated animate__backInUp" boxShadow='lg'>
                                 <CardBody>
                                     <Box position="relative" display="inline-block">
                                         <Avatar 
-                                            name={escultura.nombre} 
+                                            name={escultura.Titulo} 
                                             src={escultura.avatarUrl}  
                                             position="absolute" 
                                             top="10px" 
@@ -94,8 +99,9 @@ useEffect(() => {
                                     </Box>
                                     
                                     <Stack mt='6' spacing='3'>
-                                        <Heading size='md'>{escultura.first_name}</Heading>
-                                        <Text>{truncateText(escultura.info, 250)}</Text>
+                                        <Heading size='md'>{escultura.Titulo}</Heading>
+                                        <Text>{truncateText(escultura.escultor_nombre, 250)}</Text>
+                                        <Text>estrellas:{escultura.ranking}</Text>
 
                                         {/* Botón para mostrar QR */}
                                         <Button onClick={() => handleQRCodeClick(escultura.id)}>

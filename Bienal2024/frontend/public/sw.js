@@ -1,10 +1,10 @@
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-        .then(registration => console.log('Service Worker registrado con éxito:', registration))
-        .catch(error => console.error('Error al registrar el Service Worker:', error));
-}
+// if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker.register('/sw.js')
+//         .then(registration => console.log('Service Worker registrado con éxito:', registration))
+//         .catch(error => console.error('Error al registrar el Service Worker:', error));
+// }
 
-const CACHE_NAME = 'v1';
+const CACHE_NAME = 'v6';
 const urlsToCache = [
     '/',
     '/public/index.html',
@@ -15,7 +15,8 @@ const urlsToCache = [
     'Main.mp4',
     'Loginbackground.jpg',
     'Escultores.jpg',
-    'public/'   // Añade aquí otros archivos necesarios
+    'ws.js'
+      // Añade aquí otros archivos necesarios
 ];
 
 // Evento de instalación: almacena archivos en la caché
@@ -47,8 +48,31 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
             .then(response => {
-                return response || fetch(event.request);
+                // Si el recurso está en caché, se devuelve
+                if (response) {
+                    return response;
+                }
+                
+                // Intentamos realizar la solicitud de red
+                return fetch(event.request).then(networkResponse => {
+                    // Verificamos que la respuesta sea válida antes de almacenarla en caché
+                    if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+                        return networkResponse;
+                    }
+                    
+                    // Clonamos la respuesta para guardarla en el caché
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
+                    
+                    return networkResponse;
+                }).catch(error => {
+                    console.error('Error en fetch:', error);
+                    // Devolver una respuesta alternativa (ejemplo: offline.html) si fetch falla
+                    return caches.match('/offline.html');
+                });
             })
-            .catch(() => caches.match('/offline.html')) // Página de respaldo si todo falla
     );
 });
+
