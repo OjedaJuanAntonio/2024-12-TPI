@@ -1,17 +1,1 @@
-#version: '3.8'  # Puedes omitir esta línea si recibes advertencias de versión obsoleta
 
-services:
-  db:
-    image: postgres:17  # Puedes elegir la versión que necesites
-    restart: always
-    environment:
-      POSTGRES_DB: la_bienal  # Nombre de tu base de datos
-      POSTGRES_USER: nahuel  # Tu usuario
-      POSTGRES_PASSWORD: 9087 # Cambia esto por tu contraseña
-    ports:
-      - "5432:5433"  # Mapea el puerto 5432 de tu máquina al 5433 del contenedor
-    volumes:
-      - db_data:/var/lib/postgresql/data  # Persistencia de datos
-
-volumes:
-  db_data:  # Esto asegurará que los datos se mantengan incluso si el contenedor se detiene
