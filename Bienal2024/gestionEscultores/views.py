@@ -23,12 +23,30 @@ def obtener_escultura(request):
 
 @api_view(['POST'])
 def registrar_escultura(request):
-    if request.method == 'POST':
-        serializer = EsculturaSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if isinstance(request.data, list):  # Verifica si el JSON es una lista
+        resultados = []
+        errores = []
+        for escultura_data in request.data:
+            serializer = EsculturaSerializer(data=escultura_data)
+            if serializer.is_valid():
+                serializer.save()
+                resultados.append(serializer.data)
+            else:
+                errores.append(serializer.errors)
+        
+        if errores:
+            return Response({"success": resultados, "errors": errores}, status=status.HTTP_207_MULTI_STATUS)
+        
+        return Response(resultados, status=status.HTTP_201_CREATED)
+
+    # Procesa una solicitud normal de un solo diccionario
+    serializer = EsculturaSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 
 @api_view(['GET'])
@@ -43,9 +61,26 @@ def obtener_escultores(request):
 
 @api_view(['POST'])
 def registrar_escultor(request):
-    if request.method == 'POST':
-        serializer = EscultorRegSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if isinstance(request.data, list):  # Verifica si el JSON es una lista
+        resultados = []
+        errores = []
+        for escultor_data in request.data:
+            serializer = EscultorRegSerializer(data=escultor_data)
+            if serializer.is_valid():
+                serializer.save()
+                resultados.append(serializer.data)
+            else:
+                errores.append(serializer.errors)
+        
+        if errores:
+            return Response({"success": resultados, "errors": errores}, status=status.HTTP_207_MULTI_STATUS)
+        
+        return Response(resultados, status=status.HTTP_201_CREATED)
+
+    # Procesa una solicitud normal de un solo diccionario
+    serializer = EscultorRegSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

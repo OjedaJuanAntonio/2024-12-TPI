@@ -11,7 +11,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from urllib.parse import urlparse
 from decouple import config
+from dotenv import load_dotenv
+from os import getenv
+import os
+from urllib.parse import urlparse
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,6 +88,8 @@ SOCIAL_AUTH_AUTH0_SCOPE=[
     'email'
 ]
 
+
+
 AUTHENTICATION_BACKENDS={
     'social_core.backends.auth0.Auth0OAuth2',
     'django.contrib.auth.backends.ModelBackend'
@@ -108,6 +117,15 @@ CORS_ALLOWED_ORIGINS = [
 
 ROOT_URLCONF = 'Bienal2024.urls'
 
+# Asigna DATABASE_URL a una variable y verifica que no sea None
+database_url = os.getenv("DATABASE_URL")
+if database_url is None:
+    raise ValueError("DATABASE_URL no está configurado en las variables de entorno o en el archivo .env")
+
+# Parsear la URL de la base de datos
+tmpPostgres = urlparse(database_url)
+
+
 TEMPLATES = [
     {
        'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -130,16 +148,34 @@ WSGI_APPLICATION = 'Bienal2024.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bienal2024',  # Nombre de tu base de datos
-        'USER': 'nahuel',      # Usuario de PostgreSQL (ajústalo según tu configuración)
-        'PASSWORD': '9087',  # Contraseña del usuario
-        'HOST': 'localhost',     # Por lo general, es localhost
-        'PORT': '5432',          # Puerto por defecto de PostgreSQL
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+        'OPTIONS': {
+            'sslmode': 'require',  # Esto asegura que la conexión sea segura
+        },
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'bienal2024',  # Nombre de tu base de datos
+#         'USER': 'nahuel',      # Usuario de PostgreSQL (ajústalo según tu configuración)
+#         'PASSWORD': '9087',  # Contraseña del usuario
+#         'HOST': 'localhost',     # Por lo general, es localhost
+#         'PORT': '5432',          # Puerto por defecto de PostgreSQL
+#     }
+# }
 
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 

@@ -5,7 +5,6 @@ from django.db import models
 
 
 
-
  # Primero defines un UserManager personalizado
 class AdminManager(BaseUserManager):
      def create_user(self, email, password=None, **extra_fields):
@@ -29,8 +28,12 @@ class AdminManager(BaseUserManager):
 
 class Administrador(AbstractBaseUser, PermissionsMixin):
      DNI_Adm = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)  # Relación uno a uno
-     Fecha_cr = models.DateField()
+     Fecha_cr = models.DateField(auto_now_add=True)
+     nombre = models.CharField(max_length=30)
+     apellido = models.CharField(max_length=30)
+
      Rol = models.CharField(max_length=60)
+
 
      groups = models.ManyToManyField(
          'auth.Group',
