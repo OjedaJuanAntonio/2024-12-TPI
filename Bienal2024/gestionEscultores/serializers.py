@@ -7,17 +7,17 @@ from gestionVotos.models import Voto
 class EscultorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Escultor
-        fields = ['id', 'DNI_Esc', 'id', 'Nacionalidad', 'nombre', 'apellido', 'Fecha_Nac', 'Biografia', 'telefono']
+        fields = ['id', 'dni', 'nacionalidad', 'nombre', 'apellido', 'fecha_nac', 'biografia', 'telefono']
 
 
 class EscultorRegSerializer(serializers.ModelSerializer):
     class Meta:
         model = Escultor
-        fields = ['DNI_Esc', 'Nacionalidad', 'nombre', 'apellido', 'Fecha_Nac', 'Biografia', 'telefono']
+        fields = ['dni', 'nacionalidad', 'nombre', 'apellido', 'fecha_nac', 'biografia', 'telefono']
 
 
     def get_dni(self):
-        dni_esc = self.validated_data.get('DNI_Esc')
+        dni_esc = self.validated_data.get('dni')
         return dni_esc
 
 

@@ -2,28 +2,28 @@ from django.db import models
 from gestionUsuarios.models import Administrador
 
 class Evento(models.Model):
-    Id_E = models.AutoField(primary_key=True)  # Cambiado a AutoField
-    Nombre_Ev = models.CharField(max_length=30)
-    Descripcion = models.TextField()
-    Tematica = models.CharField(max_length=60)
-    Duracion = models.FloatField()
-    Estado = models.BooleanField()
-    Ubicacion = models.CharField(max_length=50)
-    Fecha_In = models.DateField()
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=30)
+    descripcion = models.TextField()
+    tematica = models.CharField(max_length=60)
+    duracion = models.FloatField()
+    estado = models.BooleanField()
+    ubicacion = models.CharField(max_length=50)
+    fecha_in = models.DateField(auto_now_add=True)
+    fecha_fn = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return self.Nombre_Ev
+        return self.nombre
 
 
 class Sponsor(models.Model):
-    ID_Sp = models.AutoField(primary_key=True)  # Cambiado a AutoField
-    Logotipo = models.URLField(max_length=255, blank=True)
-    Nombre = models.CharField(max_length=35)
-    Estado = models.BooleanField()
+    logo = models.URLField(max_length=255, blank=True)
+    nombre = models.CharField(max_length=35)
+    # Estado = models.BooleanField()
     Contacto = models.BigIntegerField()
 
     def __str__(self):
-        return self.Nombre
+        return self.nombre
 
 
 class AdminEvento(models.Model):

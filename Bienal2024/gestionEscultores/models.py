@@ -1,47 +1,45 @@
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.db import models
+from gestionEventos.models import Evento
 
 from django.contrib.auth.models import User  # Importa el modelo Persona desde la app correcta
 
 class Escultor(models.Model):
-    DNI_Esc = models.BigIntegerField(validators=[
+    dni = models.BigIntegerField(validators=[
         MinValueValidator(1000000),  # Mínimo 7 dígitos
         MaxValueValidator(9999999999)  # Máximo 10 dígitos
         ])    
     nombre = models.CharField(max_length=30)
     apellido = models.CharField(max_length=30)
-    Nacionalidad = models.CharField(max_length=40)
+    nacionalidad = models.CharField(max_length=40)
     telefono = models.CharField(
         max_length=15,
         validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Formato de teléfono inválido.")]
     )    
-    Fecha_Nac = models.DateField()
-    Biografia = models.TextField()
+    fecha_nac = models.DateField()
+    biografia = models.TextField()
 
 
 class Escultura(models.Model):
-    ID_Escultura = models.AutoField(primary_key=True)
-    id = models.ForeignKey(Escultor, on_delete=models.CASCADE)
-    Fecha_creacion = models.DateField()
-    Titulo = models.CharField(max_length=30)
+    id_escultor = models.ForeignKey(Escultor, on_delete=models.CASCADE)
+    id_evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
+    fecha_presentacion = models.DateField()
+    titulo = models.CharField(max_length=30)
     Intencion = models.TextField()
     Cant_votos = models.IntegerField()
-    Tematica = models.TextField(max_length=500)  # Asegúrate de que este campo está presente
+    tematica = models.TextField(max_length=500)  # Asegúrate de que este campo está presente
 
 
 class MediaFile(models.Model):
-    ID_Media = models.AutoField(primary_key=True)
     File_Path = models.CharField(max_length=300)
     File_Type = models.CharField(max_length=30)
-    Escultura_ID = models.ForeignKey('gestionEscultores.Escultura', null=True, blank=True, on_delete=models.CASCADE)
-    Evento_ID = models.ForeignKey('gestionEventos.Evento', null=True, blank=True, on_delete=models.CASCADE)
-
+    Escultura_ID = models.ForeignKey(Escultura, null=True, blank=True, on_delete=models.CASCADE)
     class Meta:
         constraints = [
             models.CheckConstraint(
                 check=(
-                    (models.Q(Escultura_ID__isnull=False) & models.Q(Evento_ID__isnull=True)) |
-                    (models.Q(Escultura_ID__isnull=True) & models.Q(Evento_ID__isnull=False))
+                    (models.Q(Escultura_ID__isnull=False)) |
+                    (models.Q(Escultura_ID__isnull=True))
                 ),
                 name='media_file_constraint'
             )
