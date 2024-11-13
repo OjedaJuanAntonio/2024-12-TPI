@@ -1,4 +1,7 @@
 // Este archivo contiene el código necesario para registrar el service worker
+/* eslint-disable no-restricted-globals */
+
+
 const isLocalhost = Boolean(
     window.location.hostname === 'localhost' ||
     window.location.hostname === '[::1]' ||
@@ -46,9 +49,7 @@ const isLocalhost = Boolean(
           installingWorker.onstatechange = () => {
             if (installingWorker.state === 'installed') {
               if (navigator.serviceWorker.controller) {
-                console.log(
-                  'Nuevo contenido está disponible; por favor, recarga la página.'
-                );
+                console.log('Nuevo contenido está disponible; por favor, recarga la página.');
   
                 if (config && config.onUpdate) {
                   config.onUpdate(registration);
@@ -63,11 +64,36 @@ const isLocalhost = Boolean(
             }
           };
         };
+  
+        // Network First fetch strategy
+        self.addEventListener('fetch', (event) => {
+          event.respondWith(
+            fetch(event.request)
+              .then((response) => {
+                // Si la solicitud tiene éxito, guarda en caché y devuelve la respuesta
+                const responseClone = response.clone();
+                caches.open('app-cache').then((cache) => cache.put(event.request, responseClone));
+                return response;
+              })
+              .catch(() => {
+                // Si la red falla, busca en el caché
+                return caches.match(event.request).then((cachedResponse) => {
+                  if (cachedResponse) {
+                    return cachedResponse;
+                  } else {
+                    // Alternativamente, muestra un archivo por defecto si no está en caché
+                    return caches.match('/offline.html');
+                  }
+                });
+              })
+          );
+        });
       })
       .catch((error) => {
         console.error('Error al registrar el service worker:', error);
       });
   }
+  
   
   function checkValidServiceWorker(swUrl, config) {
     fetch(swUrl, {

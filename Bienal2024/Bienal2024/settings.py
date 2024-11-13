@@ -14,7 +14,6 @@ from pathlib import Path
 from urllib.parse import urlparse
 from decouple import config
 from dotenv import load_dotenv
-from os import getenv
 import os
 from urllib.parse import urlparse
 
@@ -75,10 +74,10 @@ SIMPLE_JWT = {
      'BLACKLIST_AFTER_ROTATION': True,
  }
 
-SOCIAL_AUTH_TRAILING_SLASH=False
-SOCIAL_AUTH_AUTH0_DOMAIN=config('AUTH0_DOMAIN')
-SOCIAL_AUTH_AUTH0_KEY=config('AUTH0_CLIENT_ID')
-SOCIAL_AUTH_AUTH0_SECRET=config('AUTH0_CLIENT_SECRET')
+# SOCIAL_AUTH_TRAILING_SLASH=False
+# SOCIAL_AUTH_AUTH0_DOMAIN=config('AUTH0_DOMAIN')
+# SOCIAL_AUTH_AUTH0_KEY=config('AUTH0_CLIENT_ID')
+# SOCIAL_AUTH_AUTH0_SECRET=config('AUTH0_CLIENT_SECRET')
 
 
         
@@ -118,12 +117,6 @@ CORS_ALLOWED_ORIGINS = [
 ROOT_URLCONF = 'Bienal2024.urls'
 
 # Asigna DATABASE_URL a una variable y verifica que no sea None
-database_url = os.getenv("DATABASE_URL")
-if database_url is None:
-    raise ValueError("DATABASE_URL no está configurado en las variables de entorno o en el archivo .env")
-
-# Parsear la URL de la base de datos
-tmpPostgres = urlparse(database_url)
 
 
 TEMPLATES = [
@@ -149,7 +142,12 @@ WSGI_APPLICATION = 'Bienal2024.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
-tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+database_url = os.getenv("DATABASE_URL")
+if database_url is None:
+    raise ValueError("DATABASE_URL no está configurado en las variables de entorno o en el archivo .env")
+
+# Parsear la URL de la base de datos
+tmpPostgres = urlparse(database_url)
 
 DATABASES = {
     'default': {
@@ -164,7 +162,6 @@ DATABASES = {
         },
     }
 }
-
 
 # DATABASES = {
 #     'default': {

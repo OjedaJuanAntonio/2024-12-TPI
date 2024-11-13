@@ -11,6 +11,10 @@ class EsculturaViewSet(viewsets.ModelViewSet):
     queryset = Escultura.objects.all()
     serializer_class = EsculturaSerializer
 
+class EscultorViewSet(viewsets.ModelViewSet):
+    queryset = Escultor.objects.all()
+    serializer_class = EscultorSerializer
+
 @api_view(['GET'])
 def obtener_escultura(request):
     esculturas = Escultura.objects.all()
