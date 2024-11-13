@@ -1,7 +1,5 @@
-
-
 from rest_framework import serializers
-from .models import Escultor, Escultura, MediaFile
+from .models import Escultor, Escultura
 from gestionVotos.models import Voto
 
 class EscultorSerializer(serializers.ModelSerializer):
@@ -38,18 +36,4 @@ class EsculturaSerializer(serializers.ModelSerializer):
             promedio = sum([voto.estrellas for voto in votos]) / votos.count()
             return round(promedio, 2)  # Ajusta el redondeo si es necesario
         return 0  # Si no hay votos, devuelve 0 o None
-
-
-
-
-# class EsculturaSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Escultura
-#         fields = ['ID_Escultura', 'id', 'Fecha_creacion', 'Titulo', 'Intencion', 'Cant_votos', 'Tematica']
-
-
-class MediaFileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MediaFile
-        fields = ['ID_Media', 'File_Path', 'File_Type', 'Escultura_ID', 'Evento_ID']
 

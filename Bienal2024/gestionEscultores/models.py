@@ -19,6 +19,11 @@ class Escultor(models.Model):
     fecha_nac = models.DateField()
     biografia = models.TextField()
 
+class EscultorInvitado(models.Model):
+    id_evento= models.ForeignKey(Evento, on_delete= models.CASCADE)
+    id_escultor= models.ForeignKey(Escultor, on_delete= models.DO_NOTHING)
+
+
 
 class Escultura(models.Model):
     id_escultor = models.ForeignKey(Escultor, on_delete=models.CASCADE)
@@ -28,19 +33,3 @@ class Escultura(models.Model):
     Intencion = models.TextField()
     Cant_votos = models.IntegerField()
     tematica = models.TextField(max_length=500)  # Asegúrate de que este campo está presente
-
-
-class MediaFile(models.Model):
-    File_Path = models.CharField(max_length=300)
-    File_Type = models.CharField(max_length=30)
-    Escultura_ID = models.ForeignKey(Escultura, null=True, blank=True, on_delete=models.CASCADE)
-    class Meta:
-        constraints = [
-            models.CheckConstraint(
-                check=(
-                    (models.Q(Escultura_ID__isnull=False)) |
-                    (models.Q(Escultura_ID__isnull=True))
-                ),
-                name='media_file_constraint'
-            )
-        ]

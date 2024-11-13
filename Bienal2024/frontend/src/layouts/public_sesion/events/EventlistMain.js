@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'; 
-import { getDocs, collection } from 'firebase/firestore'; 
+import React, { useEffect, useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
-import { db } from '../../../Firebase';
 import { SwipperEventcardList } from '../Swippers';
+import axios from 'axios';
 
 function EventlistMain() {
     const [evento, setEventos] = useState([]);
@@ -12,14 +11,16 @@ function EventlistMain() {
 
     useEffect(() => {
         const obtenerEventos = async () => {
-            const consulta = await getDocs(collection(db, "Eventos")); 
-            const listaEventos = consulta.docs.map(doc => ({id: doc.id, ...doc.data()}));
+            const consulta = await axios.get('http://127.0.0.1:8000/eventos/');
+            const listaEventos = consulta.data.map(evento => ({id: evento.id, ...evento }));
             setEventos(listaEventos);
-        }; obtenerEventos(); }, []);
+        }; 
+      obtenerEventos(); }, []);
 
     return (
       <>
         <SwipperEventcardList evento={evento}/>
+
       </>
     );
 }

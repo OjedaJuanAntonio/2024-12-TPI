@@ -60,12 +60,12 @@ export function SwipperEventcardList({ evento }) {
                     className="mySwiper"
                     style={{ paddingBottom: '5vh' }}
                 >
-                    {evento.length > 0 ? (
+                    {evento.length > 0  ? (
                         <>
-                            {evento.slice(0, 4).map((evento) => (
-                                <SwiperSlide key={evento.id} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            {evento.slice(0, 4).map((event) => (
+                                <SwiperSlide key={event.id} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     <div className="animate__animated animate__zoomIn">
-                                        <EventcardMain evento={evento} />
+                                        <EventcardMain evento={event} />
                                     </div>
                                 </SwiperSlide>
                             ))}
