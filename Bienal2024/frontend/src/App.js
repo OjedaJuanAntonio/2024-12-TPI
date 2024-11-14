@@ -1,35 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'; 
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'; 
 import { Auth0Provider } from '@auth0/auth0-react';
 import { ChakraProvider, Box } from '@chakra-ui/react';
-import Main from './layouts/public_sesion/main/Main';
 import Addnew from './layouts/public_sesion/login_form/Addnew';
 import SculptorProfile from './layouts/public_sesion/sculptors/SculptorProfile';
 import Navbar from './layouts/public_sesion/Navbar';
 import Footerr from './layouts/public_sesion/Footerr';
 import { HashLoader } from 'react-spinners';
 import Allevents from './layouts/public_sesion/events/Allevents';
-import Sculpturelist from './layouts/public_sesion/sculptures/Sculpturelist'
+import Sculpturelist from './layouts/public_sesion/sculptures/Sculpturelist';
 import Votacion from './layouts/public_sesion/sculptures/Qrvotes';
 import Panel from './layouts/private_sesion/Panel';
-import Sculptor_register from './layouts/private_sesion/Sculptor_register';
-import Scupture_register from './layouts/private_sesion/Scupture_register';
-
-
-
+import SculptorRegister from './layouts/private_sesion/SculptorRegister';
+import ScuptureRegister from './layouts/private_sesion/ScuptureRegister';
+import QRLink from './layouts/private_sesion/QRcoding';
+import MainComponent from './layouts/public_sesion/Prueba';
+import IDCard from './layouts/public_sesion/sculptors/TabletID';
 
 function App() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const timer = setTimeout(() => {setLoading(false);   }, 1500);
+        const timer = setTimeout(() => { setLoading(false); }, 1500);
         return () => clearTimeout(timer); 
     }, []);
 
     if (loading) {
         return (
             <Box height="100vh" display="flex" justifyContent="center" alignItems="center">
-                <HashLoader  />
+                <HashLoader />
             </Box>
         ); 
     }
@@ -41,24 +40,36 @@ function App() {
                     domain={process.env.AUTH0_DOMAIN} 
                     clientId={process.env.AUTH0_CLIENT_ID}  
                     authorizationParams={{ redirect_uri: window.location.origin }}>
-                    <Navbar />
-                    <Routes>
-                        <Route path="/" element={<Main />} /> 
-                        <Route path="/createAccount" element={<Addnew />} /> 
-                        <Route path="/escultor/:id" element={<SculptorProfile />} />
-                        <Route path="/esculturas" element={<Sculpturelist/>} />
-                        <Route path="/actividades" element={<Allevents/>} />
-                        <Route path="/votar/:id" element={<Votacion />} />
-                        <Route path='/admin' element={<Panel/>}/>
-                        <Route path='/register/scultors' element={<Sculptor_register/>}/>
-                        <Route path='/register/sculpture' element={<Scupture_register/>}/>
-                        <Route path='/panelcenter' element={<Panel/>}/>
-                        
-                    </Routes>
-                    <Footerr />
+                    <ContentWithRouter />
                 </Auth0Provider>
             </ChakraProvider>
         </BrowserRouter>
+    );
+}
+
+function ContentWithRouter() {
+    const location = useLocation();
+    const hideNavbarAndFooter = location.pathname === '/tablet';
+
+    return (
+        <>
+            {!hideNavbarAndFooter && <Navbar />}
+            <Routes>
+                <Route path="/:currentUrl" element={<MainComponent />} />
+                <Route path="/createAccount" element={<Addnew />} /> 
+                <Route path="/escultor/:id" element={<SculptorProfile />} />
+                <Route path="/esculturas" element={<Sculpturelist />} />
+                <Route path="/actividades" element={<Allevents />} />
+                <Route path="/votar/:id" element={<Votacion />} />
+                <Route path='/admin' element={<Panel />} />
+                <Route path='/register/scultors' element={<SculptorRegister />} />
+                <Route path='/register/sculpture' element={<ScuptureRegister />} />
+                <Route path='/panelcenter' element={<Panel />} />
+                <Route path='/qr' element={<QRLink />} />
+                <Route path='/tablet' element={<IDCard />} />
+            </Routes>
+            {!hideNavbarAndFooter && <Footerr />}
+        </>
     );
 }
 
