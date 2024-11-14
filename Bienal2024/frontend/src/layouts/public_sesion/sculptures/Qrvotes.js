@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; // Para obtener el ID de la URL
+import { db } from '../../../Firebase'; 
+import { doc, getDoc } from 'firebase/firestore';
 import { Box, Heading, Text, Image, Button, Stack } from '@chakra-ui/react';
 import Starranking from './Starranking';
 import axios from 'axios';
 
-import { db } from '../../../Firebase'; 
-import { doc, getDoc } from 'firebase/firestore';
 
 function Votacion() {
     const { esculturaId } = useParams(); // Obtén el ID de la URL desde el QR

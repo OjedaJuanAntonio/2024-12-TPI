@@ -11,7 +11,7 @@ const Profile = () => {
       </Flex>
       <Divider mb={6} />
       <Heading size="sm">Información</Heading>
-      <Text>{user.nickname}</Text> 
+      <Text>{user.name}</Text> 
       <Heading size="sm" mt={4}>Teléfono</Heading>
       <Text>{user.phone_number || '-'}</Text> 
       <Heading size="sm" mt={4}>Información de contacto</Heading>
