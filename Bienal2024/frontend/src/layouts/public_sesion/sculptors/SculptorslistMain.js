@@ -16,7 +16,7 @@ function AutoPlay() {
 
     useEffect(() => {
         const obtenerEscultores = async () => {
-        const consultaSnapshot = await axios.get('http://127.0.0.1:8000/escultores/');
+        const consultaSnapshot = await axios.get('http://127.0.0.1:8000/escultores/obt_escultor/');
         const listaEscultores = consultaSnapshot.data.map(escultor => ({ id: escultor.id, ...escultor }));
         setEscultores(listaEscultores);
             setLoading(false);
@@ -30,8 +30,8 @@ function AutoPlay() {
         slidesToShow: 4, // Mostrar 4 por defecto
         slidesToScroll: 1,
         autoplay: true,
-        speed: 1500,
-        autoplaySpeed: 1500,
+        speed: 2000,
+        autoplaySpeed: 2000,
         cssEase: "linear",
         responsive: [
             {
