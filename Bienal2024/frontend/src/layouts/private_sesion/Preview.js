@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Box, Avatar, Heading, Text, Flex,  Image,  Badge,  SimpleGrid,} from '@chakra-ui/react';
+import { Card, CardHeader, CardBody, Box,  Heading, Text, Flex,  Image,  Badge,  SimpleGrid,} from '@chakra-ui/react';
 
 
 const Preview = ({ formData }) => {

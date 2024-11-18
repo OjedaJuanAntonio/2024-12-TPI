@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 function Map() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
-  const nombre = location.pathname === "/" ? "Mapa" : "Scanear QR";
+  const nombre = location.pathname === "/1" ? "Mapa" : "Scanear QR";
 
   return (
     <>
@@ -20,8 +20,8 @@ function Map() {
           <ModalHeader>{nombre}</ModalHeader>
           <ModalCloseButton />
           <ModalBody p={0}>
-            {location.pathname === "/" ? (
-              <Image src='https://www.bienaldelchaco.org/2024/wp-content/uploads/2024/07/plano-predio-v2-scaled.jpg' alt='Plano Predio' boxSize='100%' objectFit='contain'  />
+            {location.pathname === "/1" ? (
+              <Image src='https://www.bienaldelchaco.org/2024/wp-content/uploads/2024/07/plano-predio-v2-scaled.jpg' alt='Plano Predio' boxSize='100%' objectFit='cover' height="100%"  />
             ) : (
               <Flex justifyContent="center" alignItems="center" height="100%">
                 <Image src='https://www.shutterstock.com/image-vector/camera-icon-symbol-vector-flat-600nw-2475639413.jpg' boxSize='40%' objectFit='contain' />

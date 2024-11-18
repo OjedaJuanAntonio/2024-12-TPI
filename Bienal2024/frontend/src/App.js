@@ -2,20 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'; 
 import { Auth0Provider } from '@auth0/auth0-react';
 import { ChakraProvider, Box } from '@chakra-ui/react';
+import { HashLoader } from 'react-spinners';
 import Addnew from './layouts/public_sesion/login_form/Addnew';
 import SculptorProfile from './layouts/public_sesion/sculptors/SculptorProfile';
 import Navbar from './layouts/public_sesion/Navbar';
 import Footerr from './layouts/public_sesion/Footerr';
-import { HashLoader } from 'react-spinners';
 import Allevents from './layouts/public_sesion/events/Allevents';
 import Sculpturelist from './layouts/public_sesion/sculptures/Sculpturelist';
 import Votacion from './layouts/public_sesion/sculptures/Qrvotes';
 import Panel from './layouts/private_sesion/Panel';
 import SculptorRegister from './layouts/private_sesion/SculptorRegister';
 import ScuptureRegister from './layouts/private_sesion/ScuptureRegister';
-import QRLink from './layouts/private_sesion/QRcoding';
 import MainComponent from './layouts/public_sesion/Prueba';
-import IDCard from './layouts/public_sesion/sculptors/TabletID';
+import TabletView from './layouts/public_sesion/sculptors/TabletID';
+import QrExpirado from './layouts/public_sesion/user_profile/QrExpirado';
+import Error from './layouts/Error';
+import Main from './layouts/public_sesion/main/Main';
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -27,9 +29,7 @@ function App() {
 
     if (loading) {
         return (
-            <Box height="100vh" display="flex" justifyContent="center" alignItems="center">
-                <HashLoader />
-            </Box>
+            <Box height="100vh" display="flex" justifyContent="center" alignItems="center"> <HashLoader /></Box>
         ); 
     }
 
@@ -49,13 +49,14 @@ function App() {
 
 function ContentWithRouter() {
     const location = useLocation();
-    const hideNavbarAndFooter = location.pathname === '/tablet';
+    const hideNavbarAndFooter = location.pathname === '/tablet' || location.pathname === '/Qr/expirado' || location.pathname === '/error';
 
     return (
         <>
             {!hideNavbarAndFooter && <Navbar />}
             <Routes>
-                <Route path="/:currentUrl" element={<MainComponent />} />
+                <Route path="/2/:currentUrl" element={<MainComponent />} />
+                <Route path="/1" element={<Main />} />
                 <Route path="/createAccount" element={<Addnew />} /> 
                 <Route path="/escultor/:id" element={<SculptorProfile />} />
                 <Route path="/esculturas" element={<Sculpturelist />} />
@@ -64,9 +65,9 @@ function ContentWithRouter() {
                 <Route path='/admin' element={<Panel />} />
                 <Route path='/register/scultors' element={<SculptorRegister />} />
                 <Route path='/register/sculpture' element={<ScuptureRegister />} />
-                <Route path='/panelcenter' element={<Panel />} />
-                <Route path='/qr' element={<QRLink />} />
-                <Route path='/tablet' element={<IDCard />} />
+                <Route path='/tablet' element={<TabletView />}/>
+                <Route path='/Qr/expirado' element={ <QrExpirado/>}/>
+                <Route path='/error' element={<Error/>}/>
             </Routes>
             {!hideNavbarAndFooter && <Footerr />}
         </>

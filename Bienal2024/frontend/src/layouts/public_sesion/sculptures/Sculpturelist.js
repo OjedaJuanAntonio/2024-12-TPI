@@ -22,7 +22,7 @@ function Sculpturelist() {
     useEffect(() => {
         const obtenerEsculturas = async () => {
             setLoading(true);
-            const consulta = await axios.get('http://127.0.0.1:8000/escultores/'); 
+            const consulta = await axios.get('http://127.0.0.1:8000/escultores/obt_escult/'); 
             const listaEsculturas = consulta.data.map(escultura => ({ id: escultura.ID_Escultura, ...escultura }));
             setEsculturas(listaEsculturas); 
             setLoading(false);

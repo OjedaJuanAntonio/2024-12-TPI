@@ -26,31 +26,17 @@ const Sculptor_register = () => {
     e.preventDefault();
 
     if (!name || !lastName || !nacionalidad || !email || !generalInfo || !photo || !password) {
-      toast({
-        title: "Todos los campos son obligatorios",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      toast({title: "Todos los campos son obligatorios",status: "error",duration: 3000, isClosable: true,});
       return;
     }
-
     setIsSubmitting(true);
-
 
     await uploadFile(photo);
 
-
     if (photoURL) {
       console.log({ name, lastName, nacionalidad, email, generalInfo, photoURL });
-      toast({
-        title: "Formulario enviado con éxito",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-    setIsSubmitting(false);
+      toast({ title: "Formulario enviado con éxito",status: "success",duration: 3000,isClosable: true, });
+    } setIsSubmitting(false);
   };
 
 
@@ -88,112 +74,50 @@ const Sculptor_register = () => {
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={5}>
           <FormControl id="name" isRequired>
             <FormLabel color="teal.500">Nombre/ FirstName</FormLabel>
-            <Input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ingrese el Nombre"
-              borderColor="teal.300"
-              _hover={{ borderColor: "teal.400" }}
-            />
+            <Input type="text"value={name}  onChange={(e) => setName(e.target.value)} placeholder="Ingrese el Nombre" borderColor="teal.300" _hover={{ borderColor: "teal.400" }}/>
           </FormControl>
           <FormControl id="lastName" isRequired>
             <FormLabel color="teal.500">Apellido/ LastName</FormLabel>
-            <Input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Ingrese el Apellido"
-              borderColor="teal.300"
-              _hover={{ borderColor: "teal.400" }}
-            />
+            <Input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Ingrese el Apellido" borderColor="teal.300"_hover={{ borderColor: "teal.400" }}/>
           </FormControl>
         </SimpleGrid>
 
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={5}>
           <FormControl id="DNI" isRequired>
             <FormLabel color="teal.500">DNI/ID number</FormLabel>
-            <Input
-              type="number"
-              value={DNI}
-              onChange={(e) => setDNI(e.target.value)}
-              placeholder="Ingrese el DNI"
-              borderColor="teal.300"
-              _hover={{ borderColor: "teal.400" }}
-            />
+            <Input type="number" value={DNI} onChange={(e) => setDNI(e.target.value)} placeholder="Ingrese el DNI" borderColor="teal.300"_hover={{ borderColor: "teal.400" }}/>
           </FormControl>
           <FormControl id="nacionalidad" isRequired>
             <FormLabel color="teal.500">Nacionalidad/Nationality</FormLabel>
-            <Input
-              type="text"
-              value={nacionalidad}
-              onChange={(e) => setNacionalidad(e.target.value)}
-              placeholder="Ingrese la nacionalidad del escultor"
-              borderColor="teal.300"
-              _hover={{ borderColor: "teal.400" }}
-            />
+            <Input type="text" value={nacionalidad} onChange={(e) => setNacionalidad(e.target.value)} placeholder="Ingrese la nacionalidad del escultor" borderColor="teal.300" _hover={{ borderColor: "teal.400" }}/>
           </FormControl>
         </SimpleGrid>
 
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={5}>
           <FormControl id="phone" isRequired>
             <FormLabel color="teal.500">Telefono/ Phone</FormLabel>
-            <Input
-              type="number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Ingrese el teléfono"
-              borderColor="teal.300"
-              _hover={{ borderColor: "teal.400" }}
-            />
+            <Input type="number" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Ingrese el teléfono" borderColor="teal.300" _hover={{ borderColor: "teal.400" }} />
           </FormControl>
 
           <FormControl id="date" isRequired>
             <FormLabel color="teal.500">Fecha de Nacimiento</FormLabel>
-            <Input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              borderColor="teal.300"
-              _hover={{ borderColor: "teal.400" }}
-            />
+            <Input type="date" value={date}  onChange={(e) => setDate(e.target.value)}  borderColor="teal.300"  _hover={{ borderColor: "teal.400" }}/>
           </FormControl>
         </SimpleGrid>
 
         <FormControl id="email" isRequired>
           <FormLabel color="teal.500">Email</FormLabel>
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Ingrese el email"
-            borderColor="teal.300"
-            _hover={{ borderColor: "teal.400" }}
-          />
+          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Ingrese el email" borderColor="teal.300"_hover={{ borderColor: "teal.400" }}/>
         </FormControl>
 
         <FormControl id="password" isRequired mb={2}>
           <FormLabel color="teal.500">Contraseña</FormLabel>
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Ingrese la contraseña"
-            borderColor="teal.300"
-            _hover={{ borderColor: "teal.400" }}
-          />
+          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Ingrese la contraseña" borderColor="teal.300" _hover={{ borderColor: "teal.400" }}/>
         </FormControl>
 
         <FormControl id="generalInfo" isRequired mb={2}>
           <FormLabel color="teal.500">Bibliografia</FormLabel>
-          <Textarea
-            value={generalInfo}
-            onChange={(e) => setGeneralInfo(e.target.value)}
-            placeholder="Escribir informacion general sobre escultor"
-            borderColor="teal.300"
-            _hover={{ borderColor: "teal.400" }}
-            rows={4}
-          />
+          <Textarea value={generalInfo} onChange={(e) => setGeneralInfo(e.target.value)} placeholder="Escribir informacion general sobre escultor" borderColor="teal.300" _hover={{ borderColor: "teal.400" }} rows={4} />
         </FormControl>
 
         <Uploader setPhoto={setPhoto} />
@@ -203,29 +127,11 @@ const Sculptor_register = () => {
             <Text color="teal.600" fontSize="md">
               {photo.name}
             </Text>
-            <Image
-              src={photoURL || URL.createObjectURL(photo)}
-              alt="Vista previa de la imagen"
-              maxW="200px"
-              mt={2}
-              borderRadius="full"
-              mx="auto"
-              objectFit="cover"
-            />
+            <Image src={photoURL || URL.createObjectURL(photo)} alt="Vista previa de la imagen"maxW="200px" mt={2} borderRadius="full" mx="auto" objectFit="cover"/>
           </Box>
         )}
 
-        <Button
-          type="submit"
-          colorScheme="teal"
-          size="lg"
-          width="full"
-          mt={6}
-          _hover={{ bg: "teal.500" }}
-          boxShadow="md"
-          isLoading={isSubmitting} 
-          loadingText="Enviando" 
-        >
+        <Button type="submit" colorScheme="teal" size="lg" width="full"mt={6} _hover={{ bg: "teal.500" }} boxShadow="md" isLoading={isSubmitting}  loadingText="Enviando"  >
           {isSubmitting ? "Enviando..." : "Enviar"}
         </Button>
       </form>

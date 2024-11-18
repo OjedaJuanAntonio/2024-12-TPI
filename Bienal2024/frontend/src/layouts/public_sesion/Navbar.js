@@ -27,13 +27,12 @@ const Navbar = () => {
         />
         
         <HStack spacing={8} alignItems="center" flexGrow={1} color="white">
-          <Link to='/'><Image src='https://www.bienaldelchaco.org/2024/wp-content/uploads/2019/01/web-logo-130x50-3.png' alt="Bienal 2024 Logo" objectFit="contain" boxSize={'120px'} /></Link>
+          <Link to='/1'><Image src='https://www.bienaldelchaco.org/2024/wp-content/uploads/2019/01/web-logo-130x50-3.png' alt="Bienal 2024 Logo" objectFit="contain" boxSize={'120px'} /></Link>
           <HStack as="nav" spacing={4} display={{ base: 'none', md: 'flex' }}>
-          <Link to="/actividades"><NavLink>Actividades</NavLink></Link>
             <Link to='/esculturas'><NavLink>Esculturas</NavLink></Link>
             <NavLink>Otras Ediciones</NavLink>
             <Link to='/admin'><NavLink><strong>Panel de Control</strong></NavLink></Link>
-            
+            <Link to='/tablet'><NavLink><strong>Perfil votacion</strong></NavLink></Link>
           </HStack>
         </HStack>
 

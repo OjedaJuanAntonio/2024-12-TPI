@@ -10,7 +10,7 @@ const location = useLocation();
     maxSize: 5 * 1024 * 1024,
     onDrop: (acceptedFiles) => {
       const file = acceptedFiles[0];
-      setPhoto(file); // Solo se pasa el archivo al padre, no hay previsualización aquí
+      setPhoto(file); 
     },
   });
 

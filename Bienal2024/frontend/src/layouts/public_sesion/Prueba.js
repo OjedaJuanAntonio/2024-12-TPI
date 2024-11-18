@@ -1,42 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Main from './main/Main';
 import QrExpirado from './user_profile/QrExpirado';
+import Error from "../Error"
 
 const MainComponent = () => {
   const { currentUrl } = useParams();
-  const navigate = useNavigate();
-  const [isValid, setIsValid] = useState(true); // Inicializamos como válido por defecto
+  const [isValid, setIsValid] = useState(true); 
+  const [setError, setSetError] = useState(false); 
 
   useEffect(() => {
     try {
-      // Decodificar la hora desde el currentUrl (base64)
       const decodedTime = atob(currentUrl);
-      const decodedTimeInMs = parseInt(decodedTime, 10); // Convertir a milisegundos
-
+      const decodedTimeMin = parseInt(decodedTime, 10); 
+      
+      if (isNaN(decodedTimeMin)) {
+        setSetError(true); 
+        return;}
+      
       const currentTime = Date.now();
-      const timeDiff = (currentTime - decodedTimeInMs) / 1000; // Diferencia en segundos
+      const timeDiff = (currentTime - decodedTimeMin) / 1000;
+      if (timeDiff >= 30) {setIsValid(false);}
 
-      if (timeDiff >= 30) {
-        // Si la diferencia es mayor a 30 segundos, marcar como inválido (expirado)
-        setIsValid(false);
-        navigate('/expired');
-      }
-    } catch (error) {
-      // Si ocurre un error en la decodificación o la comparación, redirigir a error
-      setIsValid(false);
-      navigate('/error');
+    } catch (error) {  setSetError(true);}}, [currentUrl]);
+
+    if (setError) {
+        return <Error />; 
     }
-  }, [currentUrl, navigate]);
 
-  // Si no es válido, muestra un mensaje de error o redirige a otro componente
   return (
     <div>
-      {isValid ? (
-        <Main />
-      ) : (
-        <QrExpirado/>
-      )}
+      {isValid ? ( <Main />) : (<QrExpirado/>)}
     </div>
   );
 };

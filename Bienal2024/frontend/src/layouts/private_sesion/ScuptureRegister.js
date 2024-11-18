@@ -7,15 +7,7 @@ import Uploader from './Uploader';
 
 const Scupture_register = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [formData, setFormData] = useState({
-    id_escultor: '',
-    id_evento: '',
-    fecha_inicio: '',
-    fecha_fin: '',
-    titulo: '',
-    Intencion: '',
-    tematica: '',
-  });
+  const [formData, setFormData] = useState({ id_escultor: '',id_evento: '',fecha_inicio: '',fecha_fin: '',titulo: '',Intencion: '',tematica: '',});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,34 +25,15 @@ const Scupture_register = () => {
 
 
   const isFormComplete = () => {
-    return (
-      formData.id_escultor &&
-      formData.id_evento &&
-      formData.fecha_inicio &&
-      formData.fecha_fin &&
-      formData.titulo &&
-      formData.tematica
-    );
+    return (formData.id_escultor && formData.id_evento && formData.fecha_inicio && formData.fecha_fin && formData.titulo && formData.tematica );
   };
 
 
   const inputBg = useColorModeValue('gray.100', 'gray.600');
- 
 
   return (
     <div style={{ backgroundImage: `url(${Loginbackground})`,display: 'flex',justifyContent: 'center', alignItems: 'center', }}>
-    <Box
-    maxW="lg"
-    mx="auto"
-    mt={10}
-    mb={5}
-    p={8}
-    borderRadius="lg"
-    boxShadow="xl"
-    bg="white"
-    border="1px solid #e2e8f0"
-    className="animate__animated animate__zoomIn"
-    >
+    <Box maxW="lg" mx="auto" mt={10} mb={5} p={8} borderRadius="lg" boxShadow="xl"bg="white" border="1px solid #e2e8f0" className="animate__animated animate__zoomIn">
       <Heading as="h1" size="xl" mb={4} textAlign="center" color="teal.600">Registro de Escultura </Heading>
       <Text mb={6} fontSize="lg" color="gray.600" textAlign="center">Completa los datos de la escultura para el evento</Text>
     
@@ -86,22 +59,12 @@ const Scupture_register = () => {
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4} w="100%" alignItems="center">
             <FormControl id="fecha_inicio" isRequired>
               <FormLabel>Fecha de Inicio</FormLabel>
-              <Input
-                type="date"
-                name="fecha_inicio"
-                onChange={handleChange}
-                bg={inputBg}
-              />
+              <Input type="date" name="fecha_inicio" onChange={handleChange}bg={inputBg}/>
             </FormControl>
 
             <FormControl id="fecha_fin" isRequired>
               <FormLabel>Fecha de Fin</FormLabel>
-              <Input
-                type="date"
-                name="fecha_fin"
-                onChange={handleChange}
-                bg={inputBg}
-              />
+              <Input type="date" name="fecha_fin"onChange={handleChange} bg={inputBg}/>
             </FormControl>
           </SimpleGrid>
 
@@ -112,12 +75,7 @@ const Scupture_register = () => {
 
           <FormControl id="Intencion">
             <FormLabel>Intención</FormLabel>
-            <Textarea
-              name="Intencion"
-              onChange={handleChange}
-              placeholder="Describe la intención de la obra"
-              bg={inputBg}
-            />
+            <Textarea name="Intencion" onChange={handleChange} placeholder="Describe la intención de la obra" bg={inputBg}/>
           </FormControl>
 
           <FormControl id="tematica" isRequired>
@@ -132,16 +90,7 @@ const Scupture_register = () => {
           </FormControl>
           <Uploader/>
 
-          <Button
-            colorScheme="teal"
-            type="submit"
-            width="full"
-            mt={4}
-            _hover={{ bg: 'teal.600' }}
-            boxShadow="md"
-            onClick={onOpen}
-            disabled={!isFormComplete()} // Deshabilitar hasta que el formulario esté completo
-          >
+          <Button colorScheme="teal"type="submit"width="full"mt={4} _hover={{ bg: 'teal.600' }} boxShadow="md" onClick={onOpen} disabled={!isFormComplete()}>
             Vista Previa
           </Button>
 
@@ -150,12 +99,10 @@ const Scupture_register = () => {
             <ModalContent>
               <ModalCloseButton />
               <ModalBody>
-                  <Preview formData={formData} />
+                <Preview formData={formData} />
               </ModalBody>
               <ModalFooter>
-                <Button variant="outline" size="sm">
-                  Enviar
-                </Button>
+                <Button variant="outline" size="sm"> Enviar </Button>
               </ModalFooter>
             </ModalContent>
           </Modal>
