@@ -1,90 +1,84 @@
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .models import Escultura, Escultor
-from .serializers import EsculturaSerializer, EscultorSerializer, EscultorRegSerializer
+from firebase_admin import db
+from .serializers import EscultorSerializer, EscultorRegSerializer
 
-# Create your views here.
+# Inicializar referencia a la base de datos
+ref = db.reference('escultores')
 
-class EsculturaViewSet(viewsets.ModelViewSet):
-    queryset = Escultura.objects.all()
-    serializer_class = EsculturaSerializer
+class EscultorViewSet(viewsets.ViewSet):
+    """
+    ViewSet para manejar escultores en Realtime Database.
+    """
 
-class EscultorViewSet(viewsets.ModelViewSet):
-    queryset = Escultor.objects.all()
-    serializer_class = EscultorSerializer
+    def list(self, request):
+        """
+        Obtiene todos los escultores desde Realtime Database.
+        """
+        try:
+            escultores = ref.get()
+            if escultores:
+                # Convertir los datos en una lista para que sea serializable
+                escultores_list = [
+                    {'id': key, **value} for key, value in escultores.items()
+                ]
+                return Response(escultores_list, status=status.HTTP_200_OK)
+            return Response([], status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@api_view(['GET'])
-def obtener_escultura(request):
-    esculturas = Escultura.objects.all()
-    serializer = EsculturaSerializer(esculturas, many=True)
-    if esculturas.exists():
-        return Response(serializer.data)
-    else:
-        return Response('no hay esculturas')
-    
+    def create(self, request):
+        """
+        Crea un nuevo escultor en Realtime Database.
+        """
+        serializer = EscultorRegSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                data = serializer.validated_data
+                new_ref = ref.push(data)  # Añade el escultor y genera un nuevo ID
+                return Response({'id': new_ref.key, **data}, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
-def registrar_escultura(request):
-    if isinstance(request.data, list):  # Verifica si el JSON es una lista
-        resultados = []
-        errores = []
-        for escultura_data in request.data:
-            serializer = EsculturaSerializer(data=escultura_data)
-            if serializer.is_valid():
-                serializer.save()
-                resultados.append(serializer.data)
-            else:
-                errores.append(serializer.errors)
-        
-        if errores:
-            return Response({"success": resultados, "errors": errores}, status=status.HTTP_207_MULTI_STATUS)
-        
-        return Response(resultados, status=status.HTTP_201_CREATED)
+    def retrieve(self, request, pk=None):
+        """
+        Obtiene un escultor específico por su ID.
+        """
+        try:
+            escultor = ref.child(pk).get()
+            if escultor:
+                return Response({'id': pk, **escultor}, status=status.HTTP_200_OK)
+            return Response({'error': 'Escultor no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    # Procesa una solicitud normal de un solo diccionario
-    serializer = EsculturaSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def update(self, request, pk=None):
+        """
+        Actualiza un escultor existente en Realtime Database.
+        """
+        serializer = EscultorSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                data = serializer.validated_data
+                escultor_ref = ref.child(pk)
+                if escultor_ref.get():
+                    escultor_ref.update(data)  # Actualiza los datos en la base de datos
+                    return Response({'id': pk, **data}, status=status.HTTP_200_OK)
+                return Response({'error': 'Escultor no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    
-
-@api_view(['GET'])
-def obtener_escultores(request):
-    esculturas = Escultor.objects.all()
-    serializer = EscultorSerializer(esculturas, many=True)
-    if esculturas.exists():
-        return Response(serializer.data)
-    else:
-        return Response('no hay escultores')
-    
-
-@api_view(['POST'])
-def registrar_escultor(request):
-    if isinstance(request.data, list):  # Verifica si el JSON es una lista
-        resultados = []
-        errores = []
-        for escultor_data in request.data:
-            serializer = EscultorRegSerializer(data=escultor_data)
-            if serializer.is_valid():
-                serializer.save()
-                resultados.append(serializer.data)
-            else:
-                errores.append(serializer.errors)
-        
-        if errores:
-            return Response({"success": resultados, "errors": errores}, status=status.HTTP_207_MULTI_STATUS)
-        
-        return Response(resultados, status=status.HTTP_201_CREATED)
-
-    # Procesa una solicitud normal de un solo diccionario
-    serializer = EscultorRegSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def destroy(self, request, pk=None):
+        """
+        Elimina un escultor por su ID.
+        """
+        try:
+            escultor_ref = ref.child(pk)
+            if escultor_ref.get():
+                escultor_ref.delete()
+                return Response({'message': 'Escultor eliminado'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'error': 'Escultor no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

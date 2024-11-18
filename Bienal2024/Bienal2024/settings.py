@@ -12,15 +12,30 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from urllib.parse import urlparse
-from decouple import config
+#from decouple import config
 from dotenv import load_dotenv
 import os
-from urllib.parse import urlparse
+
+import firebase_admin
+from firebase_admin import credentials
+
+# Ruta al archivo de credenciales
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FIREBASE_CREDENTIALS_PATH = os.path.join(BASE_DIR, 'serviceAccountKey.json')
+
+
+# Inicializar Firebase si aún no está inicializado
+if not firebase_admin._apps:  # Evitar inicialización múltiple
+    cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
+    firebase_admin.initialize_app(cred, {
+        'databaseURL': 'https://imagenes-url-default-rtdb.firebaseio.com/'  # Cambia esto por la URL de tu Realtime Database
+    })
+
 
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+#BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -45,11 +60,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'gestion_voto',
+    'gestionEsculturas',
     'gestionEscultores',
     'gestionUsuarios',
     'gestionEventos',
     'gestionSponsors',
-    'gestionVotos',
+    #'gestionVotos',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
@@ -113,6 +130,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Puerto donde está corriendo tu React app
 ]
 
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+
+
 
 ROOT_URLCONF = 'Bienal2024.urls'
 
@@ -122,7 +149,8 @@ ROOT_URLCONF = 'Bienal2024.urls'
 TEMPLATES = [
     {
        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Asegúrate de que este directorio esté incluido
+        # 'DIRS': [BASE_DIR / 'templates'],  # Asegúrate de que este directorio esté incluido
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,51 +163,10 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Bienal2024.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-
-database_url = os.getenv("DATABASE_URL")
-if database_url is None:
-    raise ValueError("DATABASE_URL no está configurado en las variables de entorno o en el archivo .env")
-
-# Parsear la URL de la base de datos
-tmpPostgres = urlparse(database_url)
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': tmpPostgres.path.replace('/', ''),
-        'USER': tmpPostgres.username,
-        'PASSWORD': tmpPostgres.password,
-        'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
-        'OPTIONS': {
-            'sslmode': 'require',  # Esto asegura que la conexión sea segura
-        },
-    }
-}
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'bienal2024',  # Nombre de tu base de datos
-#         'USER': 'nahuel',      # Usuario de PostgreSQL (ajústalo según tu configuración)
-#         'PASSWORD': '9087',  # Contraseña del usuario
-#         'HOST': 'localhost',     # Por lo general, es localhost
-#         'PORT': '5432',          # Puerto por defecto de PostgreSQL
-#     }
-# }
 
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
-
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -197,8 +184,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 

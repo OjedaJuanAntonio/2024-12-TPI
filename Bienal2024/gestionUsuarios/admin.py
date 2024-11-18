@@ -1,5 +1,5 @@
 from django.contrib import admin
-from gestionEscultores.models import Escultor, Escultura
+from gestionEscultores.models import Escultor
 from gestionEventos.models import Evento, EventoSponsor, AdminEvento
 from gestionUsuarios.models import Administrador
 
@@ -26,7 +26,6 @@ class BBDD_Administrador(admin.ModelAdmin):
 #  Registro de los modelos en el panel de administración
 admin.site.register(Administrador, BBDD_Administrador)
 admin.site.register(Escultor)
-admin.site.register(Escultura)
 admin.site.register(Evento)
 admin.site.register(EventoSponsor)
 admin.site.register(AdminEvento)

@@ -1,8 +1,8 @@
 from rest_framework import serializers
 # from django.contrib.auth.models import User
-from .models import Voto
+from .models import Votos
 
 class votoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Voto
+        model = Votos
         fields = ['escultura', 'estrellas', 'id_votante']

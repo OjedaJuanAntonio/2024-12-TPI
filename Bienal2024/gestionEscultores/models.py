@@ -2,7 +2,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator, RegexVa
 from django.db import models
 from gestionEventos.models import Evento
 
-from django.contrib.auth.models import User  # Importa el modelo Persona desde la app correcta
+#from django.contrib.auth.models import User  # Importa el modelo Persona desde la app correcta
 
 class Escultor(models.Model):
     dni = models.BigIntegerField(validators=[
@@ -20,16 +20,5 @@ class Escultor(models.Model):
     biografia = models.TextField()
 
 class EscultorInvitado(models.Model):
-    id_evento= models.ForeignKey(Evento, on_delete= models.CASCADE)
-    id_escultor= models.ForeignKey(Escultor, on_delete= models.DO_NOTHING)
-
-
-
-class Escultura(models.Model):
-    id_escultor = models.ForeignKey(Escultor, on_delete=models.CASCADE)
     id_evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
-    fecha_presentacion = models.DateField()
-    titulo = models.CharField(max_length=30)
-    Intencion = models.TextField()
-    Cant_votos = models.IntegerField()
-    tematica = models.TextField(max_length=500)  # Asegúrate de que este campo está presente
+    id_escultor= models.ForeignKey(Escultor, on_delete= models.DO_NOTHING)

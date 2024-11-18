@@ -1,7 +1,11 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import EventoViewSet
+
+# Crear un enrutador y registrar el ViewSet
+router = DefaultRouter()
+router.register(r'eventos', EventoViewSet, basename='evento')
 
 urlpatterns = [
-    path('reg_evento/', views.registrar_evento, name='registrar_evento'),
-    path('obt_evento/', views.obtener_evento, name='obt_evento')
+    path('', include(router.urls)),  # Incluir las rutas generadas automáticamente por el router
 ]
