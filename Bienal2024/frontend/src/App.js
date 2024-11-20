@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'; 
-import { Auth0Provider } from '@auth0/auth0-react';
-import { ChakraProvider, Box } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { HashLoader } from 'react-spinners';
 import Addnew from './layouts/public_sesion/login_form/Addnew';
 import SculptorProfile from './layouts/public_sesion/sculptors/SculptorProfile';
@@ -32,17 +31,10 @@ function App() {
             <Box height="100vh" display="flex" justifyContent="center" alignItems="center"> <HashLoader /></Box>
         ); 
     }
-
+    //tralade la carga de de auth0 y chackra al modulo index encargado de cargar el modulo app
     return (
         <BrowserRouter>
-            <ChakraProvider>
-                <Auth0Provider 
-                    domain={process.env.AUTH0_DOMAIN} 
-                    clientId={process.env.AUTH0_CLIENT_ID}  
-                    authorizationParams={{ redirect_uri: window.location.origin }}>
                     <ContentWithRouter />
-                </Auth0Provider>
-            </ChakraProvider>
         </BrowserRouter>
     );
 }
@@ -63,7 +55,11 @@ function ContentWithRouter() {
                 <Route path="/actividades" element={<Allevents />} />
                 <Route path="/votar/:id" element={<Votacion />} />
                 <Route path='/admin' element={<Panel />} />
+
+                {/* probe este modulo y tuve inconvenientes, al parecer provenientes de Firestore */}
                 <Route path='/register/scultors' element={<SculptorRegister />} />
+                
+                {/* Por lo que vi este componente no esta terminado */}
                 <Route path='/register/sculpture' element={<ScuptureRegister />} />
                 <Route path='/tablet' element={<TabletView />}/>
                 <Route path='/Qr/expirado' element={ <QrExpirado/>}/>

@@ -4,6 +4,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Loginbackground from '../../assets/Loginbackground.jpg';
 import Uploader from "./Uploader";
 import 'animate.css';
+import axios from "axios";
 
 const storage = getStorage();
 
@@ -51,7 +52,7 @@ const Sculptor_register = () => {
       };
   
       try {
-        const response = await fetch("http://localhost:8000/escultores/", {
+        const response = await axios.post("http://localhost:8000/escultores/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
