@@ -12,6 +12,7 @@ import { EffectCoverflow, Pagination } from 'swiper/modules';
 import EventcardMain from "./events/EventcardMain";
 import { Link } from "react-router-dom";
 
+
 export function SwipperProfile() {
     const location = useLocation();
     const { escultor } = location.state;
@@ -36,83 +37,126 @@ export function SwipperProfile() {
     );
 }
 
+
+
+
 export function SwipperEventcardList({ evento }) {
     return (
         <>
-            <Box>
-                <Box textAlign="center" p={2} fontWeight="bold">
-                    <Text fontSize="xl">Eventos del Dia</Text>
-                </Box>
-                <Swiper
-                    effect={'coverflow'}
-                    grabCursor={true}
-                    centeredSlides={true}
-                    slidesPerView={3}
-                    coverflowEffect={{
-                        rotate: 50,
-                        stretch: 0,
-                        depth: 100,
-                        modifier: 1,
-                        slideShadows: false,
-                    }}
-                    pagination={true}
-                    modules={[EffectCoverflow, Pagination]}
-                    className="mySwiper"
-                    style={{ paddingBottom: '5vh' }}
-                >
-                    {evento.length > 0 ? (
-                        <>
-                            {evento.slice(0, 4).map((evento) => (
-                                <SwiperSlide key={evento.id} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                    <div className="animate__animated animate__zoomIn">
-                                        <EventcardMain evento={evento} />
-                                    </div>
-                                </SwiperSlide>
-                            ))}
-                           <SwiperSlide style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-    <Card
-        direction={{ base: 'column', sm: 'row' }}
-        overflow="hidden"
-        variant="outline"
-        w="100%" // Ancho completo
-        maxW="400px" // Ancho máximo para dispositivos grandes
-        h="350px" // Altura fija para asegurar espacio para el botón
-        mx="auto"
-        p={4}
-        display="flex" // Usar flexbox
-        flexDirection="column" // Alinear verticalmente
-        justifyContent="center" // Centrar verticalmente
-        alignItems="center" // Centrar horizontalmente
-        style={{
-            backgroundImage: `url(${evento.Img_Profile})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            color: 'white',
-        }}
-    >
-        <Link to={{ pathname: "/actividades", state: { eventos: [evento] } }}>
-            <Button
-                py="2"
-                fontSize={{ base: 'md', sm: 'lg' }}
-                fontWeight="bold"
-                textAlign="center"
-                variant="link"
-                textDecoration="underline"
-            >
-                Ver Todos
-            </Button>
-        </Link>
-    </Card>
-</SwiperSlide>
-
-                        </>
-                    ) : (
-                        <SwiperSlide>
-                            <div>No hay eventos disponibles.</div>
-                        </SwiperSlide>
-                    )}
-                </Swiper>
+            <Box textAlign="center" py={4}>
+                <Text fontSize="2xl" fontWeight="bold">
+                    Eventos del Día
+                </Text>
             </Box>
+            <Swiper
+                effect={'coverflow'}
+                grabCursor={true}
+                centeredSlides={true}
+                slidesPerView={3}
+                coverflowEffect={{
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows: false,
+                }}
+                pagination={{ clickable: true }}
+                modules={[EffectCoverflow, Pagination]}
+                style={{ paddingBottom: '5vh' }}
+            >
+                {evento.length > 0 ? (
+                    <>
+                        {/* Muestra los primeros 4 eventos */}
+                        {evento.slice(0, 4).map((event) => (
+                            <SwiperSlide
+                                key={event.id}
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Card
+                                    direction="column"
+                                    overflow="hidden"
+                                    variant="outline"
+                                    w="90%" // Ocupa el 90% del ancho
+                                    maxW="300px" // Ancho máximo
+                                    h="350px" // Altura fija
+                                    mx="auto"
+                                    p={4}
+                                    display="flex"
+                                    flexDirection="column"
+                                    justifyContent="center"
+                                    alignItems="center"
+
+                                    bgSize="cover"
+                                    bgPosition="center"
+                                    boxShadow="lg"
+                                    color="white"
+                                    borderRadius="lg"
+                                >
+                                    <Text fontSize="lg" fontWeight="bold" color={"black"}>
+                                        {event.nombre}
+                                    </Text>
+                                    <Text fontSize="sm" mt={2} color={"black"}>
+                                        {event.tematica}
+                                    </Text>
+                                    <Text fontSize="sm" fontStyle="italic" mt={1} color={"black"}>
+                                        {event.ubicacion}
+                                    </Text>
+                                </Card>
+                            </SwiperSlide>
+                        ))}
+                        {/* Último slide: Ver todos */}
+                        <SwiperSlide
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Card
+                                direction="column"
+                                overflow="hidden"
+                                variant="outline"
+                                w="90%"
+                                maxW="300px"
+                                h="350px"
+                                mx="auto"
+                                p={4}
+                                display="flex"
+                                justifyContent="center"
+                                alignItems="center"
+                                bg="gray.700"
+                                boxShadow="lg"
+                                borderRadius="lg"
+                                color="white"
+                            >
+                                <Link to="/actividades">
+                                    <Button
+                                        py={2}
+                                        fontSize="md"
+                                        fontWeight="bold"
+                                        textAlign="center"
+                                        colorScheme="blue"
+                                    >
+                                        Ver Todos los Eventos
+                                    </Button>
+                                </Link>
+                            </Card>
+                        </SwiperSlide>
+                    </>
+                ) : (
+                    <SwiperSlide>
+                        <Box textAlign="center" p={4}>
+                            <Text fontSize="lg" color="gray.500">
+                                No hay eventos disponibles.
+                            </Text>
+                        </Box>
+                    </SwiperSlide>
+                )}
+            </Swiper>
         </>
     );
 }

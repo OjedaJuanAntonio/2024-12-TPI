@@ -14,30 +14,93 @@ const Sculptor_register = () => {
   const [email, setEmail] = useState("");
   const [generalInfo, setGeneralInfo] = useState("");
   const [photo, setPhoto] = useState(null);
-  const [password, setPassword] = useState("");
   const [photoURL, setPhotoURL] = useState(null);
   const [phone, setPhone] = useState(null);
-  const [date, setDate] = useState(null);
   const [DNI, setDNI] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false); 
   const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!name || !lastName || !nacionalidad || !email || !generalInfo || !photo || !password) {
-      toast({title: "Todos los campos son obligatorios",status: "error",duration: 3000, isClosable: true,});
+  
+    if (!name || !lastName || !nacionalidad || !email || !generalInfo || !photo) {
+      toast({
+        title: "Todos los campos son obligatorios",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
+  
     setIsSubmitting(true);
-
+  
+    // Sube el archivo primero y luego envía los datos si la subida es exitosa
     await uploadFile(photo);
-
+  
     if (photoURL) {
-      console.log({ name, lastName, nacionalidad, email, generalInfo, photoURL });
-      toast({ title: "Formulario enviado con éxito",status: "success",duration: 3000,isClosable: true, });
-    } setIsSubmitting(false);
+      const sculptorData = {
+        name,
+        lastName,
+        nacionalidad,
+        email,
+        generalInfo,
+        photo: photoURL,
+        phone,
+        DNI,
+      };
+  
+      try {
+        const response = await fetch("http://localhost:8000/escultores/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(sculptorData),
+        });
+  
+        if (response.ok) {
+          toast({
+            title: "Formulario enviado con éxito",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+          // Limpia el formulario
+          setName("");
+          setLastName("");
+          setNacionalidad("");
+          setEmail("");
+          setGeneralInfo("");
+          setPhoto(null);
+          setPhotoURL(null);
+          setPhone("");
+          setDNI("");
+        } else {
+          const errorData = await response.json();
+          toast({
+            title: "Error al enviar el formulario",
+            description: errorData.message || "Hubo un problema al enviar los datos.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      } catch (error) {
+        console.error("Error al enviar los datos:", error);
+        toast({
+          title: "Error de red",
+          description: "No se pudo conectar con el servidor.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+  
+    setIsSubmitting(false);
   };
+  
 
 
   const uploadFile = async (file) => {
@@ -93,30 +156,18 @@ const Sculptor_register = () => {
           </FormControl>
         </SimpleGrid>
 
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={5}>
           <FormControl id="phone" isRequired>
             <FormLabel color="teal.500">Telefono/ Phone</FormLabel>
             <Input type="number" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Ingrese el teléfono" borderColor="teal.300" _hover={{ borderColor: "teal.400" }} />
           </FormControl>
-
-          <FormControl id="date" isRequired>
-            <FormLabel color="teal.500">Fecha de Nacimiento</FormLabel>
-            <Input type="date" value={date}  onChange={(e) => setDate(e.target.value)}  borderColor="teal.300"  _hover={{ borderColor: "teal.400" }}/>
-          </FormControl>
-        </SimpleGrid>
 
         <FormControl id="email" isRequired>
           <FormLabel color="teal.500">Email</FormLabel>
           <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Ingrese el email" borderColor="teal.300"_hover={{ borderColor: "teal.400" }}/>
         </FormControl>
 
-        <FormControl id="password" isRequired mb={2}>
-          <FormLabel color="teal.500">Contraseña</FormLabel>
-          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Ingrese la contraseña" borderColor="teal.300" _hover={{ borderColor: "teal.400" }}/>
-        </FormControl>
-
         <FormControl id="generalInfo" isRequired mb={2}>
-          <FormLabel color="teal.500">Bibliografia</FormLabel>
+          <FormLabel color="teal.500">Biografia</FormLabel>
           <Textarea value={generalInfo} onChange={(e) => setGeneralInfo(e.target.value)} placeholder="Escribir informacion general sobre escultor" borderColor="teal.300" _hover={{ borderColor: "teal.400" }} rows={4} />
         </FormControl>
 
@@ -141,3 +192,7 @@ const Sculptor_register = () => {
 };
 
 export default Sculptor_register;
+
+
+
+

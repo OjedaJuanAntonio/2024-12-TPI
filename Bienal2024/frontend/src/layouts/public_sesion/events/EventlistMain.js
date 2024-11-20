@@ -1,26 +1,42 @@
 import React, { useEffect, useState } from 'react'; 
-import { getDocs, collection } from 'firebase/firestore'; 
 import 'swiper/css';
-import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
-import { db } from '../../../Firebase';
-import { SwipperEventcardList } from '../Swippers';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper';
+import {SwipperEventcardList} from '../Swippers'
 
 function EventlistMain() {
     const [evento, setEventos] = useState([]);
-
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const obtenerEventos = async () => {
-            const consulta = await getDocs(collection(db, "Eventos")); 
-            const listaEventos = consulta.docs.map(doc => ({id: doc.id, ...doc.data()}));
-            setEventos(listaEventos);
-        }; obtenerEventos(); }, []);
+            try {
+                const response = await fetch('http://localhost:8000/eventos/');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los eventos');
+                }
+                const data = await response.json();
+                console.log(data); // Verifica la respuesta de la API
+                setEventos(data || []);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error:', error);
+                setLoading(false);
+            }
+        };
+  
+        obtenerEventos();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
-      <>
-        <SwipperEventcardList evento={evento}/>
-      </>
+        <>
+            <SwipperEventcardList evento={evento} />
+        </>
     );
 }
 

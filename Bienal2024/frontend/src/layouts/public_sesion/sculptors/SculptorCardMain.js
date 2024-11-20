@@ -9,7 +9,7 @@ function SculptorCardMain({ escultor, showAvatar }) {
     return (
         <Box textAlign="center" m={3} boxShadow="2xl">
             <Center pt={4}>
-                <Avatar size="2xl" src={showAvatar ? undefined : escultor.Img_Profile} border="3px solid black" />
+                <Avatar size="2xl" src={showAvatar ? undefined : escultor.photo} border="3px solid black" />
             </Center>
             <Text fontWeight="bold" fontSize="m" mt={2}>{showAvatar ?   Escult: `${escultor.nombre} ${escultor.apellido}`}</Text>
             <Text>{showAvatar ? NombreEsc : escultor.ip_address}</Text>

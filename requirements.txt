@@ -1,41 +1,40 @@
 asgiref==3.8.1
 astunparse==1.6.3
-boltons @ file:///home/conda/feedstock_root/build_artifacts/boltons_1677499911949/work
-brotlipy @ file:///Users/runner/miniforge3/conda-bld/brotlipy_1666764741656/work
+boltons
+brotlipy
 certifi==2023.5.7
-cffi @ file:///Users/runner/miniforge3/conda-bld/cffi_1671179477998/work
+cffi
 chardet==5.2.0
-charset-normalizer @ file:///home/conda/feedstock_root/build_artifacts/charset-normalizer_1678108872112/work
+charset-normalizer
 code2flow==2.5.1
-colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1666700638685/work
-conda==23.3.1
-conda-package-handling @ file:///home/conda/feedstock_root/build_artifacts/conda-package-handling_1669907009957/work
-conda_package_streaming @ file:///home/conda/feedstock_root/build_artifacts/conda-package-streaming_1669733752472/work
-cryptography @ file:///Users/runner/miniforge3/conda-bld/cryptography-split_1681508838526/work
+colorama
+conda-package-handling
+conda_package_streaming
+cryptography
 dill==0.3.7
 Django==4.2.16
-idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1663625384323/work
-jsonpatch @ file:///home/conda/feedstock_root/build_artifacts/jsonpatch_1632759296524/work
+idna
+jsonpatch
 jsonpointer==2.0
 mysql-connector-python==8.4.0
-packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1681337016113/work
-pluggy @ file:///home/conda/feedstock_root/build_artifacts/pluggy_1667232663820/work
+packaging
+pluggy
 ply==3.11
 psycopg2==2.9.9
 psycopg2-binary==2.9.9
 py2flowchart==0.0.2
-pycosat @ file:///Users/runner/miniforge3/conda-bld/pycosat_1666836599375/work
-pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
+pycosat
+pycparser
 pyflowchart==0.3.1
-pyOpenSSL @ file:///home/conda/feedstock_root/build_artifacts/pyopenssl_1680037383858/work
-PySocks @ file:///home/conda/feedstock_root/build_artifacts/pysocks_1661604839144/work
-requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1682535435083/work
-ruamel.yaml @ file:///Users/runner/miniforge3/conda-bld/ruamel.yaml_1683692227764/work
-ruamel.yaml.clib @ file:///Users/runner/miniforge3/conda-bld/ruamel.yaml.clib_1670412931817/work
+pyOpenSSL
+PySocks
+requests
+ruamel.yaml
+ruamel.yaml.clib
 six==1.16.0
 sqlparse==0.5.1
-toolz @ file:///home/conda/feedstock_root/build_artifacts/toolz_1657485559105/work
-tqdm @ file:///home/conda/feedstock_root/build_artifacts/tqdm_1677948868469/work
+toolz
+tqdm
 typing_extensions==4.12.2
-urllib3 @ file:///home/conda/feedstock_root/build_artifacts/urllib3_1678635778344/work
+urllib3
 zstandard==0.19.0

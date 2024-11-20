@@ -6,28 +6,34 @@ import SculptorCardMain from "./SculptorCardMain";
 import { Box, Spinner } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom"; 
 import 'animate.css';
-import axios from 'axios';
-
-
 function AutoPlay() {
     const [escultores, setEscultores] = useState([]);
     const [loading, setLoading] = useState(true);
-    const location = useLocation(); 
+    const location = useLocation();
 
     useEffect(() => {
         const obtenerEscultores = async () => {
-        const consultaSnapshot = await axios.get('http://127.0.0.1:8000/escultores/obt_escultor/');
-        const listaEscultores = consultaSnapshot.data.map(escultor => ({ id: escultor.id, ...escultor }));
-        setEscultores(listaEscultores);
-            setLoading(false);
-        }; 
+            try {
+                const response = await fetch('http://127.0.0.1:8000/escultores/');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los escultores');
+                }
+                const data = await response.json();
+                setEscultores(data.map(escultor => ({ id: escultor.id, ...escultor })));
+            } catch (error) {
+                console.error("Error fetching escultores:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         obtenerEscultores();
-    },[]);
+    }, []);
 
     const configuracion = {
         dots: true,
         infinite: true,
-        slidesToShow: 4, // Mostrar 4 por defecto
+        slidesToShow: 4,
         slidesToScroll: 1,
         autoplay: true,
         speed: 2000,
@@ -35,16 +41,12 @@ function AutoPlay() {
         cssEase: "linear",
         responsive: [
             {
-                breakpoint: 768, // Tamaño en píxeles para móviles
-                settings: {
-                    slidesToShow: 2, // Mostrar 2 en móviles
-                },
+                breakpoint: 768,
+                settings: { slidesToShow: 2 },
             },
             {
-                breakpoint: 1024, // Tamaño en píxeles para pantallas más grandes
-                settings: {
-                    slidesToShow: 3, // Mostrar 3 en tabletas o pantallas medianas
-                },
+                breakpoint: 1024,
+                settings: { slidesToShow: 3 },
             },
         ],
     };
@@ -56,8 +58,8 @@ function AutoPlay() {
                     <Spinner size="xl" />
                 </Box>
             ) : (
-                <Slider {...configuracion} style={{ width: '100%', padding: 0, margintop: 20 }}>
-                    {location.pathname === "/" ? (
+                <Slider {...configuracion}>
+                    {location.pathname === "/1" ? (
                         escultores.map(escultor => (
                             <div key={escultor.id} className="animate__animated animate__zoomIn">
                                 <SculptorCardMain escultor={escultor} showAvatar={false} />
@@ -71,5 +73,6 @@ function AutoPlay() {
         </div>
     );
 }
+
 
 export default AutoPlay;

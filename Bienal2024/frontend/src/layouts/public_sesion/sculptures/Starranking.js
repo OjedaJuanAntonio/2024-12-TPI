@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Icon, HStack, Text, Box, VStack } from '@chakra-ui/react';
 import { FaStar } from 'react-icons/fa';
 
-const StarRating = ({ onRatingChange }) => {
+const StarRating = () => {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
 
   const handleRating = (rate) => {
     setRating(rate);
     onRatingChange(rate); // Llama a la función de callback con la calificación
+    console.log(rate); // Muestra en consola el valor seleccionado
   };
 
   const labels = ['Malo', 'Regular', 'Bueno', 'Muy Bueno', 'Excelente'];

@@ -30,12 +30,12 @@ const SculptorProfile = () => {
       <Box w="100vw" p={4}>
         <Flex flexDir="column" borderRadius="lg" boxShadow="2xl" bg="white" p={4} position="relative" top="-8vh" >
           <Center mb={4}>
-            <Image borderRadius="full" boxSize="20vh" src={escultor.Img_Profile} border="4px solid white" boxShadow="dark-lg"/>
+            <Image borderRadius="full" boxSize="20vh" src={escultor.photo} border="4px solid white" boxShadow="dark-lg"/>
           </Center>
           <Text fontWeight="bold" fontSize="2xl" textAlign="center">{escultor.nombre} {escultor.apellido}</Text>
           <Text fontSize="lg" textAlign="center">{escultor.Nacionalidad}</Text>
           <Heading fontSize="xl" mb={2}>Biografia:</Heading>
-          <Text fontSize="md">{escultor.Biografia || "Sin distinciones."}</Text>
+          <Text fontSize="md">{escultor.biografia || "Sin distinciones."}</Text>
         </Flex>
       </Box>
       <AutoPlay />
