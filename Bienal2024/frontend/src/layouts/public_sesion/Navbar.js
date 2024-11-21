@@ -1,18 +1,79 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
-import { Avatar, Wrap, Box, Flex, HStack, IconButton, useDisclosure, Text, Stack, Menu, MenuButton, MenuList, MenuItem, MenuGroup, MenuDivider, Image } from '@chakra-ui/react';
+import {
+  Avatar,
+  Wrap,
+  Box,
+  Flex,
+  HStack,
+  IconButton,
+  useDisclosure,
+  Text,
+  Stack,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuGroup,
+  MenuDivider,
+  Image
+} from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import Map from './user_profile/Navprofile';
 
 const Navbar = () => {
   const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
-  const handleLogout = () => logout({ returnTo: window.location.origin });
+
+  const handleLogout = () => {
+    logout({ returnTo: window.location.origin });
+    localStorage.removeItem('authUser'); // Elimina el usuario guardado
+  };
+
+  // Persistir información del usuario y enviarla al backend
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      // Extraer los campos necesarios
+      const userData = {
+        sub: user.sub,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        nickname: user.nickname,
+      };
+
+      // Guardar en localStorage para persistencia local
+      localStorage.setItem('authUser', JSON.stringify(userData));
+
+      // Realizar el POST al backend
+      fetch('http://localhost:8000/usuarios/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Error al enviar datos: ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log('Usuario guardado en el backend:', data);
+        })
+        .catch((error) => {
+          console.error('Error al enviar datos del usuario:', error);
+        });
+    }
+  }, [isAuthenticated, user]);
+
+  // Recuperar usuario desde localStorage
+  const savedUser = JSON.parse(localStorage.getItem('authUser'));
 
   return (
-    <Box  bg="black" px={4}>
+    <Box bg="black" px={4}>
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <IconButton
           size="md"
@@ -25,24 +86,34 @@ const Navbar = () => {
           color="white"
           _hover={{ bg: "rgba(255, 255, 255, 0.5)" }}
         />
-        
+
         <HStack spacing={8} alignItems="center" flexGrow={1} color="white">
-          <Link to='/1'><Image src='https://www.bienaldelchaco.org/2024/wp-content/uploads/2019/01/web-logo-130x50-3.png' alt="Bienal 2024 Logo" objectFit="contain" boxSize={'120px'} /></Link>
+          <Link to='/'>
+            <Image
+              src='https://www.bienaldelchaco.org/2024/wp-content/uploads/2019/01/web-logo-130x50-3.png'
+              alt="Bienal 2024 Logo"
+              objectFit="contain"
+              boxSize={'120px'}
+            />
+          </Link>
           <HStack as="nav" spacing={4} display={{ base: 'none', md: 'flex' }}>
             <Link to='/esculturas'><NavLink>Esculturas</NavLink></Link>
-            <NavLink>Otras Ediciones</NavLink>
             <Link to='/admin'><NavLink><strong>Panel de Control</strong></NavLink></Link>
-            <Link to='/tablet'><NavLink><strong>Perfil votacion</strong></NavLink></Link>
+            <Link to='/tablet'><NavLink><strong>Perfil votación</strong></NavLink></Link>
+            <Link to='/Todas/esculturas'><NavLink><strong>EsculturasTablet</strong></NavLink></Link>
+            <NavLink>Otras Ediciones</NavLink>
           </HStack>
         </HStack>
 
         <Flex alignItems="center">
-          {isAuthenticated ? (
+          {isAuthenticated || savedUser ? (
             <Wrap>
               <Menu>
-                <MenuButton as={Avatar} src={user.picture} size='md' />
+                <MenuButton as={Avatar} src={user?.picture || savedUser?.picture} size='md' />
                 <MenuList>
-                  <Text fontSize="md" px={4} py={2}>¡Hola, {user.given_name}!</Text>
+                  <Text fontSize="md" px={4} py={2}>
+                    ¡Hola, {user?.nickname || savedUser?.nickname}!
+                  </Text>
                   <MenuGroup title='Perfil'>
                     <MenuItem><Map /></MenuItem>
                     <MenuItem onClick={handleLogout} color="red.500" fontStyle='oblique'>Cerrar Sesión</MenuItem>
@@ -57,9 +128,9 @@ const Navbar = () => {
           ) : (
             <Wrap>
               <Menu>
-                <MenuButton as={Avatar} src='https://bit.ly/broken-link' size='md' color="black"/>
+                <MenuButton as={Avatar} src='https://bit.ly/broken-link' size='md' color="black" />
                 <MenuList>
-                  <MenuGroup >
+                  <MenuGroup>
                     <MenuItem onClick={loginWithRedirect}>Iniciar Sesión</MenuItem>
                     <Link to="/createAccount">
                       <MenuItem>Crear Cuenta</MenuItem>

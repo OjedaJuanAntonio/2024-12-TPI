@@ -59,7 +59,7 @@ function AutoPlay() {
                 </Box>
             ) : (
                 <Slider {...configuracion}>
-                    {location.pathname === "/1" ? (
+                    {location.pathname === "/" ? (
                         escultores.map(escultor => (
                             <div key={escultor.id} className="animate__animated animate__zoomIn">
                                 <SculptorCardMain escultor={escultor} showAvatar={false} />

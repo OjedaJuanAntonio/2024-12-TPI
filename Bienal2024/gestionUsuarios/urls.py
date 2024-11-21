@@ -1,8 +1,10 @@
-from django.urls import path
-from .views import ProfileView, RegisterView, LoginView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import UsuarioViewSet
+
+router = DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet, basename='usuario')
 
 urlpatterns = [
-    #path('register/', RegisterView.as_view(), name="register"),  # Registro de usuario (si aplica)
-    path('login/', LoginView.as_view(), name="login"),          # Inicio de sesión usando Auth0
-    path('profile/', ProfileView.as_view(), name="profile"),    # Perfil del usuario autenticado
+    path('', include(router.urls)),
 ]

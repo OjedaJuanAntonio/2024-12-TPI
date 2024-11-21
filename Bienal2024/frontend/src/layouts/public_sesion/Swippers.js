@@ -9,7 +9,6 @@ import { Navigation } from 'swiper/modules';
 import { useLocation } from 'react-router-dom';
 import { Box, Image, Text, Card,Button } from "@chakra-ui/react";
 import { EffectCoverflow, Pagination } from 'swiper/modules';
-import EventcardMain from "./events/EventcardMain";
 import { Link } from "react-router-dom";
 
 

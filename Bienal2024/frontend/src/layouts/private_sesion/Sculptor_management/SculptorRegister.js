@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import {Box,FormControl,FormLabel,Input,Textarea,Button,SimpleGrid,Heading,Text,useToast,Image,} from "@chakra-ui/react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import Loginbackground from '../../assets/Loginbackground.jpg';
-import Uploader from "./Uploader";
+import Loginbackground from '../../../assets/Loginbackground.jpg';
+import Uploader from "../Uploader";
 import 'animate.css';
 import axios from "axios";
 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'; 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper';
 import {SwipperEventcardList} from '../Swippers'
+import { ClockLoader } from 'react-spinners';
+
 
 function EventlistMain() {
     const [evento, setEventos] = useState([]);
@@ -30,7 +30,8 @@ function EventlistMain() {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <ClockLoader/>
+
     }
 
     return (

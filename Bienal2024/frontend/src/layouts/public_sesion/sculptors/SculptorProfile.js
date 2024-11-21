@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Image, Text, Heading, Flex, Center } from '@chakra-ui/react';
 import Escultores from '../../../assets/Escultores.jpg';
-import AutoPlay from './SculptorslistMain';
 import { SwipperProfile } from "../Swippers";
 import { useLocation } from 'react-router-dom';
 import { HashLoader } from 'react-spinners';
@@ -38,7 +37,6 @@ const SculptorProfile = () => {
           <Text fontSize="md">{escultor.biografia || "Sin distinciones."}</Text>
         </Flex>
       </Box>
-      <AutoPlay />
       <SwipperProfile escultor={escultor} />
     </>
   );

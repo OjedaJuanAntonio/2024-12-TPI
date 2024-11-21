@@ -10,14 +10,17 @@ import Allevents from './layouts/public_sesion/events/Allevents';
 import Sculpturelist from './layouts/public_sesion/sculptures/Sculpturelist';
 import Votacion from './layouts/public_sesion/sculptures/Qrvotes';
 import Panel from './layouts/private_sesion/Panel';
-import SculptorRegister from './layouts/private_sesion/SculptorRegister';
-import ScuptureRegister from './layouts/private_sesion/ScuptureRegister';
+import SculptorRegister from './layouts/private_sesion/Sculptor_management/SculptorRegister';
+import ScuptureRegister from './layouts/private_sesion/Sculpture_management/ScuptureRegister';
 import MainComponent from './layouts/public_sesion/Prueba';
 import TabletView from './layouts/public_sesion/sculptors/TabletID';
 import QrExpirado from './layouts/public_sesion/user_profile/QrExpirado';
 import Error from './layouts/Error';
 import Main from './layouts/public_sesion/main/Main';
-
+import EditEventManager from "./layouts/private_sesion/Event_management/Edit_Event"
+import DeleteEventManager from "./layouts/private_sesion/Event_management/Delete_event"
+import EventRegister from "./layouts/private_sesion/Event_management/Register_event"
+import SculptureAllList from "./layouts/private_sesion/Allsculptures"
 function App() {
     const [loading, setLoading] = useState(true);
 
@@ -41,14 +44,14 @@ function App() {
 
 function ContentWithRouter() {
     const location = useLocation();
-    const hideNavbarAndFooter = location.pathname === '/tablet' || location.pathname === '/Qr/expirado' || location.pathname === '/error';
+    const hideNavbarAndFooter = location.pathname === '/Todas/esculturas' || location.pathname === '/Qr/expirado' || location.pathname === '/error';
 
     return (
         <>
             {!hideNavbarAndFooter && <Navbar />}
             <Routes>
                 <Route path="/2/:currentUrl" element={<MainComponent />} />
-                <Route path="/1" element={<Main />} />
+                <Route path="/" element={<Main />} />
                 <Route path="/createAccount" element={<Addnew />} /> 
                 <Route path="/escultor/:id" element={<SculptorProfile />} />
                 <Route path="/esculturas" element={<Sculpturelist />} />
@@ -57,13 +60,18 @@ function ContentWithRouter() {
                 <Route path='/admin' element={<Panel />} />
 
                 {/* probe este modulo y tuve inconvenientes, al parecer provenientes de Firestore */}
-                <Route path='/register/scultors' element={<SculptorRegister />} />
+                <Route path='/escultores/add' element={<SculptorRegister />} />
                 
                 {/* Por lo que vi este componente no esta terminado */}
-                <Route path='/register/sculpture' element={<ScuptureRegister />} />
+                <Route path='/esculturas/add' element={<ScuptureRegister />} />
                 <Route path='/tablet' element={<TabletView />}/>
                 <Route path='/Qr/expirado' element={ <QrExpirado/>}/>
                 <Route path='/error' element={<Error/>}/>
+                <Route path='/eventos/edit' element={<EditEventManager/>}/>
+                <Route path='/eventos/delete' element={<DeleteEventManager/>}/>
+                <Route path='/eventos/add' element={<EventRegister/>}/>
+                <Route path='/Todas/esculturas' element={<SculptureAllList/>}/>
+
             </Routes>
             {!hideNavbarAndFooter && <Footerr />}
         </>

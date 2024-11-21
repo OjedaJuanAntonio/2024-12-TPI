@@ -1,3 +1,23 @@
+# from rest_framework import serializers
+# from .models import Escultor
+
+# class EscultorSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Escultor
+#         fields = ['dni', 'nacionalidad', 'nombre', 'apellido', 'biografia', 'telefono']
+
+
+# class EscultorRegSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Escultor
+#         fields = ['dni', 'nacionalidad', 'nombre', 'apellido', 'biografia', 'telefono']
+
+
+#     def get_dni(self):
+#         dni_esc = self.validated_data.get('dni')
+#         return dni_esc
+
+
 from rest_framework import serializers
 from .models import Escultor, EscultorInvitado
 

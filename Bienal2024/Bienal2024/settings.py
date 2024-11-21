@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from urllib.parse import urlparse
 #from decouple import config
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 import os
 
 import firebase_admin
@@ -32,7 +32,7 @@ if not firebase_admin._apps:  # Evitar inicialización múltiple
     })
 
 
-# # load_dotenv()
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 #BASE_DIR = Path(__file__).resolve().parent.parent
@@ -60,13 +60,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'gestion_voto',
+    #'gestion_voto',
     'gestionEsculturas',
     'gestionEscultores',
     'gestionUsuarios',
     'gestionEventos',
     'gestionSponsors',
-    #'gestionVotos',
+    'gestionVotos',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',

@@ -5,7 +5,10 @@ from rest_framework.routers import DefaultRouter
 from gestionEscultores.views import EscultorViewSet
 from gestionEventos.views import EventoViewSet
 from gestionEsculturas.views import EsculturaViewSet
-from gestion_voto.views import VotoViewSet  # Aquí no necesitamos 'votacion'
+from gestionVotos.views import VotoViewSet
+from gestionSponsors.views import SponsorViewSet
+from gestionUsuarios.views import UsuarioViewSet
+
 
 # Creando el enrutador para la gestión de votos
 router_voto = DefaultRouter()
@@ -23,6 +26,17 @@ router_escultores.register(r'escultores', EscultorViewSet, basename='escultor')
 router_eventos = DefaultRouter()
 router_eventos.register(r'eventos', EventoViewSet, basename='escultor')
 
+
+router_sponsors = DefaultRouter()
+router_sponsors.register(r'sponsors', SponsorViewSet, basename='spon')
+
+
+router_usuarios = DefaultRouter()
+router_usuarios.register(r'usuarios', UsuarioViewSet, basename='usuario')
+
+
+
+
 # Definir las URLs del proyecto
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,4 +49,6 @@ urlpatterns = [
     *router_esculturas.urls,  # Rutas para esculturas
     *router_eventos.urls,     # Rutas para eventos
     *router_voto.urls,        # Rutas para votos
+    *router_sponsors.urls,
+    *router_usuarios.urls,
 ]

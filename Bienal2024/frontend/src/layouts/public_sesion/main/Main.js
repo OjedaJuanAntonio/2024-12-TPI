@@ -3,7 +3,6 @@ import EventlistMain from '../events/EventlistMain';
 import Map from '../../Map';
 import AutoPlay from '../sculptors/SculptorslistMain';
 import { Mainvideo1 ,Mainvideo2 } from './Mainvideos';
-import Starranking from "../sculptures/Starranking"
 
 
 const Main = () => (
@@ -13,7 +12,7 @@ const Main = () => (
         <EventlistMain />
         <Mainvideo2/>
         <AutoPlay/>
-        <Starranking/>
+
     </>
 );
 

@@ -11,7 +11,6 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  SimpleGrid,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -20,9 +19,9 @@ import {
   ModalBody,
   ModalFooter
 } from '@chakra-ui/react';
-import Preview from './Preview';
-import Loginbackground from '../../assets/Loginbackground.jpg';
-import Uploader from './Uploader';
+import Preview from '../Preview';
+import Loginbackground from '../../../assets/Loginbackground.jpg';
+import Uploader from '../Uploader';
 
 const Sculpture_register = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

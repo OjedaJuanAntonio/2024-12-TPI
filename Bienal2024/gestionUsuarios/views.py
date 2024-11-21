@@ -1,36 +1,60 @@
-from rest_framework.views import APIView
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework import status
-from firebase_admin import firestore
+from .serializers import UsuarioSerializer
+from firebase_admin import db
 
-db = firestore.client()
 
-class RegisterView(APIView):
-    def post(self, request):
-        data = request.data
+# Inicializar Realtime Database
+ref = db.reference('usuarios')
+
+
+class UsuarioViewSet(viewsets.ViewSet):
+    """
+    ViewSet para manejar usuarios autenticados desde Auth0, usando Firebase Realtime Database.
+    """
+
+    def create(self, request):
+        """
+        Crea un nuevo usuario con los datos proporcionados por Auth0 en Firebase.
+        """
+        serializer = UsuarioSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                # Verificar si el usuario ya existe en Firebase (por auth0_id)
+                sub = serializer.validated_data['sub']
+                user_ref = ref.child(sub)
+                
+                if user_ref.get():  # Si el usuario ya existe
+                    return Response({"message": "Usuario ya existe"}, status=status.HTTP_200_OK)
+                
+                # Crear un nuevo usuario en Firebase
+                user_ref.set(serializer.validated_data)  # Guardar los datos en Firebase
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def list(self, request):
+        """
+        Obtiene todos los usuarios desde Firebase.
+        """
         try:
-            # Registrar usuario en Firestore
-            db.collection('users').document(data['uid']).set({
-                'name': data['name'],
-                'email': data['email']
-            })
-            return Response({'message': 'Usuario registrado con éxito'}, status=status.HTTP_201_CREATED)
+            users = ref.get()  # Obtener todos los usuarios desde Firebase
+            if users:
+                users_list = [{'id': key, **value} for key, value in users.items()]
+                return Response(users_list, status=status.HTTP_200_OK)
+            return Response([], status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class LoginView(APIView):
-    def post(self, request):
-        return Response({'message': 'Funcionalidad de inicio de sesión no implementada'})
-
-class ProfileView(APIView):
-    def get(self, request):
-        user_id = request.query_params.get('uid')
+    def retrieve(self, request, pk=None):
+        """
+        Obtiene un usuario por su auth0_id desde Firebase.
+        """
         try:
-            # Obtener datos del usuario desde Firestore
-            user_doc = db.collection('users').document(user_id).get()
-            if user_doc.exists:
-                return Response(user_doc.to_dict(), status=status.HTTP_200_OK)
-            else:
-                return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            user = ref.child(pk).get()  # Obtener el usuario desde Firebase por su auth0_id
+            if user:
+                return Response({'id': pk, **user}, status=status.HTTP_200_OK)
+            return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

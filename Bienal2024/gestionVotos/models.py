@@ -1,15 +1,21 @@
 from django.db import models
-from django.contrib.auth.models import User# Asegúrate de que la ruta sea correcta
-#from gestionEscultores.models import Escultura
+from django.core.validators import MinValueValidator, MaxValueValidator  # Agregar esta línea
+#from gestionEsculturas.models import Escultura
+#from gestionUsuarios.models import Usuario  # Asumiendo que gestionUsuarios tiene un modelo Usuario
 
-# class Votos(models.Model):
-#     id_votante = models.ForeignKey(User, on_delete=models.CASCADE)
-#     #escultura = models.ForeignKey(Escultura, on_delete=models.CASCADE)
-#     fecha_voto = models.DateTimeField(auto_now_add=True)
-#     estrellas = models.IntegerField()
+class Voto(models.Model):
+    id_escultura = models.TextField(max_length=500)
+    id_usuario = models.TextField(max_length=500)
+    puntaje = models.IntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ]
+    )
+    fecha_voto = models.DateTimeField(auto_now_add=True)
 
-#     class Meta:
-#         unique_together = ('id_votante', 'escultura')  # Asegura que un visitante solo pueda votar una vez por escultura
+    class Meta:
+        unique_together = ('id_escultura', 'id_usuario')  # Garantiza que un usuario solo pueda votar una vez por escultura
 
-#     def __str__(self):
-#         return f"{self.id_votante} votó por el {self.fecha_voto}"
+    def __str__(self):
+        return f"Voto de {self.id_usuario.name} a la escultura {self.id_escultura.titulo} con puntaje {self.puntaje}"

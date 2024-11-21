@@ -1,151 +1,193 @@
-import React, { useState, useEffect } from 'react';
-import { db } from '../../../Firebase'; 
-import { getDocs, collection } from 'firebase/firestore';
-import { SimpleGrid, Stack, Card, CardBody, Image, Heading, Text, Divider, CardFooter, Avatar, Box, Button } from '@chakra-ui/react';
-import Starranking from './Starranking';
-import FilterBar from './FiltterBar'; 
-import HashLoader from 'react-spinners/HashLoader'; 
-import 'animate.css'; 
-import QRCode from 'react-qr-code'
-import axios from 'axios';
+import {
+  Box,
+  Image,
+  Text,
+  IconButton,
+  VStack,
+  HStack,
+  Avatar,
+  Skeleton,
+  SkeletonText,
+  SkeletonCircle,
+} from "@chakra-ui/react";
+import { FaShareAlt } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import FiltterBar from "./FiltterBar";
 
-function Sculpturelist() {
-    const [esculturas, setEsculturas] = useState([]); 
-    const [loading, setLoading] = useState(true);
+const SculptureList = () => {
+  const [esculturas, setEsculturas] = useState([]);
+  const [filteredEsculturas, setFilteredEsculturas] = useState([]);
+  const [escultores, setEscultores] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
-
-
-    const [ratings, setRatings] = useState({});
-    const [votedStatus, setVotedStatus] = useState({}); // Almacena el estado de votación por escultura
-    const [showQR, setShowQR] = useState(null); // Almacena la escultura para la cual se muestra el QR
-    const [timestamp, setTimestamp] = useState(Date.now()); // Estado para el timestamp del QR
-    useEffect(() => {
-        const obtenerEsculturas = async () => {
-            setLoading(true);
-            const consulta = await axios.get('http://127.0.0.1:8000/escultores/obt_escult/'); 
-            const listaEsculturas = consulta.data.map(escultura => ({ id: escultura.ID_Escultura, ...escultura }));
-            setEsculturas(listaEsculturas); 
-            setLoading(false);
-        };
-
-        obtenerEsculturas(); 
-    }, []); 
-
-
-    const truncateText = (text, limit) => {
-        if (text.length > limit) {
-            return text.substring(0, limit) + '...';
-        }
-        return text;
+  // Carga inicial de datos
+  useEffect(() => {
+    const fetchEsculturas = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/esculturas/");
+        const data = await response.json();
+        setEsculturas(data);
+        setFilteredEsculturas(data);
+      } catch (error) {
+        console.error("Error fetching esculturas:", error);
+      }
     };
 
-    const handleQRCodeClick = (esculturaId) => {
-        // Muestra el QR code correspondiente a la escultura seleccionada
-        setShowQR(esculturaId);
+    const fetchEscultores = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/escultores/");
+        const data = await response.json();
+        // Crear un mapa de escultores para acceso rápido por ID
+        const escultoresMap = data.reduce((acc, escultor) => {
+          acc[escultor.id] = escultor;
+          return acc;
+        }, {});
+        setEscultores(escultoresMap);
+      } catch (error) {
+        console.error("Error fetching escultores:", error);
+      }
     };
 
-    const handleRatingChange = (id, newRating) => {
-        setRatings((prevRatings) => ({
-            ...prevRatings,
-            [id]: newRating, // Guarda la calificación usando el ID
-        }));
-        console.log(`Nueva calificación para ${id}: ${newRating}`);
-        setVotedStatus((prevStatus) => ({
-            ...prevStatus,
-            [id]: true, // Marca esta escultura como votada
-        }));
+    const fetchData = async () => {
+      setIsLoading(true);
+      await Promise.all([fetchEsculturas(), fetchEscultores()]);
+      setIsLoading(false);
     };
 
+    fetchData();
+  }, []);
 
+  // Manejo de filtros
+  const handleFilterChange = (type, value) => {
+    let updatedEsculturas = [...esculturas];
 
-useEffect(() => {
-    const interval = setInterval(() => {
-        setTimestamp(Date.now()); // Actualiza el timestamp cada minuto
-    }, 600); // 1 minuto = 60,000 ms
+    if (type === "categoria") {
+      updatedEsculturas = esculturas.filter(
+        (escultura) => escultura.categoria === value
+      );
+    } else if (type === "orden") {
+      if (value === "Artista") {
+        updatedEsculturas.sort((a, b) => a.autor.localeCompare(b.autor));
+      } else if (value === "Fecha") {
+        updatedEsculturas.sort(
+          (a, b) => new Date(b.fecha) - new Date(a.fecha)
+        );
+      } else if (value === "AZ") {
+        updatedEsculturas.sort((a, b) => a.titulo.localeCompare(b.titulo));
+      } else if (value === "ZA") {
+        updatedEsculturas.sort((a, b) => b.titulo.localeCompare(a.titulo));
+      }
+    }
+    setFilteredEsculturas(updatedEsculturas);
+  };
 
-    return () => clearInterval(interval); // Limpia el intervalo cuando el componente se desmonta
-}, []);
+  // Función para compartir escultura
+  const handleShare = (escultura) => {
+    const shareUrl = `${window.location.origin}/escultura/${escultura.id}`;
+    if (navigator.share) {
+      navigator
+        .share({
+          title: escultura.titulo,
+          text: escultura.intencion,
+          url: shareUrl,
+        })
+        .catch((error) => console.error("Error:", error));
+    } else {
+      alert("Compartir no disponible en este navegador");
+    }
+  };
 
-    return (
-        <>
-            <FilterBar/>
-            {loading ? (
-                <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-                    <HashLoader color="black" />
+  return (
+    <Box p="4" bg="gray.100" minH="100vh">
+      <FiltterBar onFilterChange={handleFilterChange} />
+
+      <Box
+        display="grid"
+        gridTemplateColumns={{
+          base: "1fr",
+          sm: "repeat(2, 1fr)",
+          lg: "repeat(3, 1fr)",
+        }}
+        gap="6"
+        className="animate__animated animate__zoomIn"
+      >
+        {isLoading
+          ? Array.from({ length: 6 }).map((_, index) => (
+              <Box
+                key={index}
+                maxW="sm"
+                borderWidth="1px"
+                borderRadius="lg"
+                overflow="hidden"
+                boxShadow="lg"
+                p="4"
+                bg="white"
+              >
+                <HStack spacing={4} align="center" mb={2}>
+                  <SkeletonCircle size="10" />
+                  <Box flex="1">
+                    <SkeletonText noOfLines={1} spacing="2" />
+                  </Box>
+                </HStack>
+                <Skeleton height="100px" />
+                <SkeletonText mt="4" noOfLines={3} spacing="4" />
+              </Box>
+            ))
+          : filteredEsculturas.map((escultura) => {
+              const escultor = escultores[escultura.id_escultor] || {};
+              return (
+                <Box
+                  key={escultura.id}
+                  maxW="sm"
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  bg="white"
+                  overflow="hidden"
+                  boxShadow="2xl"
+                  transition="all 0.3s ease"
+                  transform="scale(1)"
+                  _hover={{ transform: "scale(1.05)", boxShadow: "3xl" }}
+                >
+                  <HStack spacing="2" m="4">
+                    <Avatar
+                      size="sm"
+                      name={escultor.nombre || "Autor desconocido"}
+                      src={escultor.photo || ""}
+                    />
+                    <Text fontSize="sm" color="gray.500">
+                      {escultor.nombre || "NN"}
+                    </Text>
+                  </HStack>
+                  <Image src={escultura.url_imagen} alt={escultura.titulo} />
+                  <Box p="4">
+                    <VStack align="start" spacing="2">
+                      <Text fontWeight="bold" fontSize="lg">
+                        {escultura.titulo}
+                      </Text>
+                    </VStack>
+                    <Text
+                      mt="3"
+                      fontSize="sm"
+                      color="gray.600"
+                      noOfLines={2}
+                    >
+                      {escultura.intencion}
+                    </Text>
+                  </Box>
+                  <Box p="4" display="flex" justifyContent="flex-end" gap="2">
+                    <IconButton
+                      aria-label="Compartir"
+                      icon={<FaShareAlt />}
+                      variant="ghost"
+                      onClick={() => handleShare(escultura)}
+                    />
+                  </Box>
                 </Box>
-            ) : (
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 ,xl:4 }} spacing={4}>
-                    {esculturas.length > 0 ? (
-                        esculturas.map((escultura) => (
-                            <Card key={escultura.ID_Escultura} maxW='sm' className="animate__animated animate__backInUp" boxShadow='lg'>
-                                <CardBody>
-                                    <Box position="relative" display="inline-block">
-                                        <Avatar 
-                                            name={escultura.Titulo} 
-                                            src={escultura.avatarUrl}  
-                                            position="absolute" 
-                                            top="10px" 
-                                            left="10px"
-                                            zIndex="1"
-                                        />
-                                        <Image 
-                                            src={escultura.Img}  
-                                            alt={escultura.first_name} 
-                                            borderRadius="lg" 
-                                            objectFit="cover" 
-                                            width="100%"
-                                            height="150px"
-                                        />
-                                    </Box>
-                                    
-                                    <Stack mt='6' spacing='3'>
-                                        <Heading size='md'>{escultura.Titulo}</Heading>
-                                        <Text>{truncateText(escultura.escultor_nombre, 250)}</Text>
-                                        <Text>estrellas:{escultura.ranking}</Text>
+              );
+            })}
+      </Box>
+    </Box>
+  );
+};
 
-                                        {/* Botón para mostrar QR */}
-                                        <Button onClick={() => handleQRCodeClick(escultura.id)}>
-                                            Codigo QR
-                                        </Button>
-                                      
-                                        {/* Muestra el código QR si el usuario ha hecho clic en el botón */}
-                                        {showQR === escultura.id && (
-                                            <Box mt={4}>
-                                                 <QRCode value={`http://localhost:3000/vote/${escultura.id}?ts=${timestamp}`} />
-                                            </Box>
-                                        )}
-                                        
-                                        {ratings[escultura.id] && (
-                                            <Text fontWeight="bold">
-                                                {/* Muestra el valor de la votación o un texto */}
-                                            </Text>
-                                        )}
-                                    </Stack>
-                                </CardBody>
-                              
-                                <CardFooter m={2}>
-                                    <Box flexShrink={0}>
-                                        {votedStatus[escultura.id] ? (
-                                            <Text fontSize="lg" fontWeight={'bold'} mr={2}>
-                                                Gracias por votar
-                                            </Text>
-                                        ) : (
-                                            <>
-                                                <Text fontSize="lg" fontWeight={'bold'} mr={2}>
-                                                    Votar:
-                                                </Text>
-                                                <Starranking onRatingChange={(newRating) => handleRatingChange(escultura.id, newRating)} />
-                                            </>
-                                        )}
-                                    </Box>
-                                </CardFooter>
-                            </Card>
-                        ))
-                    ) : null}
-                </SimpleGrid>
-            )}
-        </>
-    );
-}
-
-export default Sculpturelist;
+export default SculptureList;

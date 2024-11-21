@@ -1,42 +1,67 @@
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework import status
-from firebase_admin import firestore
-from .serializers import votoSerializer
-
-# Firestore client (ya inicializado en settings.py)
-db = firestore.client()
+from .serializers import VotoSerializer
+from firebase_admin import db
 
 
-@api_view(['POST'])
-@authentication_classes([])  # Puedes configurar autenticación específica aquí si la necesitas.
-@permission_classes([])  # Puedes requerir permisos específicos aquí si es necesario.
-def votacion(request):
+# Inicializar Realtime Database
+ref = db.reference('votos')
+
+
+class VotoViewSet(viewsets.ViewSet):
     """
-    Maneja la lógica de votación utilizando Firebase Firestore.
+    ViewSet para manejar los votos de las esculturas.
     """
-    if request.method == 'POST':
-        serializer = votoSerializer(data=request.data)
+
+    def list(self, request):
+        """
+        Obtiene todos los votos registrados desde Firebase Realtime Database.
+        """
+        try:
+            votos = ref.get()  # Obtiene los votos desde Firebase
+            if votos:
+                # Convertir los datos en una lista de diccionarios para serializar
+                votos_list = [{'id': key, **value} for key, value in votos.items()]
+                return Response(votos_list, status=status.HTTP_200_OK)
+            return Response([], status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def create(self, request):
+        """
+        Crea un nuevo voto para una escultura en Firebase.
+        """
+        serializer = VotoSerializer(data=request.data)
         if serializer.is_valid():
-            usuario = request.user.username  # O cualquier identificador único del usuario
-            escultor = serializer.validated_data['escultor']
-
             try:
-                # Verificar si el usuario ya votó por este escultor
-                voto_docs = db.collection('votos').where('usuario', '==', usuario).where('escultor', '==', escultor).stream()
-                if any(voto_docs):
-                    return Response({'error': "Ya has votado por este escultor."}, status=status.HTTP_400_BAD_REQUEST)
-
-                # Guardar el voto en Firestore
-                data = {
-                    'usuario': usuario,
-                    'escultor': escultor,
-                    'fecha': firestore.SERVER_TIMESTAMP,
-                }
-                db.collection('votos').add(data)
-                return Response(data, status=status.HTTP_201_CREATED)
+                data = serializer.validated_data
+                new_ref = ref.push(data)  # Añadir el voto a Firebase
+                return Response({'id': new_ref.key, **data}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, pk=None):
+        """
+        Obtiene un voto específico por ID desde Firebase.
+        """
+        try:
+            voto = ref.child(pk).get()  # Obtiene el voto por ID desde Firebase
+            if voto:
+                return Response({'id': pk, **voto}, status=status.HTTP_200_OK)
+            return Response({'error': 'Voto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def destroy(self, request, pk=None):
+        """
+        Elimina un voto específico por ID desde Firebase.
+        """
+        try:
+            voto_ref = ref.child(pk)
+            if voto_ref.get():
+                voto_ref.delete()  # Elimina el voto desde Firebase
+                return Response({'message': 'Voto eliminado'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'error': 'Voto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

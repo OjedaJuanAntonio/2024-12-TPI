@@ -1,8 +1,15 @@
 from rest_framework import serializers
-# from django.contrib.auth.models import User
-from .models import Votos
+from .models import Voto
 
-class votoSerializer(serializers.ModelSerializer):
+class VotoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Votos
-        fields = ['escultura', 'estrellas', 'id_votante']
+        model = Voto
+        fields = ['id_escultura', 'id_usuario', 'puntaje']
+
+    def validate(self, data):
+        """
+        Validar que un usuario no haya votado ya por la misma escultura.
+        """
+        if Voto.objects.filter(id_escultura=data['id_escultura'], id_usuario=data['id_usuario']).exists():
+            raise serializers.ValidationError("Este usuario ya ha votado por esta escultura.")
+        return data
