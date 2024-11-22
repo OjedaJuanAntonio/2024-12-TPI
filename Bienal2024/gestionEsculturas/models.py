@@ -7,7 +7,8 @@ class Escultura(models.Model):
     intencion = models.TextField()
     tematica = models.TextField(max_length=500)
     material_principal = models.CharField(max_length=100)
-    url_imagen = models.URLField(max_length=500)  # Campo para la URL de la imagen
+    url_imagen = models.URLField(max_length=500)  
+    votos = models.IntegerField(default=0) 
 
     def __str__(self):
         return self.titulo

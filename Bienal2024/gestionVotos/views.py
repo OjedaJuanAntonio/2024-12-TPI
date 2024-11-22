@@ -4,7 +4,6 @@ from .serializers import VotoSerializer
 from firebase_admin import db
 
 
-# Inicializar Realtime Database
 ref = db.reference('votos')
 
 
@@ -18,9 +17,8 @@ class VotoViewSet(viewsets.ViewSet):
         Obtiene todos los votos registrados desde Firebase Realtime Database.
         """
         try:
-            votos = ref.get()  # Obtiene los votos desde Firebase
+            votos = ref.get() 
             if votos:
-                # Convertir los datos en una lista de diccionarios para serializar
                 votos_list = [{'id': key, **value} for key, value in votos.items()]
                 return Response(votos_list, status=status.HTTP_200_OK)
             return Response([], status=status.HTTP_200_OK)
@@ -35,7 +33,7 @@ class VotoViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             try:
                 data = serializer.validated_data
-                new_ref = ref.push(data)  # Añadir el voto a Firebase
+                new_ref = ref.push(data)  
                 return Response({'id': new_ref.key, **data}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -46,7 +44,7 @@ class VotoViewSet(viewsets.ViewSet):
         Obtiene un voto específico por ID desde Firebase.
         """
         try:
-            voto = ref.child(pk).get()  # Obtiene el voto por ID desde Firebase
+            voto = ref.child(pk).get()
             if voto:
                 return Response({'id': pk, **voto}, status=status.HTTP_200_OK)
             return Response({'error': 'Voto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
@@ -60,7 +58,7 @@ class VotoViewSet(viewsets.ViewSet):
         try:
             voto_ref = ref.child(pk)
             if voto_ref.get():
-                voto_ref.delete()  # Elimina el voto desde Firebase
+                voto_ref.delete() 
                 return Response({'message': 'Voto eliminado'}, status=status.HTTP_204_NO_CONTENT)
             return Response({'error': 'Voto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:

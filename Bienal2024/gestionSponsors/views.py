@@ -34,7 +34,7 @@ class SponsorViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             try:
                 data = serializer.validated_data
-                new_ref = ref.push(data)  # Crea el sponsor en la base de datos
+                new_ref = ref.push(data)  
                 return Response({'id': new_ref.key, **data}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
