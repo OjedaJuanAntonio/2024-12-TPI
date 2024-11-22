@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Text, Image, VStack } from '@chakra-ui/react';
-import TabletView from '../public_sesion/sculptors/TabletID';
+import { useNavigate } from 'react-router-dom'; // Importar useNavigate
 
 const SculptureAllList = () => {
   const [esculturas, setEsculturas] = useState([]); // Lista de esculturas
-  const [selectedSculpture, setSelectedSculpture] = useState(null); // Escultura seleccionada
+  const navigate = useNavigate(); // Hook para navegar entre rutas
 
   useEffect(() => {
     fetch('http://localhost:8000/esculturas/')
@@ -12,11 +12,6 @@ const SculptureAllList = () => {
       .then((data) => setEsculturas(data))
       .catch((error) => console.error('Error fetching esculturas:', error));
   }, []);
-
-  if (selectedSculpture) {
-    // Renderizar TabletView con la escultura seleccionada
-    return <TabletView sculpture={selectedSculpture} />;
-  }
 
   return (
     <Box p="5">
@@ -31,15 +26,8 @@ const SculptureAllList = () => {
             width="100%"
             display="flex"
             justifyContent="space-between"
-            alignItems="center">
-
-
-
-
-
-
-
-
+            alignItems="center"
+          >
             <Box display="flex" alignItems="center">
               <Image
                 src={escultura.url_imagen}
@@ -54,7 +42,7 @@ const SculptureAllList = () => {
             </Box>
             <Button
               colorScheme="teal"
-              onClick={() => setSelectedSculpture(escultura)}
+              onClick={() => navigate(`/tabletview/${escultura.id}`)} // Navegar a la ruta dinámica
             >
               Formato Tablet
             </Button>

@@ -1,22 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Input,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Button,
-  useToast,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Text,
+import {Box,Input,Table,Thead,Tbody,Tr,Th,Td,Button,useToast,Modal,ModalOverlay,ModalContent, ModalHeader,ModalBody,
+  ModalFooter,Text,
 } from "@chakra-ui/react";
 import { PinInput, PinInputField } from "@chakra-ui/react";
 
@@ -90,7 +74,7 @@ const DeleteEventManager = () => {
           prev.filter((evento) => evento.id !== selectedEvento.id)
         );
         setIsModalOpen(false); // Cerrar el modal
-        setPin(""); // Resetear el PIN
+        setPin(""); 
       })
       .catch((error) => {
         console.error("Error al eliminar el evento:", error);

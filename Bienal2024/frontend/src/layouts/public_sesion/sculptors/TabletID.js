@@ -1,8 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import DynamicQRCode from '../../private_sesion/QRcoding';
 
-const TabletView = ({ sculpture }) => {
+const TabletView = () => {
+  const { id } = useParams(); // Obtener el ID de la ruta
+  const [sculpture, setSculpture] = useState(null); // Escultura seleccionada
+
+  useEffect(() => {
+    // Fetch de la escultura específica por ID
+    fetch(`http://localhost:8000/esculturas/${id}`)
+      .then((response) => response.json())
+      .then((data) => setSculpture(data))
+      .catch((error) => console.error('Error fetching sculpture:', error));
+  }, [id]);
+
+  if (!sculpture) {
+    return (
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+        background="linear-gradient(to bottom, #c0d9f7, #4b77a3)"
+      >
+        <Text fontSize="2xl" fontWeight="bold" color="gray.800">
+          Cargando...
+        </Text>
+      </Flex>
+    );
+  }
+
   return (
     <Flex
       direction="row"
@@ -28,19 +55,15 @@ const TabletView = ({ sculpture }) => {
           display="flex"
           justifyContent="center"
           alignItems="center"
-           boxShadow="lg"
+          boxShadow="lg"
         >
-        
-
-        <Image rounded="md" src={sculpture.url_imagen} alt={sculpture.titulo} />
-
-
+          <Image rounded="md" src={sculpture.url_imagen} alt={sculpture.titulo} />
         </Box>
         <Box>
           <Text fontSize="6xl" fontWeight="bold" color="gray.800" marginBottom="30px">
             {sculpture.nombre}
           </Text>
-          <Text fontSize="4xl"  marginBottom="40px">
+          <Text fontSize="4xl" marginBottom="40px">
             <strong>{sculpture.titulo}</strong>
           </Text>
         </Box>
@@ -58,7 +81,12 @@ const TabletView = ({ sculpture }) => {
         <Text fontSize="4xl" fontWeight="bold" color="gray.800" marginBottom="20px">
           Votar
         </Text>
-        <DynamicQRCode />
+        {/* Pasamos la información de la escultura como prop */}
+        <DynamicQRCode
+          url="http://localhost:3000/votar"
+          Countdown={10000}
+          data={sculpture.id}
+        />
       </Box>
     </Flex>
   );

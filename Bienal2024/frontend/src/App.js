@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'; 
 import { Box } from '@chakra-ui/react';
 import { HashLoader } from 'react-spinners';
-import Addnew from './layouts/public_sesion/login_form/Addnew';
 import SculptorProfile from './layouts/public_sesion/sculptors/SculptorProfile';
 import Navbar from './layouts/public_sesion/Navbar';
 import Footerr from './layouts/public_sesion/Footerr';
@@ -44,7 +43,7 @@ function App() {
 
 function ContentWithRouter() {
     const location = useLocation();
-    const hideNavbarAndFooter = location.pathname === '/Todas/esculturas' || location.pathname === '/Qr/expirado' || location.pathname === '/error';
+    const hideNavbarAndFooter = location.pathname === "/tabletview" || location.pathname === '/Qr/expirado' || location.pathname === '/error';
 
     return (
         <>
@@ -52,7 +51,7 @@ function ContentWithRouter() {
             <Routes>
                 <Route path="/2/:currentUrl" element={<MainComponent />} />
                 <Route path="/" element={<Main />} />
-                <Route path="/createAccount" element={<Addnew />} /> 
+                {/*<Route path="/createAccount" element={<Addnew />} /> A CHEQUEAR SI SIRVE PARA MAS ADELANTE LA LOGICA*/ }
                 <Route path="/escultor/:id" element={<SculptorProfile />} />
                 <Route path="/esculturas" element={<Sculpturelist />} />
                 <Route path="/actividades" element={<Allevents />} />
@@ -64,7 +63,7 @@ function ContentWithRouter() {
                 
                 {/* Por lo que vi este componente no esta terminado */}
                 <Route path='/esculturas/add' element={<ScuptureRegister />} />
-                <Route path='/tablet' element={<TabletView />}/>
+                <Route path="/tabletview/:id" element={<TabletView />} /> 
                 <Route path='/Qr/expirado' element={ <QrExpirado/>}/>
                 <Route path='/error' element={<Error/>}/>
                 <Route path='/eventos/edit' element={<EditEventManager/>}/>

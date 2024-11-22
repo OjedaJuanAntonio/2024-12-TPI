@@ -41,7 +41,7 @@ function Eventcard({ evento }) {
       </CardBody>
       <Image
         objectFit='cover'
-        src={evento.Img_Profile} // Corregido aquí
+        src={evento.Img_Profile} 
         alt={evento.imageAlt}
       />
 

@@ -21,9 +21,9 @@ function EventcardMain({ evento }) {
             direction={{ base: 'column', sm: 'row' }}
             overflow="hidden"
             variant="outline"
-            w="100%" // Ancho completo
-            maxW="400px" // Ancho máximo para dispositivos grandes
-            h="350px" // Altura fija para asegurar espacio para el botón
+            w="100%" 
+            maxW="400px"
+            h="350px" 
             mx="auto"
             p={4}
             style={{

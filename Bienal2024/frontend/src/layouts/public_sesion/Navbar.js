@@ -17,7 +17,7 @@ import {
   MenuItem,
   MenuGroup,
   MenuDivider,
-  Image
+  Image,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import Map from './user_profile/Navprofile';
@@ -31,22 +31,22 @@ const Navbar = () => {
     localStorage.removeItem('authUser'); // Elimina el usuario guardado
   };
 
-  // Persistir información del usuario y enviarla al backend
   useEffect(() => {
     if (isAuthenticated && user) {
-      // Extraer los campos necesarios
       const userData = {
         sub: user.sub,
+        given_name: user.given_name,
+        family_name: user.family_name,
         name: user.name,
         email: user.email,
         picture: user.picture,
         nickname: user.nickname,
       };
 
-      // Guardar en localStorage para persistencia local
+
       localStorage.setItem('authUser', JSON.stringify(userData));
 
-      // Realizar el POST al backend
+
       fetch('http://localhost:8000/usuarios/', {
         method: 'POST',
         headers: {
@@ -64,6 +64,7 @@ const Navbar = () => {
           console.log('Usuario guardado en el backend:', data);
         })
         .catch((error) => {
+          alert('Error al guardar el usuario en el backend. Por favor, intente nuevamente.');
           console.error('Error al enviar datos del usuario:', error);
         });
     }
@@ -71,6 +72,12 @@ const Navbar = () => {
 
   // Recuperar usuario desde localStorage
   const savedUser = JSON.parse(localStorage.getItem('authUser'));
+
+  const NavLink = ({ children }) => (
+    <Text px={2} py={1} _hover={{ textDecoration: 'none', fontSize: '1.2em' }} transition="font-size 0.2s ease">
+      {children}
+    </Text>
+  );
 
   return (
     <Box bg="black" px={4}>
@@ -84,23 +91,33 @@ const Navbar = () => {
           mr={4}
           bg="rgba(255, 255, 255, 0.3)"
           color="white"
-          _hover={{ bg: "rgba(255, 255, 255, 0.5)" }}
+          _hover={{ bg: 'rgba(255, 255, 255, 0.5)' }}
         />
 
         <HStack spacing={8} alignItems="center" flexGrow={1} color="white">
-          <Link to='/'>
+          <Link to="/">
             <Image
-              src='https://www.bienaldelchaco.org/2024/wp-content/uploads/2019/01/web-logo-130x50-3.png'
+              src="https://www.bienaldelchaco.org/2024/wp-content/uploads/2019/01/web-logo-130x50-3.png"
               alt="Bienal 2024 Logo"
               objectFit="contain"
-              boxSize={'120px'}
+              boxSize="120px"
             />
           </Link>
           <HStack as="nav" spacing={4} display={{ base: 'none', md: 'flex' }}>
-            <Link to='/esculturas'><NavLink>Esculturas</NavLink></Link>
-            <Link to='/admin'><NavLink><strong>Panel de Control</strong></NavLink></Link>
-            <Link to='/tablet'><NavLink><strong>Perfil votación</strong></NavLink></Link>
-            <Link to='/Todas/esculturas'><NavLink><strong>EsculturasTablet</strong></NavLink></Link>
+            <Link to="/esculturas">
+              <NavLink>Esculturas</NavLink>
+            </Link>
+            <Link to="/admin">
+              <NavLink>
+                <strong>Panel de Control</strong>
+              </NavLink>
+            </Link>
+
+            <Link to="/Todas/esculturas">
+              <NavLink>
+                <strong>Esculturas Tablet</strong>
+              </NavLink>
+            </Link>
             <NavLink>Otras Ediciones</NavLink>
           </HStack>
         </HStack>
@@ -109,17 +126,21 @@ const Navbar = () => {
           {isAuthenticated || savedUser ? (
             <Wrap>
               <Menu>
-                <MenuButton as={Avatar} src={user?.picture || savedUser?.picture} size='md' />
+                <MenuButton as={Avatar} src={user?.picture || savedUser?.picture} size="md" />
                 <MenuList>
                   <Text fontSize="md" px={4} py={2}>
                     ¡Hola, {user?.nickname || savedUser?.nickname}!
                   </Text>
-                  <MenuGroup title='Perfil'>
-                    <MenuItem><Map /></MenuItem>
-                    <MenuItem onClick={handleLogout} color="red.500" fontStyle='oblique'>Cerrar Sesión</MenuItem>
+                  <MenuGroup title="Perfil">
+                    <MenuItem>
+                      <Map />
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout} color="red.500" fontStyle="oblique">
+                      Cerrar Sesión
+                    </MenuItem>
                   </MenuGroup>
                   <MenuDivider />
-                  <MenuGroup title='Ayuda'>
+                  <MenuGroup title="Ayuda">
                     <MenuItem>FAQ</MenuItem>
                   </MenuGroup>
                 </MenuList>
@@ -128,13 +149,10 @@ const Navbar = () => {
           ) : (
             <Wrap>
               <Menu>
-                <MenuButton as={Avatar} src='https://bit.ly/broken-link' size='md' color="black" />
+                <MenuButton as={Avatar} src="https://bit.ly/broken-link" size="md" color="black" />
                 <MenuList>
                   <MenuGroup>
                     <MenuItem onClick={loginWithRedirect}>Iniciar Sesión</MenuItem>
-                    <Link to="/createAccount">
-                      <MenuItem>Crear Cuenta</MenuItem>
-                    </Link>
                   </MenuGroup>
                 </MenuList>
               </Menu>
@@ -147,7 +165,9 @@ const Navbar = () => {
         <Box pb={4} display={{ md: 'none' }}>
           <Stack as="nav" spacing={4}>
             <NavLink>Actividades</NavLink>
-            <Link to='/esculturas'><NavLink>Esculturas</NavLink></Link>
+            <Link to="/esculturas">
+              <NavLink>Esculturas</NavLink>
+            </Link>
             <NavLink>Otras Ediciones</NavLink>
           </Stack>
         </Box>
@@ -155,11 +175,5 @@ const Navbar = () => {
     </Box>
   );
 };
-
-const NavLink = ({ children }) => (
-  <Text px={2} py={1} _hover={{ textDecoration: 'none', fontSize: '1.2em' }} transition="font-size 0.2s ease">
-    {children}
-  </Text>
-);
 
 export default Navbar;

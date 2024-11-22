@@ -3,6 +3,9 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import {SwipperEventcardList} from '../Swippers'
 import { ClockLoader } from 'react-spinners';
+import { Box } from "@chakra-ui/react";
+
+
 
 
 function EventlistMain() {
@@ -17,7 +20,7 @@ function EventlistMain() {
                     throw new Error('Error al obtener los eventos');
                 }
                 const data = await response.json();
-                console.log(data); // Verifica la respuesta de la API
+       
                 setEventos(data || []);
                 setLoading(false);
             } catch (error) {
@@ -30,9 +33,12 @@ function EventlistMain() {
     }, []);
 
     if (loading) {
-        return <ClockLoader/>
-
-    }
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center" minH="100vh">
+            <ClockLoader />
+          </Box>
+        );
+      }
 
     return (
         <>

@@ -6,11 +6,10 @@ const EsculturasList = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Función para hacer la solicitud GET a tu API
     const fetchEsculturas = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:8000/escultores/obt_escult/');
-        setEsculturas(response.data);  // Asume que la respuesta es una lista de esculturas
+        setEsculturas(response.data);  
         setLoading(false);
       } catch (error) {
         console.error('Error al cargar las esculturas:', error);
@@ -18,7 +17,7 @@ const EsculturasList = () => {
       }
     };
 
-    fetchEsculturas(); // Llama a la función para cargar las esculturas al montar el componente
+    fetchEsculturas(); 
   }, []);
 
   if (loading) {
