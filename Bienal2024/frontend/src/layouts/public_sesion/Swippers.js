@@ -12,29 +12,26 @@ import { EffectCoverflow, Pagination } from 'swiper/modules';
 import { Link } from "react-router-dom";
 
 
-export function SwipperProfile() {
-    const location = useLocation();
-    const { escultor } = location.state;
-
+export function SwipperProfile({ images }) {
     return (
-        <Box width="100%" height="35vh">
-            <Swiper navigation={true} modules={[Navigation]} style={{ height: '100%' }}>
-                {[escultor.Img3, escultor.Img2, escultor.Img1, escultor.Img].map((img, index) => (
-                    <SwiperSlide key={index}>
-                        <Image
-                            src={img}
-                            alt={`Sculptor's work ${index + 1}`}
-                            objectFit="cover"
-                            width="100%"
-                            height="100%"
-                            fallbackSrc="path/to/placeholder-image.jpg"
-                        />
-                    </SwiperSlide>
-                ))}
-            </Swiper>
-        </Box>
+      <Box width="100%" height="35vh">
+        <Swiper navigation={true} modules={[Navigation]} style={{ height: '100%' }}>
+          {images.map((img, index) => (
+            <SwiperSlide key={index}>
+              <Image
+                src={img.url} // Accede a la URL desde el array de imágenes
+                alt={`Escultura ${index + 1}`}
+                objectFit="cover"
+                width="100%"
+                height="100%"
+                fallbackSrc="path/to/placeholder-image.jpg" // Cambia esta ruta a una imagen de respaldo
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </Box>
     );
-}
+  }
 
 
 

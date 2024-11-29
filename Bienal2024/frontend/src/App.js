@@ -20,6 +20,8 @@ import EditEventManager from "./layouts/private_sesion/Event_management/Edit_Eve
 import DeleteEventManager from "./layouts/private_sesion/Event_management/Delete_event"
 import EventRegister from "./layouts/private_sesion/Event_management/Register_event"
 import SculptureAllList from "./layouts/private_sesion/Allsculptures"
+import Podium from './layouts/private_sesion/Podio';
+import UserRegister from './layouts/private_sesion/AdminRegister'
 function App() {
     const [loading, setLoading] = useState(true);
 
@@ -51,17 +53,12 @@ function ContentWithRouter() {
             <Routes>
                 <Route path="/2/:currentUrl" element={<MainComponent />} />
                 <Route path="/" element={<Main />} />
-                {/*<Route path="/createAccount" element={<Addnew />} /> A CHEQUEAR SI SIRVE PARA MAS ADELANTE LA LOGICA*/ }
                 <Route path="/escultor/:id" element={<SculptorProfile />} />
                 <Route path="/esculturas" element={<Sculpturelist />} />
                 <Route path="/actividades" element={<Allevents />} />
                 <Route path="/votar/:id" element={<Votacion />} />
                 <Route path='/admin' element={<Panel />} />
-
-                {/* probe este modulo y tuve inconvenientes, al parecer provenientes de Firestore */}
                 <Route path='/escultores/add' element={<SculptorRegister />} />
-                
-                {/* Por lo que vi este componente no esta terminado */}
                 <Route path='/esculturas/add' element={<ScuptureRegister />} />
                 <Route path="/tabletview/:id" element={<TabletView />} /> 
                 <Route path='/Qr/expirado' element={ <QrExpirado/>}/>
@@ -70,7 +67,8 @@ function ContentWithRouter() {
                 <Route path='/eventos/delete' element={<DeleteEventManager/>}/>
                 <Route path='/eventos/add' element={<EventRegister/>}/>
                 <Route path='/Todas/esculturas' element={<SculptureAllList/>}/>
-
+                <Route path='/11' element={<Podium/>}/>
+                <Route path='/Admin/addAdm' element={<UserRegister/>}/>
             </Routes>
             {!hideNavbarAndFooter && <Footerr />}
         </>

@@ -33,6 +33,7 @@ const Navbar = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
+      console.log("Objeto completo del usuario:", user);
       const userData = {
         sub: user.sub,
         given_name: user.given_name,
@@ -41,6 +42,7 @@ const Navbar = () => {
         email: user.email,
         picture: user.picture,
         nickname: user.nickname,
+        type_user: 'normal'
       };
 
 
@@ -128,6 +130,9 @@ const Navbar = () => {
               <Menu>
                 <MenuButton as={Avatar} src={user?.picture || savedUser?.picture} size="md" />
                 <MenuList>
+                  <Text fontSize="md" px={4} py={2}>
+                    ¡Hola, {user?.nickname || savedUser?.nickname}!
+                  </Text>
                   <Text fontSize="md" px={4} py={2}>
                     ¡Hola, {user?.nickname || savedUser?.nickname}!
                   </Text>

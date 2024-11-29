@@ -6,9 +6,9 @@ import { PinInput, PinInputField } from "@chakra-ui/react";
 
 
 const DeleteEventManager = () => {
-  const [eventos, setEventos] = useState([]); // Lista completa de eventos
-  const [filteredEventos, setFilteredEventos] = useState([]); // Lista filtrada
-  const [searchQuery, setSearchQuery] = useState(""); // Texto del buscador
+  const [eventos, setEventos] = useState([]); 
+  const [filteredEventos, setFilteredEventos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedEvento, setSelectedEvento] = useState(null); // Evento seleccionado para eliminar
   const [pin, setPin] = useState(""); // PIN ingresado
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado del modal

@@ -42,7 +42,7 @@ const SculptureList = () => {
             ))
           : esculturas.map((escultura) => (
               <Box key={escultura.id} maxW="sm" borderWidth="1px" borderRadius="lg" bg="white" overflow="hidden" boxShadow="2xl" transition="all 0.3s ease" transform="scale(1)" _hover={{ transform: "scale(1.05)", boxShadow: "3xl" }}>
-                <Image src={escultura.url_imagen} alt={escultura.titulo} width="100%" height="60%" objectFit="cover" />
+                <Image src={escultura.url_imagen_1} alt={escultura.titulo} width="100%" height="60%" objectFit="cover" />
                 <Box p="4">
                   <VStack align="start" spacing="2">
                     <Text fontWeight="bold" fontSize="lg">{escultura.titulo}</Text>

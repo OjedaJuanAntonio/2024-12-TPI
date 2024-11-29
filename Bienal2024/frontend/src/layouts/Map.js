@@ -1,5 +1,13 @@
-import React from 'react';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Image, Button, Flex } from '@chakra-ui/react';
+import React, { useRef, useEffect } from 'react';
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  Button,
+} from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/hooks';
 import { FiMap } from 'react-icons/fi';
 import { useLocation } from 'react-router-dom';
@@ -9,10 +17,47 @@ function Map() {
   const location = useLocation();
   const nombre = location.pathname === "/1" ? "Mapa" : "Scanear QR";
 
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Accede a la cámara cuando el modal está abierto
+      const startCamera = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        } catch (err) {
+          console.error("Error al acceder a la cámara:", err);
+        }
+      };
+      startCamera();
+    } else {
+      // Detener la cámara cuando el modal se cierra
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject;
+        const tracks = stream.getTracks();
+        tracks.forEach((track) => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    }
+  }, [isOpen]);
+
   return (
     <>
-      <Button  onClick={onOpen} m={4} position="fixed" bottom="2vh"  right="2vh"  borderRadius="full" size="lg" colorScheme="teal" zIndex="9999"> 
-        {nombre} <FiMap /> 
+      <Button
+        onClick={onOpen}
+        m={4}
+        position="fixed"
+        bottom="2vh"
+        right="2vh"
+        borderRadius="full"
+        size="lg"
+        colorScheme="teal"
+        zIndex="9999"
+      >
+        {nombre} <FiMap />
       </Button>
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
@@ -20,13 +65,12 @@ function Map() {
           <ModalHeader>{nombre}</ModalHeader>
           <ModalCloseButton />
           <ModalBody p={0}>
-            {location.pathname === "/1" ? (
-              <Image src='https://www.bienaldelchaco.org/2024/wp-content/uploads/2024/07/plano-predio-v2-scaled.jpg' alt='Plano Predio' boxSize='100%' objectFit='cover' height="100%"  />
-            ) : (
-              <Flex justifyContent="center" alignItems="center" height="100%">
-                <Image src='https://www.shutterstock.com/image-vector/camera-icon-symbol-vector-flat-600nw-2475639413.jpg' boxSize='40%' objectFit='contain' />
-              </Flex>
-            )}
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              style={{ width: "100%", height: "100%" }}
+            ></video>
           </ModalBody>
         </ModalContent>
       </Modal>

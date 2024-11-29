@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Image, Text, Center, Spinner } from "@chakra-ui/react";
 import StarRating from "../../public_sesion/sculptures/Starranking";
 
-const CardVote = ({ idEscultura }) => {
+const CardVote = ({ idEscultura, idUsuario }) => {
   const [fetchedData, setFetchedData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -37,45 +37,37 @@ const CardVote = ({ idEscultura }) => {
       alert("Ya votaste por esta escultura.");
       return;
     }
-  
-    const votosActuales = fetchedData.votos;
-    const nuevosVotos = votosActuales + rate;
-  
-    console.log("Votos actuales:", votosActuales);
-    console.log("Voto seleccionado:", rate);
-    console.log("Votos actualizados:", nuevosVotos);
-  
-    // Crear un nuevo objeto con los datos actualizados
-    const updatedData = {
-      ...fetchedData,
-      votos: nuevosVotos,
+
+    // Crear el payload para el voto
+    const voteData = {
+      id_escultura: idEscultura,
+      id_usuario: 'google-oauth2|106061117643564383144',
+      puntaje: rate,
     };
-  
-    // Enviar el objeto completo al backend
-    fetch(`http://localhost:8000/esculturas/${idEscultura}`, {
-      method: "PUT", // Cambiado a PUT
+    console.log(voteData)
+    // Enviar el voto al backend
+    fetch(`http://localhost:8000/votos/`, {
+      method: "POST", // Usar POST para registrar un nuevo voto
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedData),
+      body: JSON.stringify(voteData),
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Error al actualizar los datos");
+          throw new Error("Error al enviar el voto");
         }
         return response.json();
       })
-      .then((updatedServerData) => {
-        console.log("Respuesta del servidor:", updatedServerData);
-        setFetchedData(updatedServerData); // Actualizar con los datos recibidos del servidor
-        setHasVoted(true);
+      .then((responseData) => {
+        console.log("Voto registrado con éxito:", responseData);
+        setHasVoted(true); // Indicar que el usuario ya votó
       })
       .catch((error) => {
-        console.error("Error al enviar los datos:", error);
+        console.error("Error al enviar el voto:", error);
         alert("Ocurrió un error al enviar tu voto. Intenta nuevamente.");
       });
   };
-  
 
   if (loading) {
     return (
