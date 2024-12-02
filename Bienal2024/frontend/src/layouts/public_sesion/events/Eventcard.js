@@ -9,26 +9,18 @@ import {
     CardBody, 
     Image, 
     CardFooter, 
-    Avatar, 
     IconButton, 
     Badge, 
-    Button, 
+    Button 
 } from '@chakra-ui/react';
 import { FaShareAlt, FaCalendarPlus } from 'react-icons/fa';
 
 function Eventcard({ evento }) {
-  // Generar fechas y horas falsas
-  const fechaInicio = "2024-12-10"; // Fecha de inicio falsa
-  const horaInicio = "12:00"; // Hora de inicio falsa
-  const fechaFin = "2024-12-10"; // Fecha de fin falsa
-  const horaFin = "14:00"; // Hora de fin falsa
-
   const handleAddToGoogleCalendar = () => {
-    // Extraer los datos necesarios del evento
-    const { nombre, tematica, ubicacion } = evento;
+    const { nombre, tematica, ubicacion, fecha_inicio, fecha_fin } = evento;
 
-    // Crear el enlace para Google Calendar
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(nombre)}&details=${encodeURIComponent(tematica)}&location=${encodeURIComponent(ubicacion)}&dates=${fechaInicio.replace(/-/g, '')}T${horaInicio.replace(':', '')}00Z/${fechaFin.replace(/-/g, '')}T${horaFin.replace(':', '')}00Z`;
+    // Crear el enlace para Google Calendar para un evento de todo el día
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(nombre)}&details=${encodeURIComponent(tematica)}&location=${encodeURIComponent(ubicacion)}&dates=${fecha_inicio.replace(/-/g, '')}/${fecha_fin.replace(/-/g, '')}`;
 
     // Abrir el enlace en una nueva pestaña
     window.open(googleCalendarUrl, '_blank');
@@ -47,53 +39,64 @@ function Eventcard({ evento }) {
       {/* Header */}
       <CardHeader bg="gray.50" p={4}>
         <Flex alignItems="center" justifyContent="space-between">
-          <Flex alignItems="center" gap={3}>
-            <Avatar src={evento.Img_Profile} name={evento.nombre} size="md" />
-            <Box>
-              <Heading size="md" color="gray.700">{evento.nombre}</Heading>
-              <Text fontSize="sm" color="gray.500">{evento.tematica}</Text>
-            </Box>
-          </Flex>
-          <Button
-      onClick={handleAddToGoogleCalendar}
-      variant="ghost"
-
-    
-    >
-      <FaCalendarPlus />
-    </Button>
+          <Box>
+            <Heading size="md" color="gray.700" ml={2}>{evento.nombre}</Heading>
+            <Badge colorScheme="blue" borderRadius="full" px={3}>{evento.tematica}</Badge>
+          </Box>
+          <Button onClick={handleAddToGoogleCalendar} variant="ghost">
+            <FaCalendarPlus />
+          </Button>
         </Flex>
       </CardHeader>
 
-      {/* Image */}
+      {/* Imagen */}
       <Image 
         objectFit="cover" 
-        src={evento.Img_Profile} 
+        src={evento.img_evento} 
         alt={evento.imageAlt || "Imagen del evento"} 
         h="200px" 
         w="100%" 
         borderBottom="1px solid #E2E8F0"
       />
 
-      {/* Body */}
-      <CardBody p={5}>
-        <Flex justifyContent="space-between" alignItems="center">
-          <Text color="gray.600" fontSize="sm" noOfLines={1}>
-            <strong>Ubicación:</strong> {evento.ubicacion || "Ubicación desconocida"}
-          </Text>
-          <Badge colorScheme="blue" borderRadius="full" px={3}>
-            {evento.tematica}
-          </Badge>
-        </Flex>
-        <Text mt={3} fontSize="sm" color="gray.500" noOfLines={3}>
-          Este evento es perfecto para aquellos interesados en <strong>{evento.tematica}</strong>. 
-          ¡No te lo pierdas!
-        </Text>
+      {/* Cuerpo */}
+      <CardBody p={6} bg="gray.50" borderRadius="md" boxShadow="sm">
+        <Box>
+          {/* Fechas en la misma fila */}
+          <Flex justifyContent="space-between" alignItems="flex-start" mb={6}>
+            <Box>
+              <Text color="gray.600" fontSize="sm" fontWeight="bold" mb={1}>
+                Fecha de inicio:
+              </Text>
+              <Text color="teal.700" fontSize="lg" fontWeight="semibold">
+                {evento.fecha_inicio}
+              </Text>
+            </Box>
+
+            <Box textAlign="right">
+              <Text color="gray.600" fontSize="sm" fontWeight="bold" mb={1}>
+                Fecha de finalización:
+              </Text>
+              <Text color="teal.700" fontSize="lg" fontWeight="semibold">
+                {evento.fecha_fin}
+              </Text>
+            </Box>
+          </Flex>
+
+          {/* Ubicación */}
+          <Box>
+            <Text color="gray.600" fontSize="sm" fontWeight="bold">
+              Ubicación:
+            </Text>
+            <Text color="teal.700" fontSize="md" fontWeight="semibold">
+              {evento.ubicacion || "Ubicación desconocida"}
+            </Text>
+          </Box>
+        </Box>
       </CardBody>
 
       {/* Footer */}
       <CardFooter
-        position="relative"
         display="flex"
         justifyContent="flex-end"
         p={2}
@@ -113,10 +116,7 @@ function Eventcard({ evento }) {
               url: shareUrl,
             }).catch((error) => console.error("Error al compartir:", error));
           }} 
-          mr={2}
         />
-        {/* Botón de Añadir a Google Calendar */}
-       
       </CardFooter>
     </Card>
   );

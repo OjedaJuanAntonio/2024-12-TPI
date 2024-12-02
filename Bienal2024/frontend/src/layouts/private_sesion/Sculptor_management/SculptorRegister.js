@@ -10,10 +10,11 @@ import {
   Heading,
   Text,
   useToast,
-  Image,
 } from "@chakra-ui/react";
-import Loginbackground from "../../../assets/Loginbackground.jpg";
-import Uploader from "../Uploader";
+import Select from "react-select";
+import { getNames } from "country-list"; // Nombres de países
+import Uploader from "../Uploader"; // Tu componente existente
+import Loginbackground from "../../../assets/Loginbackground.webp";
 import "animate.css";
 
 const Sculptor_register = () => {
@@ -31,7 +32,6 @@ const Sculptor_register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validaciones
     if (!name || !lastName || !nacionalidad || !email || !generalInfo) {
       toast({
         title: "Todos los campos son obligatorios",
@@ -52,6 +52,7 @@ const Sculptor_register = () => {
       generalInfo,
       phone,
       DNI,
+      photo,
     };
 
     try {
@@ -75,7 +76,6 @@ const Sculptor_register = () => {
         isClosable: true,
       });
 
-      // Limpia el formulario
       setName("");
       setLastName("");
       setNacionalidad("");
@@ -97,6 +97,11 @@ const Sculptor_register = () => {
       setIsSubmitting(false);
     }
   };
+
+  const countryOptions = getNames().map((name) => ({
+    value: name,
+    label: name,
+  }));
 
   return (
     <div
@@ -166,19 +171,17 @@ const Sculptor_register = () => {
             </FormControl>
             <FormControl id="nacionalidad" isRequired>
               <FormLabel color="teal.500">Nacionalidad/Nationality</FormLabel>
-              <Input
-                type="text"
-                value={nacionalidad}
-                onChange={(e) => setNacionalidad(e.target.value)}
-                placeholder="Ingrese la nacionalidad del escultor"
-                borderColor="teal.300"
-                _hover={{ borderColor: "teal.400" }}
+              <Select
+                options={countryOptions}
+                placeholder="Seleccione un país"
+                onChange={(option) => setNacionalidad(option.value)}
+                value={countryOptions.find((option) => option.value === nacionalidad)}
               />
             </FormControl>
           </SimpleGrid>
 
           <FormControl id="phone" isRequired>
-            <FormLabel color="teal.500">Telefono/ Phone</FormLabel>
+            <FormLabel color="teal.500">Teléfono/ Phone</FormLabel>
             <Input
               type="number"
               value={phone}
@@ -213,24 +216,7 @@ const Sculptor_register = () => {
             />
           </FormControl>
 
-          <Uploader setPhoto={setPhoto} />
-
-          {photo && (
-            <Box mt={2} textAlign="center">
-              <Text color="teal.600" fontSize="md">
-                {photo.name}
-              </Text>
-              <Image
-                src={URL.createObjectURL(photo)}
-                alt="Vista previa de la imagen"
-                maxW="200px"
-                mt={2}
-                borderRadius="full"
-                mx="auto"
-                objectFit="cover"
-              />
-            </Box>
-          )}
+          <Uploader setPhoto={setPhoto} label="Subir foto de perfil" folder="profile_pictures" />
 
           <Button
             type="submit"

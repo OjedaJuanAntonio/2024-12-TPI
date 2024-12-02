@@ -23,8 +23,16 @@ class UsuarioViewSet(viewsets.ViewSet):
                 # Verificar si el usuario ya existe en Firebase (por sub)
                 sub = serializer.validated_data['sub']
                 user_ref = ref.child(sub)
+                existing_user = user_ref.get()
 
-                if user_ref.get():  # Si el usuario ya existe
+                if existing_user:  # Si el usuario ya existe
+                    # Verificar el tipo de usuario si ya existe
+                    type_user = existing_user.get('type_user', 'normal')
+                    if type_user != 'normal':
+                        return Response(
+                            {"message": "Administrador ya registrado", "type_user": type_user},
+                            status=status.HTTP_400_BAD_REQUEST
+                        )
                     return Response({"message": "Usuario ya existe"}, status=status.HTTP_200_OK)
 
                 # Crear un nuevo usuario en Firebase
@@ -44,7 +52,7 @@ class UsuarioViewSet(viewsets.ViewSet):
         Obtiene todos los usuarios desde Firebase.
         """
         try:
-            users = ref.get()  
+            users = ref.get()
             if users:
                 users_list = [{'id': key, **value} for key, value in users.items()]
                 return Response(users_list, status=status.HTTP_200_OK)
@@ -58,10 +66,34 @@ class UsuarioViewSet(viewsets.ViewSet):
         Obtiene un usuario por su ID (sub) desde Firebase.
         """
         try:
-            user = ref.child(pk).get() 
+            user = ref.child(pk).get()
             if user:
                 return Response({'id': pk, **user}, status=status.HTTP_200_OK)
             return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             logger.error(f"Error al obtener usuario con ID {pk} desde Firebase: {e}")
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None):
+        """
+        Actualiza los datos de un usuario existente en Firebase.
+        """
+        serializer = UsuarioSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                user_ref = ref.child(pk)
+                existing_user = user_ref.get()
+
+                if not existing_user:  # Si el usuario no existe
+                    return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+                # Actualizar el usuario con los datos proporcionados
+                user_ref.update(serializer.validated_data)
+                return Response({"message": "Usuario actualizado correctamente"}, status=status.HTTP_200_OK)
+            except Exception as e:
+                logger.error(f"Error al actualizar usuario con ID {pk} en Firebase: {e}")
+                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # Log de errores de validación
+        logger.error(f"Errores de validación: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

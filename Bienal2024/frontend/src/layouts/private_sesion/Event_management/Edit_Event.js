@@ -12,7 +12,6 @@ import {
   useToast,
   FormControl,
   FormLabel,
-  Input as ChakraInput,
   VStack,
   Modal,
   ModalOverlay,
@@ -20,23 +19,25 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  HStack,
+  Heading,
 } from "@chakra-ui/react";
+import { EditIcon } from "@chakra-ui/icons";
 
 const EditEventManager = () => {
-  const [eventos, setEventos] = useState([]); // Lista completa de eventos
-  const [filteredEventos, setFilteredEventos] = useState([]); // Lista filtrada
-  const [searchQuery, setSearchQuery] = useState(""); // Texto del buscador
-  const [selectedEvento, setSelectedEvento] = useState(null); // Evento seleccionado para editar
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado del modal
+  const [eventos, setEventos] = useState([]);
+  const [filteredEventos, setFilteredEventos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedEvento, setSelectedEvento] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
-    // Fetch de eventos
     fetch("http://localhost:8000/eventos/")
       .then((response) => response.json())
       .then((data) => {
         setEventos(data);
-        setFilteredEventos(data); // Inicialmente sin filtros
+        setFilteredEventos(data);
       })
       .catch((error) => {
         console.error("Error fetching eventos:", error);
@@ -46,6 +47,7 @@ const EditEventManager = () => {
           status: "error",
           duration: 5000,
           isClosable: true,
+          position:'top'
         });
       });
   }, [toast]);
@@ -61,8 +63,8 @@ const EditEventManager = () => {
   };
 
   const handleEdit = (evento) => {
-    setSelectedEvento(evento); // Guardar el evento seleccionado
-    setIsModalOpen(true); // Abrir el modal
+    setSelectedEvento(evento);
+    setIsModalOpen(true);
   };
 
   const handleFieldChange = (field, value) => {
@@ -75,6 +77,22 @@ const EditEventManager = () => {
   const handleSave = () => {
     if (!selectedEvento) return;
 
+    // Validación adicional para fechas
+    const fechaInicio = new Date(selectedEvento.fecha_inicio);
+    const fechaFin = new Date(selectedEvento.fecha_fin);
+
+    if (fechaFin <= fechaInicio) {
+      toast({
+        title: "Error",
+        description: "La fecha de fin debe ser posterior a la fecha de inicio.",
+        status: "error",
+        position: 'top',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
     fetch(`http://localhost:8000/eventos/${selectedEvento.id}/`, {
       method: "PUT",
       headers: {
@@ -86,10 +104,11 @@ const EditEventManager = () => {
       .then((data) => {
         toast({
           title: "Evento actualizado",
-          description: `El evento "${data.nombre}" fue actualizado con éxito.`,
+          description: `El evento "${selectedEvento.nombre}" fue actualizado con éxito.`,
           status: "success",
           duration: 5000,
           isClosable: true,
+          position:'top'
         });
         setEventos((prev) =>
           prev.map((evento) =>
@@ -101,7 +120,7 @@ const EditEventManager = () => {
             evento.id === selectedEvento.id ? data : evento
           )
         );
-        setIsModalOpen(false); // Cerrar el modal
+        setIsModalOpen(false);
       })
       .catch((error) => {
         console.error("Error al editar el evento:", error);
@@ -116,51 +135,71 @@ const EditEventManager = () => {
   };
 
   return (
-    <Box p={4}>
-      <Input
-        placeholder="Buscar eventos por nombre..."
-        value={searchQuery}
-        onChange={handleSearch}
-        mb={4}
-      />
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Nombre</Th>
-            <Th>Temática</Th>
-            <Th>Acciones</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {filteredEventos.map((evento) => (
-            <Tr key={evento.id}>
-              <Td>{evento.nombre}</Td>
-              <Td>{evento.tematica}</Td>
-              <Td>
-                <Button
-                  colorScheme="blue"
-                  size="sm"
-                  onClick={() => handleEdit(evento)}
-                >
-                  Editar
-                </Button>
-              </Td>
+    <Box bg="gray.100" minH="100vh" w="100%" p={8}>
+      <Box
+        bg="white"
+        borderRadius="lg"
+        boxShadow="lg"
+        w="100%"
+        p={4}
+        overflowX="auto"
+      >
+        <Heading textAlign="center" mb={4} fontSize="2xl" color="teal.600">
+          Edición de Eventos
+        </Heading>
+        <HStack justifyContent="center" mb={5}>
+          <Input
+            placeholder="Buscar eventos por nombre..."
+            value={searchQuery}
+            onChange={handleSearch}
+            borderRadius="md"
+            focusBorderColor="teal.400"
+            w="100%"
+          />
+        </HStack>
+        <Table variant="simple" w="100%">
+          <Thead bg="teal.500">
+            <Tr>
+              <Th color="white">Nombre</Th>
+              <Th color="white">Temática</Th>
+              <Th color="white">Ubicación</Th>
+              <Th color="white" textAlign="center">
+                Acciones
+              </Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {filteredEventos.map((evento) => (
+              <Tr key={evento.id}>
+                <Td>{evento.nombre}</Td>
+                <Td>{evento.tematica}</Td>
+                <Td>{evento.ubicacion || "Sin ubicación"}</Td>
+                <Td textAlign="center">
+                  <Button
+                    leftIcon={<EditIcon />}
+                    colorScheme="teal"
+                    size="sm"
+                    onClick={() => handleEdit(evento)}
+                  >
+                    Editar
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
 
-      {/* Modal para editar el evento */}
       {selectedEvento && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Editar Evento</ModalHeader>
+            <ModalHeader textAlign="center">Editar Evento</ModalHeader>
             <ModalBody>
               <VStack spacing={4}>
                 <FormControl>
                   <FormLabel>Nombre</FormLabel>
-                  <ChakraInput
+                  <Input
                     value={selectedEvento.nombre}
                     onChange={(e) =>
                       handleFieldChange("nombre", e.target.value)
@@ -169,7 +208,7 @@ const EditEventManager = () => {
                 </FormControl>
                 <FormControl>
                   <FormLabel>Temática</FormLabel>
-                  <ChakraInput
+                  <Input
                     value={selectedEvento.tematica}
                     onChange={(e) =>
                       handleFieldChange("tematica", e.target.value)
@@ -178,7 +217,7 @@ const EditEventManager = () => {
                 </FormControl>
                 <FormControl>
                   <FormLabel>Descripción</FormLabel>
-                  <ChakraInput
+                  <Input
                     value={selectedEvento.descripcion || ""}
                     onChange={(e) =>
                       handleFieldChange("descripcion", e.target.value)
@@ -186,28 +225,44 @@ const EditEventManager = () => {
                   />
                 </FormControl>
                 <FormControl>
-                  <FormLabel>Ubicacion</FormLabel>
-                  <ChakraInput
+                  <FormLabel>Ubicación</FormLabel>
+                  <Input
                     value={selectedEvento.ubicacion || ""}
                     onChange={(e) =>
                       handleFieldChange("ubicacion", e.target.value)
                     }
                   />
                 </FormControl>
+                <HStack spacing={4} width="100%">
+                  <FormControl>
+                    <FormLabel>Fecha de Inicio</FormLabel>
+                    <Input
+                      type="date"
+                      value={selectedEvento.fecha_inicio || ""}
+                      onChange={(e) =>
+                        handleFieldChange("fecha_inicio", e.target.value)
+                      }
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Fecha de Fin</FormLabel>
+                    <Input
+                      type="date"
+                      value={selectedEvento.fecha_fin || ""}
+                      min={selectedEvento.fecha_inicio || ""}
+                      onChange={(e) =>
+                        handleFieldChange("fecha_fin", e.target.value)
+                      }
+                    />
+                  </FormControl>
+                </HStack>
               </VStack>
             </ModalBody>
             <ModalFooter>
-              <Button
-                colorScheme="teal"
-                mr={3}
-                onClick={handleSave}
-              >
+              <Button colorScheme="teal" mr={3} onClick={handleSave}>
                 Guardar
               </Button>
-              <Button
-                variant="ghost"
-                onClick={() => setIsModalOpen(false)}
-              >
+              <Button variant="ghost" onClick={() => setIsModalOpen(false)}>
                 Cancelar
               </Button>
             </ModalFooter>

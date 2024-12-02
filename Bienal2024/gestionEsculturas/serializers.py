@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 from .models import Escultura
 
@@ -7,4 +6,4 @@ class EsculturaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Escultura
-        fields = ['id', 'id_escultor', 'id_evento', 'titulo', 'intencion', 'tematica', 'material_principal', 'url_imagen', 'votos']
+        fields = ['id','id_escultor','id_evento','titulo','intencion','material_principal','url_imagen_1','url_imagen_2','url_imagen_3',]

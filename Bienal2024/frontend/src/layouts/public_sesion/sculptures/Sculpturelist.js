@@ -2,6 +2,14 @@ import { Box, Image, Text, IconButton, VStack, HStack, Skeleton, SkeletonText, S
 import { FaShareAlt } from "react-icons/fa"; 
 import React, { useState, useEffect } from "react"; 
 import FiltterBar from "./FiltterBar";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css/free-mode';
+import 'swiper/css/navigation';
+import 'swiper/css/thumbs';
+import 'swiper/css/pagination';
+import 'swiper/css/grid';
+
+import { Navigation } from 'swiper/modules';
 
 const SculptureList = () => {
   const [esculturas, setEsculturas] = useState([]);
@@ -42,7 +50,11 @@ const SculptureList = () => {
             ))
           : esculturas.map((escultura) => (
               <Box key={escultura.id} maxW="sm" borderWidth="1px" borderRadius="lg" bg="white" overflow="hidden" boxShadow="2xl" transition="all 0.3s ease" transform="scale(1)" _hover={{ transform: "scale(1.05)", boxShadow: "3xl" }}>
-                <Image src={escultura.url_imagen_1} alt={escultura.titulo} width="100%" height="60%" objectFit="cover" />
+                <Swiper  navigation={true} modules={[Navigation]}  style={{ maxHeight: '40vh' }} >
+                   <SwiperSlide><Image src={escultura.url_imagen_1}  objectFit="cover" width="100%"height="100%" fallbackSrc="path/to/placeholder-image.jpg" /></SwiperSlide>
+                   <SwiperSlide><Image src={escultura.url_imagen_2}  objectFit="cover" width="100%"height="100%" fallbackSrc="path/to/placeholder-image.jpg" /></SwiperSlide>
+                   <SwiperSlide><Image src={escultura.url_imagen_3}  objectFit="cover" width="100%"height="100%" fallbackSrc="path/to/placeholder-image.jpg" /></SwiperSlide>
+                </Swiper>
                 <Box p="4">
                   <VStack align="start" spacing="2">
                     <Text fontWeight="bold" fontSize="lg">{escultura.titulo}</Text>

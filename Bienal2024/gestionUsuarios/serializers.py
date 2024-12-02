@@ -11,6 +11,11 @@ class UsuarioSerializer(serializers.Serializer):
     nickname = serializers.CharField(max_length=100, required=False, allow_blank=True)  
     family_name = serializers.CharField(max_length=255, required=False, allow_blank=True)
     given_name = serializers.CharField(max_length=255, required=False, allow_blank=True)  
+    type_user = serializers.CharField(
+        max_length=255, 
+        default='normal', 
+        required=False
+    )
 
 
 #capaz que se tenga que agregar los cambos que faltan con requiered=false

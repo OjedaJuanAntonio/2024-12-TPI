@@ -5,10 +5,10 @@ class Escultura(models.Model):
     id_evento = models.TextField(max_length=500)
     titulo = models.CharField(max_length=30)
     intencion = models.TextField()
-    tematica = models.TextField(max_length=500)
     material_principal = models.CharField(max_length=100)
-    url_imagen = models.URLField(max_length=500)  
-    votos = models.IntegerField(default=0) 
-
+    url_imagen_1 = models.URLField(max_length=500)  
+    url_imagen_2 = models.URLField(max_length=500, blank=True, null=True)
+    url_imagen_3 = models.URLField(max_length=500, blank=True, null=True)
+    
     def __str__(self):
         return self.titulo

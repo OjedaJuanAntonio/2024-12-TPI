@@ -9,10 +9,12 @@ import {
   VStack,
   Heading,
   Text,
+  HStack,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import Loginbackground from "../../../assets/Loginbackground.jpg";
+import Loginbackground from "../../../assets/Loginbackground.webp";
+import Uploader from "../Uploader";
 
 const EventRegister = () => {
   const toast = useToast();
@@ -21,6 +23,8 @@ const EventRegister = () => {
     nombre: "",
     tematica: "",
     ubicacion: "",
+    fecha_inicio: "",
+    fecha_fin: "",
   });
 
   const handleChange = (e) => {
@@ -29,11 +33,41 @@ const EventRegister = () => {
   };
 
   const isFormComplete = () => {
-    return formData.descripcion && formData.nombre && formData.tematica && formData.ubicacion;
+    return (
+      formData.descripcion &&
+      formData.nombre &&
+      formData.tematica &&
+      formData.ubicacion &&
+      formData.fecha_inicio &&
+      formData.fecha_fin &&
+      formData.img_evento
+    );
+  };
+
+  console.log(formData)
+
+  const handleUploaderChange = (key, url) => {
+    setFormData({ ...formData, [key]: url });
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Evitar recarga de la página
+    e.preventDefault();
+
+
+    const fechaInicio = new Date(formData.fecha_inicio);
+    const fechaFin = new Date(formData.fecha_fin);
+
+    if (fechaFin <= fechaInicio) {
+      toast({
+        title: "Error",
+        description: "La fecha de fin debe ser posterior a la fecha de inicio.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
     fetch("http://localhost:8000/eventos/", {
       method: "POST",
       headers: {
@@ -60,6 +94,8 @@ const EventRegister = () => {
           nombre: "",
           tematica: "",
           ubicacion: "",
+          fecha_inicio: "",
+          fecha_fin: "",
         });
       })
       .catch((error) => {
@@ -86,7 +122,7 @@ const EventRegister = () => {
       }}
     >
       <Box
-        maxW="lg"
+        maxW="3xl"
         mx="auto"
         mt={10}
         mb={5}
@@ -101,7 +137,7 @@ const EventRegister = () => {
           Registro de Evento
         </Heading>
         <Text mb={6} fontSize="lg" color="gray.600" textAlign="center">
-          Completa los datos del evento
+          Completa los datos del nuevo evento
         </Text>
 
         <form onSubmit={handleSubmit}>
@@ -128,6 +164,31 @@ const EventRegister = () => {
               />
             </FormControl>
 
+            <HStack spacing={5} width="100%">
+              <FormControl id="fecha_inicio" isRequired>
+                <FormLabel>Fecha de Inicio</FormLabel>
+                <Input
+                  type="date"
+                  name="fecha_inicio"
+                  value={formData.fecha_inicio}
+                  onChange={handleChange}
+                  bg={inputBg}
+                />
+              </FormControl>
+
+              <FormControl id="fecha_fin" isRequired>
+                <FormLabel>Fecha de Fin</FormLabel>
+                <Input
+                  type="date"
+                  name="fecha_fin"
+                  value={formData.fecha_fin}
+                  min={formData.fecha_inicio || ""}
+                  onChange={handleChange}
+                  bg={inputBg}
+                />
+              </FormControl>
+            </HStack>
+
             <FormControl id="ubicacion" isRequired>
               <FormLabel>Ubicación</FormLabel>
               <Input
@@ -149,6 +210,7 @@ const EventRegister = () => {
                 bg={inputBg}
               />
             </FormControl>
+            <Uploader setPhoto={(url) => handleUploaderChange('img_evento', url)} label="Subir del Evento" folder="events_pictures" defaultUrl={formData.img_evento} />
 
             <Button
               colorScheme="teal"

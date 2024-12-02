@@ -1,26 +1,43 @@
 import React, { useState, useEffect } from "react";
-import {Box,Input,Table,Thead,Tbody,Tr,Th,Td,Button,useToast,Modal,ModalOverlay,ModalContent, ModalHeader,ModalBody,
-  ModalFooter,Text,
+import {
+  Box,
+  Input,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Button,
+  useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  HStack,
+  Heading,
+  Text,
 } from "@chakra-ui/react";
 import { PinInput, PinInputField } from "@chakra-ui/react";
-
+import { DeleteIcon } from "@chakra-ui/icons";
 
 const DeleteEventManager = () => {
-  const [eventos, setEventos] = useState([]); 
+  const [eventos, setEventos] = useState([]);
   const [filteredEventos, setFilteredEventos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedEvento, setSelectedEvento] = useState(null); // Evento seleccionado para eliminar
-  const [pin, setPin] = useState(""); // PIN ingresado
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado del modal
+  const [selectedEvento, setSelectedEvento] = useState(null);
+  const [pin, setPin] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
-    // Fetch de eventos
     fetch("http://localhost:8000/eventos/")
       .then((response) => response.json())
       .then((data) => {
         setEventos(data);
-        setFilteredEventos(data); // Inicialmente sin filtros
+        setFilteredEventos(data);
       })
       .catch((error) => {
         console.error("Error fetching eventos:", error);
@@ -30,6 +47,11 @@ const DeleteEventManager = () => {
           status: "error",
           duration: 5000,
           isClosable: true,
+          position: "top",
+          containerStyle: {
+            fontSize: "lg",
+            maxWidth: "600px",
+          },
         });
       });
   }, [toast]);
@@ -73,8 +95,8 @@ const DeleteEventManager = () => {
         setFilteredEventos((prev) =>
           prev.filter((evento) => evento.id !== selectedEvento.id)
         );
-        setIsModalOpen(false); // Cerrar el modal
-        setPin(""); 
+        setIsModalOpen(false);
+        setPin("");
       })
       .catch((error) => {
         console.error("Error al eliminar el evento:", error);
@@ -89,81 +111,80 @@ const DeleteEventManager = () => {
   };
 
   const openDeleteModal = (evento) => {
-    setSelectedEvento(evento); // Guardar el evento seleccionado
-    setIsModalOpen(true); // Abrir el modal
+    setSelectedEvento(evento);
+    setIsModalOpen(true);
   };
 
   return (
-    <Box p={4}>
-      <Input
-        placeholder="Buscar eventos por nombre..."
-        value={searchQuery}
-        onChange={handleSearch}
-        mb={4}
-      />
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Nombre</Th>
-            <Th>Temática</Th>
-            <Th>Acciones</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {filteredEventos.map((evento) => (
-            <Tr key={evento.id}>
-              <Td>{evento.nombre}</Td>
-              <Td>{evento.tematica}</Td>
-              <Td>
-                <Button
-                  colorScheme="red"
-                  size="sm"
-                  onClick={() => openDeleteModal(evento)}
-                >
-                  Eliminar
-                </Button>
-              </Td>
+    <Box bg="gray.100" minH="100vh" w="100%" p={8}>
+      <Box bg="white" borderRadius="lg" boxShadow="lg" w="100%" p={4} overflowX="auto">
+        <Heading textAlign="center" mb={4} fontSize="2xl" color="red.600">
+          Eliminación de Eventos
+        </Heading>
+        <HStack justifyContent="center" mb={5}>
+          <Input
+            placeholder="Buscar eventos por nombre..."
+            value={searchQuery}
+            onChange={handleSearch}
+            borderRadius="md"
+            focusBorderColor="red.400"
+            w="100%"
+          />
+        </HStack>
+        <Table variant="simple" w="100%">
+          <Thead bg="red.500">
+            <Tr>
+              <Th color="white">Nombre</Th>
+              <Th color="white">Temática</Th>
+              <Th color="white" textAlign="center">
+                Acciones
+              </Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {filteredEventos.map((evento) => (
+              <Tr key={evento.id}>
+                <Td>{evento.nombre}</Td>
+                <Td>{evento.tematica}</Td>
+                <Td textAlign="center">
+                  <Button
+                    leftIcon={<DeleteIcon />}
+                    colorScheme="red"
+                    size="sm"
+                    onClick={() => openDeleteModal(evento)}
+                  >
+                    Eliminar
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
 
-      {/* Modal para confirmar la eliminación */}
       {selectedEvento && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>
-              ¿Está seguro de eliminar "{selectedEvento.nombre}"?
+            <ModalHeader textAlign="center">
+              Confirmar eliminación de "{selectedEvento.nombre}"
             </ModalHeader>
             <ModalBody>
-    
-                    <Text>Ingrese el PIN para confirmar:</Text>
-                    <PinInput
-                    value={pin}
-                    onChange={(value) => setPin(value)}
-                    size="lg"
-                    otp
-                    >
-                    <PinInputField m={2}/>
-                    <PinInputField m={2}/>
-                    <PinInputField m={2}/>
-                    <PinInputField m={2} />
-                    </PinInput>
-    
+              <Text mb={4}>Ingrese el PIN para confirmar:</Text>
+              <HStack justifyContent="center">
+                <PinInput value={pin} onChange={(value) => setPin(value)} size="lg" otp>
+                  <PinInputField m={2} />
+                  <PinInputField m={2} />
+                  <PinInputField m={2} />
+                  <PinInputField m={2} />
+                </PinInput>
+              </HStack>
             </ModalBody>
             <ModalFooter>
-              <Button
-                colorScheme="red"
-                mr={3}
-                onClick={handleDelete}
-              >
+              <Button colorScheme="red" mr={3} onClick={handleDelete}>
                 Confirmar
               </Button>
-              <Button
-                variant="ghost"
-                onClick={() => setIsModalOpen(false)}
-              >
+              <Button variant="ghost" onClick={() => setIsModalOpen(false)}>
                 Cancelar
               </Button>
             </ModalFooter>

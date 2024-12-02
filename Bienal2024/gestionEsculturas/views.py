@@ -11,6 +11,9 @@ class EsculturaViewSet(viewsets.ViewSet):
     """
 
     def list(self, request):
+        """
+        Obtiene todas las esculturas.
+        """
         try:
             esculturas = ref.get()
             if esculturas:
@@ -21,17 +24,23 @@ class EsculturaViewSet(viewsets.ViewSet):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def create(self, request):
+        """
+        Crea una nueva escultura.
+        """
         serializer = EsculturaSerializer(data=request.data)
         if serializer.is_valid():
             try:
                 data = serializer.validated_data
-                new_ref = ref.push(data)
+                new_ref = ref.push(data)  # Agrega los datos a Firebase
                 return Response({'id': new_ref.key, **data}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
+        """
+        Obtiene una escultura específica por ID.
+        """
         try:
             escultura = ref.child(pk).get()
             if escultura:
@@ -42,7 +51,7 @@ class EsculturaViewSet(viewsets.ViewSet):
 
     def update(self, request, pk=None):
         """
-        Maneja solicitudes PUT para actualizaciones completas.
+        Reemplaza completamente los datos de una escultura (PUT).
         """
         serializer = EsculturaSerializer(data=request.data)
         if serializer.is_valid():
@@ -50,7 +59,7 @@ class EsculturaViewSet(viewsets.ViewSet):
                 data = serializer.validated_data
                 escultura_ref = ref.child(pk)
                 if escultura_ref.get():
-                    escultura_ref.set(data)  # Sobrescribe completamente los datos
+                    escultura_ref.set(data)  # Reemplaza todos los datos
                     return Response({'id': pk, **data}, status=status.HTTP_200_OK)
                 return Response({'error': 'Escultura no encontrada'}, status=status.HTTP_404_NOT_FOUND)
             except Exception as e:
@@ -59,7 +68,7 @@ class EsculturaViewSet(viewsets.ViewSet):
 
     def partial_update(self, request, pk=None):
         """
-        Maneja solicitudes PATCH para actualizaciones parciales.
+        Actualiza parcialmente los datos de una escultura (PATCH).
         """
         try:
             escultura_ref = ref.child(pk)
@@ -70,14 +79,17 @@ class EsculturaViewSet(viewsets.ViewSet):
             serializer = EsculturaSerializer(data=request.data, partial=True)
             if serializer.is_valid():
                 data = serializer.validated_data
-                escultura_ref.update(data)  
-                updated_data = {**existing_data, **data}  
+                escultura_ref.update(data)  # Actualiza solo los campos proporcionados
+                updated_data = {**existing_data, **data}  # Mezcla datos originales y actualizados
                 return Response({'id': pk, **updated_data}, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
+        """
+        Elimina una escultura.
+        """
         try:
             escultura_ref = ref.child(pk)
             if escultura_ref.get():

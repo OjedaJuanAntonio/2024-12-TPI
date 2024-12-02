@@ -8,7 +8,7 @@ import Footerr from './layouts/public_sesion/Footerr';
 import Allevents from './layouts/public_sesion/events/Allevents';
 import Sculpturelist from './layouts/public_sesion/sculptures/Sculpturelist';
 import Votacion from './layouts/public_sesion/sculptures/Qrvotes';
-import Panel from './layouts/private_sesion/Panel';
+import GestionarEscultores from './layouts/private_sesion/Sculptor_management/SculptorPanel';
 import SculptorRegister from './layouts/private_sesion/Sculptor_management/SculptorRegister';
 import ScuptureRegister from './layouts/private_sesion/Sculpture_management/ScuptureRegister';
 import MainComponent from './layouts/public_sesion/Prueba';
@@ -22,6 +22,12 @@ import EventRegister from "./layouts/private_sesion/Event_management/Register_ev
 import SculptureAllList from "./layouts/private_sesion/Allsculptures"
 import Podium from './layouts/private_sesion/Podio';
 import UserRegister from './layouts/private_sesion/AdminRegister'
+import EditSculptorManager from './layouts/private_sesion/Sculptor_management/EditSculptor'
+import GestionarEventos from './layouts/private_sesion/Event_management/EventPanel'
+import GestionarEsculturas  from './layouts/private_sesion/Sculpture_management/SculpturePanel';
+import EditSculptureManager from './layouts/private_sesion/Sculpture_management/EditSculpure';
+import DeleteSculptorManager from './layouts/private_sesion/Sculptor_management/DeleteSculptor';
+import DeleteSculptureManager from './layouts/private_sesion/Sculpture_management/DeleteSculpture';
 function App() {
     const [loading, setLoading] = useState(true);
 
@@ -57,7 +63,13 @@ function ContentWithRouter() {
                 <Route path="/esculturas" element={<Sculpturelist />} />
                 <Route path="/actividades" element={<Allevents />} />
                 <Route path="/votar/:id" element={<Votacion />} />
-                <Route path='/admin' element={<Panel />} />
+                <Route path='/admin/escultores' element={<GestionarEscultores />} />
+                <Route path='/admin/esculturas' element={<GestionarEsculturas />} />
+                <Route path='/esculturas/delete' element={<DeleteSculptureManager />} />
+                <Route path='/admin/eventos' element={<GestionarEventos />} />
+                <Route path='/escultores/delete' element={<DeleteSculptorManager />} />
+                <Route path='/escultores/edit' element={<EditSculptorManager />} />
+                <Route path='/esculturas/edit' element={<EditSculptureManager />} />
                 <Route path='/escultores/add' element={<SculptorRegister />} />
                 <Route path='/esculturas/add' element={<ScuptureRegister />} />
                 <Route path="/tabletview/:id" element={<TabletView />} /> 
