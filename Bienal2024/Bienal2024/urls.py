@@ -39,7 +39,7 @@ urlpatterns = [
     path('', include('social_django.urls')),  
     path('user/', include('gestionUsuarios.urls')), 
     path('evento/', include('gestionEventos.Urls')), 
-
+    path('votos/', include('gestionVotos.urls')),
     # Integración con DRF usando routers
     *router_escultores.urls,  
     *router_esculturas.urls,  

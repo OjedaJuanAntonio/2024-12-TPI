@@ -1,28 +1,24 @@
 from rest_framework import serializers
-from datetime import datetime
 from .models import Evento
+import re
 
 class EventoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evento
-        fields = ['nombre', 'descripcion', 'tematica', 'ubicacion', 'fecha_inicio', 'fecha_fin','img_evento' ]
+        fields = ['nombre', 'descripcion', 'tematica', 'ubicacion', 'fecha_inicio', 'fecha_fin', 'img_evento']
 
     def validate_fecha_inicio(self, value):
-        if isinstance(value, int):  # Si llega como timestamp
-            return datetime.utcfromtimestamp(value / 1000).date()  # Convierte a date
-        elif isinstance(value, str):  # Si llega como string
-            try:
-                return datetime.strptime(value, "%Y-%m-%d").date()  # Formato esperado
-            except ValueError:
-                raise serializers.ValidationError("Formato de fecha inválido para fecha_inicio.")
+        """
+        Valida que fecha_inicio tenga el formato correcto (YYYY-MM-DD).
+        """
+        if not re.match(r'^\d{4}-\d{2}-\d{2}$', value):
+            raise serializers.ValidationError("El formato de fecha_inicio debe ser YYYY-MM-DD.")
         return value
 
     def validate_fecha_fin(self, value):
-        if isinstance(value, int):  # Si llega como timestamp
-            return datetime.utcfromtimestamp(value / 1000).date()  # Convierte a date
-        elif isinstance(value, str):  # Si llega como string
-            try:
-                return datetime.strptime(value, "%Y-%m-%d").date()  # Formato esperado
-            except ValueError:
-                raise serializers.ValidationError("Formato de fecha inválido para fecha_fin.")
+        """
+        Valida que fecha_fin tenga el formato correcto (YYYY-MM-DD).
+        """
+        if not re.match(r'^\d{4}-\d{2}-\d{2}$', value):
+            raise serializers.ValidationError("El formato de fecha_fin debe ser YYYY-MM-DD.")
         return value

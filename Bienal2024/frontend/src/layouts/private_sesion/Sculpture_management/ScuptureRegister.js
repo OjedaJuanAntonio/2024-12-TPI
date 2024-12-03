@@ -36,10 +36,9 @@ const Sculpture_register = () => {
     id_evento: '',
     titulo: '',
     intencion: '',
-    material_principal: '', // Cambiado de "tematica" a "material_principal"
-    url_imagen_1: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxHD_z3WSlVZ3aN3C_OZr30H84H7j7ugMtqczgxqWgQLdzkaW4_28IY7QGALl713ecjQQ&usqp=CAU',
-    url_imagen_2: 'https://img.freepik.com/fotos-premium/escultura-surrealista-naturaleza-hojas_777078-157034.jpg',
-    url_imagen_3: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREa8U6gUgdDFhtEqdhmzKDBXqs_lb70NOqrYIhZh5jGoG-hWEUD8DiWArdpUhofip8RZE&usqp=CAU',
+    material_principal: '',
+    url_imagen_1: '',
+    url_imagen_2: '',
   });
   const [escultores, setEscultores] = useState([]);
 
@@ -64,11 +63,18 @@ const Sculpture_register = () => {
   };
 
   const handleSubmit = async () => {
+    // Asigna valores predeterminados si las URL están vacías
+    const updatedFormData = {
+      ...formData,
+      url_imagen_2: formData.url_imagen_2 ||"https://i.ibb.co/5hWqr4J/Captura-de-pantalla-2024-12-03-a-la-s-09-49-07.png",
+      url_imagen_3: formData.url_imagen_3 ||"https://i.ibb.co/5hWqr4J/Captura-de-pantalla-2024-12-03-a-la-s-09-49-07.png",
+    };
+  
     try {
       const response = await fetch('http://localhost:8000/esculturas/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updatedFormData),
       });
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.statusText}`);
@@ -102,8 +108,9 @@ const Sculpture_register = () => {
         isClosable: true,
       });
     }
-    console.log(formData)
+    console.log(updatedFormData);
   };
+  
 
   const inputBg = useColorModeValue('gray.100', 'gray.600');
 
@@ -156,9 +163,10 @@ const Sculpture_register = () => {
               <Textarea name="intencion" onChange={handleChange} placeholder="Describe la intención de la obra" bg={inputBg} />
             </FormControl>
 
-            <Uploader setPhoto={(url) => handleUploaderChange('url_imagen_1', url)} label="Subir foto Principal" folder="sculpture_pictures" defaultUrl={formData.url_imagen_1} />
-            <Uploader setPhoto={(url) => handleUploaderChange('url_imagen_2', url)} label="Subir Segunda Foto" folder="sculpture_pictures" defaultUrl={formData.url_imagen_2} />
-            <Uploader setPhoto={(url) => handleUploaderChange('url_imagen_3', url)} label="Subir Tercera Foto" folder="sculpture_pictures" defaultUrl={formData.url_imagen_3} />
+            <Uploader setPhoto={(url) => handleUploaderChange('url_imagen_1', url)} label="Subir foto Principal" isRequired={true} />
+            <Uploader setPhoto={(url) => handleUploaderChange('url_imagen_2', url)} label="Subir Segunda Foto" isRequired={false} />
+            <Uploader setPhoto={(url) => handleUploaderChange('url_imagen_3', url)} label="Subir Tercera Foto" isRequired={false} />
+
 
             <Button colorScheme="teal" type="button" width="full" mt={4} _hover={{ bg: 'teal.600' }} boxShadow="md" onClick={onOpen} disabled={!isFormComplete()}>
               Vista Previa
@@ -171,7 +179,7 @@ const Sculpture_register = () => {
                 <ModalBody>
                   <Flex justifyContent="center" alignItems="center" height="100%" width="100%">
                     <Box maxW="sm" borderRadius="lg" overflow="hidden" boxShadow="xl" bg="white" justifyContent="center">
-                      <Image src={formData.url_imagen_1} alt="Imagen del evento" width="100%" height="200px" objectFit="cover" />
+                      <Image src={formData.url_imagen_1} alt={formData.titulo} width="100%" height="200px" objectFit="cover" />
                       <Box p="4">
                         <Text fontWeight="bold" fontSize="lg" noOfLines={1}>{formData.titulo}</Text>
                         <Text mt="2" fontSize="sm" color="gray.600" noOfLines={2}>{formData.intencion}</Text>

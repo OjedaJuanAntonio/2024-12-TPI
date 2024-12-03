@@ -28,6 +28,8 @@ import GestionarEsculturas  from './layouts/private_sesion/Sculpture_management/
 import EditSculptureManager from './layouts/private_sesion/Sculpture_management/EditSculpure';
 import DeleteSculptorManager from './layouts/private_sesion/Sculptor_management/DeleteSculptor';
 import DeleteSculptureManager from './layouts/private_sesion/Sculpture_management/DeleteSculpture';
+import SculptorSculptureList from './layouts/private_sesion/Sculpture_management/SculptureQR';
+
 function App() {
     const [loading, setLoading] = useState(true);
 
@@ -69,6 +71,7 @@ function ContentWithRouter() {
                 <Route path='/admin/eventos' element={<GestionarEventos />} />
                 <Route path='/escultores/delete' element={<DeleteSculptorManager />} />
                 <Route path='/escultores/edit' element={<EditSculptorManager />} />
+                <Route path='/escultores/tablet' element={<SculptorSculptureList/>} />
                 <Route path='/esculturas/edit' element={<EditSculptureManager />} />
                 <Route path='/escultores/add' element={<SculptorRegister />} />
                 <Route path='/esculturas/add' element={<ScuptureRegister />} />

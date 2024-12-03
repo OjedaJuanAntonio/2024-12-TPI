@@ -24,6 +24,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
+import Uploader from "../Uploader";
 
 const EditSculptureManager = () => {
   const [esculturas, setEsculturas] = useState([]);
@@ -31,6 +32,8 @@ const EditSculptureManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEscultura, setSelectedEscultura] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUploaderModalOpen, setIsUploaderModalOpen] = useState(false);
+  const [selectedImageKey, setSelectedImageKey] = useState("");
   const toast = useToast();
 
   useEffect(() => {
@@ -72,6 +75,12 @@ const EditSculptureManager = () => {
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handleImageClick = (imageKey) => {
+    setSelectedImageKey(imageKey);
+    setIsModalOpen(false); // Cierra el modal principal temporalmente
+    setIsUploaderModalOpen(true);
   };
 
   const handleSave = () => {
@@ -145,7 +154,7 @@ const EditSculptureManager = () => {
             <Tr>
               <Th color="white">Título</Th>
               <Th color="white">Material</Th>
-              <Th color="white">Temática</Th>
+              <Th color="white">intencion</Th>
               <Th color="white" textAlign="center">
                 Acciones
               </Th>
@@ -156,7 +165,7 @@ const EditSculptureManager = () => {
               <Tr key={escultura.id}>
                 <Td>{escultura.titulo}</Td>
                 <Td>{escultura.material_principal}</Td>
-                <Td>{escultura.tematica}</Td>
+                <Td>{escultura.intencion}</Td>
                 <Td textAlign="center">
                   <Button
                     leftIcon={<EditIcon />}
@@ -173,20 +182,29 @@ const EditSculptureManager = () => {
         </Table>
       </Box>
 
+      {/* Modal de Edición */}
       {selectedEscultura && (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size="xl">
           <ModalOverlay />
           <ModalContent>
             <ModalHeader textAlign="center">Editar Escultura</ModalHeader>
             <ModalBody>
               <VStack spacing={4}>
-                <Image
-                  src={selectedEscultura.url_imagen_1}
-                  alt={selectedEscultura.titulo}
-                  boxSize="150px"
-                  borderRadius="md"
-                  mb={4}
-                />
+                <HStack spacing={4}>
+                  {["url_imagen_1", "url_imagen_2", "url_imagen_3"].map(
+                    (key, index) => (
+                      <Image
+                        key={index}
+                        src={selectedEscultura[key]}
+                        alt={`Imagen ${index + 1}`}
+                        boxSize="150px"
+                        borderRadius="md"
+                        onClick={() => handleImageClick(key)}
+                        _hover={{ cursor: "pointer", transform: "scale(1.05)" }}
+                      />
+                    )
+                  )}
+                </HStack>
                 <FormControl>
                   <FormLabel>Título</FormLabel>
                   <Input
@@ -206,21 +224,10 @@ const EditSculptureManager = () => {
                   />
                 </FormControl>
                 <FormControl>
-                  <FormLabel>Temática</FormLabel>
+                  <FormLabel>Intencion</FormLabel>
                   <Input
-                    value={selectedEscultura.tematica}
-                    onChange={(e) =>
-                      handleFieldChange("tematica", e.target.value)
-                    }
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Intención</FormLabel>
-                  <Input
-                    value={selectedEscultura.intencion || ""}
-                    onChange={(e) =>
-                      handleFieldChange("intencion", e.target.value)
-                    }
+                    value={selectedEscultura.intencion}
+                    onChange={(e) => handleFieldChange("tematica", e.target.value)}
                   />
                 </FormControl>
               </VStack>
@@ -236,6 +243,28 @@ const EditSculptureManager = () => {
           </ModalContent>
         </Modal>
       )}
+
+      {/* Modal de Uploader */}
+      <Modal
+        isOpen={isUploaderModalOpen}
+        onClose={() => setIsUploaderModalOpen(false)}
+        size="6xl"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader textAlign="center">Subir Nueva Imagen</ModalHeader>
+          <ModalBody>
+            <Uploader
+              setPhoto={(newUrl) => {
+                handleFieldChange(selectedImageKey, newUrl);
+                setIsUploaderModalOpen(false);
+                setIsModalOpen(true); // Reabre el modal principal
+              }}
+              label={`Subir nueva imagen para ${selectedImageKey}`}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

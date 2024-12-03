@@ -6,5 +6,5 @@ class Evento(models.Model):
     tematica = models.CharField(max_length=255)
     ubicacion = models.CharField(max_length=255)
     img_evento = models.URLField(max_length=500)  
-    fecha_inicio = models.DateField()  
-    fecha_fin = models.DateField()
+    fecha_inicio = models.CharField(max_length=10)  
+    fecha_fin = models.CharField(max_length=10)  

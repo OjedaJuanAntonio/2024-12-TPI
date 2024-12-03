@@ -6,26 +6,32 @@ import 'swiper/css/thumbs';
 import 'swiper/css/pagination';
 import 'swiper/css/grid';
 import { Navigation } from 'swiper/modules';
-import { useLocation } from 'react-router-dom';
 import { Box, Image, Text, Card,Button } from "@chakra-ui/react";
 import { EffectCoverflow, Pagination } from 'swiper/modules';
 import { Link } from "react-router-dom";
 
 
+
 export function SwipperProfile({ images }) {
     return (
-      <Box width="100%" height="35vh">
-        <Swiper navigation={true} modules={[Navigation]} style={{ height: '100%' }}>
+      <Box width="100%" height="50vh">
+        <Swiper
+          navigation={true}
+          modules={[Navigation]}
+          style={{ height: '100%' }}
+        >
           {images.map((img, index) => (
             <SwiperSlide key={index}>
-              <Image
-                src={img.url} // Accede a la URL desde el array de imágenes
-                alt={`Escultura ${index + 1}`}
-                objectFit="cover"
-                width="100%"
-                height="100%"
-                fallbackSrc="path/to/placeholder-image.jpg" // Cambia esta ruta a una imagen de respaldo
-              />
+              <Box width="100%" height="100%" overflow="hidden">
+                <Image
+                  src={img.url}
+                  alt={`Escultura ${index + 1}`}
+                  objectFit="cover" // Mantiene la imagen recortada para llenar el contenedor
+                  width="100%"
+                  height="100%" // Asegura que la imagen llene el contenedor
+                  fallbackSrc="https://via.placeholder.com/800" // Imagen de respaldo en caso de que falte la original
+                />
+              </Box>
             </SwiperSlide>
           ))}
         </Swiper>

@@ -19,12 +19,13 @@ import Uploader from "../Uploader";
 const EventRegister = () => {
   const toast = useToast();
   const [formData, setFormData] = useState({
-    descripcion: "",
     nombre: "",
+    descripcion: "",
     tematica: "",
     ubicacion: "",
     fecha_inicio: "",
     fecha_fin: "",
+    "img_evento":"",
   });
 
   const handleChange = (e) => {
@@ -34,8 +35,8 @@ const EventRegister = () => {
 
   const isFormComplete = () => {
     return (
-      formData.descripcion &&
       formData.nombre &&
+      formData.descripcion &&
       formData.tematica &&
       formData.ubicacion &&
       formData.fecha_inicio &&
@@ -182,7 +183,7 @@ const EventRegister = () => {
                   type="date"
                   name="fecha_fin"
                   value={formData.fecha_fin}
-                  min={formData.fecha_inicio || ""}
+                  min={formData.fecha_fin|| ""}
                   onChange={handleChange}
                   bg={inputBg}
                 />

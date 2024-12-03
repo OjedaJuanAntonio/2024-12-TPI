@@ -21,8 +21,10 @@ import {
   ModalFooter,
   HStack,
   Heading,
+  Image,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
+import Uploader from "../Uploader";
 
 const EditEventManager = () => {
   const [eventos, setEventos] = useState([]);
@@ -30,6 +32,8 @@ const EditEventManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEvento, setSelectedEvento] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUploaderModalOpen, setIsUploaderModalOpen] = useState(false);
+  const [selectedImageKey, setSelectedImageKey] = useState("");
   const toast = useToast();
 
   useEffect(() => {
@@ -47,7 +51,6 @@ const EditEventManager = () => {
           status: "error",
           duration: 5000,
           isClosable: true,
-          position:'top'
         });
       });
   }, [toast]);
@@ -74,24 +77,20 @@ const EditEventManager = () => {
     }));
   };
 
+  const handleImageClick = (imageKey) => {
+    setSelectedImageKey(imageKey);
+    setIsModalOpen(false); // Cierra el modal principal temporalmente
+    setIsUploaderModalOpen(true);
+  };
+
+  const handleImageUploaded = (newUrl) => {
+    handleFieldChange(selectedImageKey, newUrl); // Actualiza el campo de imagen en el estado
+    setIsUploaderModalOpen(false);
+    setIsModalOpen(true); // Reabre el modal principal
+  };
+
   const handleSave = () => {
     if (!selectedEvento) return;
-
-    // Validación adicional para fechas
-    const fechaInicio = new Date(selectedEvento.fecha_inicio);
-    const fechaFin = new Date(selectedEvento.fecha_fin);
-
-    if (fechaFin <= fechaInicio) {
-      toast({
-        title: "Error",
-        description: "La fecha de fin debe ser posterior a la fecha de inicio.",
-        status: "error",
-        position: 'top',
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
-    }
 
     fetch(`http://localhost:8000/eventos/${selectedEvento.id}/`, {
       method: "PUT",
@@ -102,13 +101,13 @@ const EditEventManager = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         toast({
           title: "Evento actualizado",
-          description: `El evento "${selectedEvento.nombre}" fue actualizado con éxito.`,
+          description: `El evento "${data.nombre}" fue actualizado con éxito.`,
           status: "success",
           duration: 5000,
           isClosable: true,
-          position:'top'
         });
         setEventos((prev) =>
           prev.map((evento) =>
@@ -190,13 +189,22 @@ const EditEventManager = () => {
         </Table>
       </Box>
 
+      {/* Modal de Edición */}
       {selectedEvento && (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size="xl">
           <ModalOverlay />
           <ModalContent>
             <ModalHeader textAlign="center">Editar Evento</ModalHeader>
             <ModalBody>
               <VStack spacing={4}>
+                <Image
+                  src={selectedEvento.img_evento}
+                  alt="Imagen del evento"
+                  boxSize="150px"
+                  borderRadius="md"
+                  onClick={() => handleImageClick("img_evento")}
+                  _hover={{ cursor: "pointer", transform: "scale(1.05)" }}
+                />
                 <FormControl>
                   <FormLabel>Nombre</FormLabel>
                   <Input
@@ -212,15 +220,6 @@ const EditEventManager = () => {
                     value={selectedEvento.tematica}
                     onChange={(e) =>
                       handleFieldChange("tematica", e.target.value)
-                    }
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Descripción</FormLabel>
-                  <Input
-                    value={selectedEvento.descripcion || ""}
-                    onChange={(e) =>
-                      handleFieldChange("descripcion", e.target.value)
                     }
                   />
                 </FormControl>
@@ -269,6 +268,24 @@ const EditEventManager = () => {
           </ModalContent>
         </Modal>
       )}
+
+      {/* Modal de Uploader */}
+      <Modal
+        isOpen={isUploaderModalOpen}
+        onClose={() => setIsUploaderModalOpen(false)}
+        size="6xl"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Subir Nueva Imagen</ModalHeader>
+          <ModalBody>
+            <Uploader
+              setPhoto={(newUrl) => handleImageUploaded(newUrl)} // Llama a handleImageUploaded
+              label="Subir nueva imagen para el evento"
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
