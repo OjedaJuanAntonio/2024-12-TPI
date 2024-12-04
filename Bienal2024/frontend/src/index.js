@@ -6,7 +6,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { getConfig } from "./config";
 import history from './utils/history';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import { AuthProvider} from "./layouts/AuthContext";
+
 
 //Aqui es donde importamos la configuracion para nuestras credenciales de auth0 al momento de iniciar la aplicación
 

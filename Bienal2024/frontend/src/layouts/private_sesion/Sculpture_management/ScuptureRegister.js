@@ -41,9 +41,9 @@ const Sculpture_register = () => {
     titulo: '',
     intencion: '',
     material_principal: '', // Cambiado de "tematica" a "material_principal"
-    url_imagen_1: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxHD_z3WSlVZ3aN3C_OZr30H84H7j7ugMtqczgxqWgQLdzkaW4_28IY7QGALl713ecjQQ&usqp=CAU',
-    url_imagen_2: 'https://img.freepik.com/fotos-premium/escultura-surrealista-naturaleza-hojas_777078-157034.jpg',
-    url_imagen_3: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREa8U6gUgdDFhtEqdhmzKDBXqs_lb70NOqrYIhZh5jGoG-hWEUD8DiWArdpUhofip8RZE&usqp=CAU',
+    url_imagen_1: '',
+    url_imagen_2: 'https://i.ibb.co/5KwbzFp/Captura-de-pantalla-2024-12-02-a-la-s-20-01-04.png',
+    url_imagen_3: 'https://i.ibb.co/5KwbzFp/Captura-de-pantalla-2024-12-02-a-la-s-20-01-04.png',
   });
   const [escultores, setEscultores] = useState([]);
 
