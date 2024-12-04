@@ -18,7 +18,7 @@ const MotionButton = motion(Button);
 
 function GestionarEsculturas() {
   const { user} = useAuth0();
-  console.log('usurario:',user)
+  console.log('usurario:',user);
 
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.95 },
