@@ -130,7 +130,7 @@ CORS_ALLOW_METHODS = [
 
 
 
-ROOT_URLCONF = 'Bienal2024.urls'
+ROOT_URLCONF = 'bienal2024.urls'
 
 
 
