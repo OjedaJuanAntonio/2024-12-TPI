@@ -12,11 +12,14 @@ import {
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
 import Loginbackground from "../../../assets/Loginbackground.webp";
-
+import { useAuth0 } from "@auth0/auth0-react";
 const MotionBox = motion(Box);
 const MotionButton = motion(Button);
 
 function GestionarEsculturas() {
+  const { user} = useAuth0();
+  console.log('usurario:',user)
+
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.95 },
     visible: { opacity: 1, scale: 1, transition: { duration: 0.6 } },

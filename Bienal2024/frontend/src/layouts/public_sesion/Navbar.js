@@ -102,8 +102,8 @@ const Navbar = () => {
     }
   }, [isAuthenticated, user, toast]);
 
-
-
+  const isAdmin = true;
+  const getAdminRoute="/top3"
 
   // Recuperar usuario desde localStorage
   const savedUser = JSON.parse(localStorage.getItem('authUser'));
@@ -146,7 +146,11 @@ console.log('savedUser?.picture:', savedUser?.picture);
               <NavLink>Esculturas</NavLink>
             </Link>
             
-
+            {isAdmin && (
+        <Link to={getAdminRoute}>
+          <NavLink>Panel de control</NavLink>
+        </Link>
+      )}
            
             <Menu>
     <MenuButton

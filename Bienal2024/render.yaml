@@ -7,7 +7,7 @@ services:
     name: Bienal2024
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "python -m gunicorn Bienal2024.asgi:application -k uvicorn.workers.UvicornWorker"
+    startCommand: "python -m gunicorn bienal2024.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
       - key: FIREBASE_CREDENTIALS_PATH
         fromSecrets: firebase-credentials-key  # Usamos una variable secreta para la clave privada

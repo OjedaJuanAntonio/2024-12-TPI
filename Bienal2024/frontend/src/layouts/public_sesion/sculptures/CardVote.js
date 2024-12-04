@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Image, Text, Center, Spinner } from "@chakra-ui/react";
-import StarRating from "../../public_sesion/sculptures/Starranking";
+import StarRating from "./Starranking";
 
 const CardVote = ({ idEscultura, idUsuario }) => {
   const [fetchedData, setFetchedData] = useState(null);
