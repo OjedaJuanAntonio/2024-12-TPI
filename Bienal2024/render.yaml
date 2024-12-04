@@ -1,0 +1,19 @@
+databases:
+
+
+services:
+  - type: web
+    plan: free
+    name: Bienal2024
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "python -m gunicorn Bienal2024.asgi:application -k uvicorn.workers.UvicornWorker"
+    envVars:
+      - key: FIREBASE_CREDENTIALS_PATH
+        fromSecrets: firebase-credentials-key  # Usamos una variable secreta para la clave privada
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: FIREBASE_DATABASE_URL
+        value: "https://imagenes-url-default-rtdb.firebaseio.com/"
