@@ -15,12 +15,12 @@ import {
 } from '@chakra-ui/react';
 import { FaShareAlt, FaCalendarPlus } from 'react-icons/fa';
 
-function Eventcard({ evento }) {
+function Eventcard({ evento, addCalendar }) {
   const handleAddToGoogleCalendar = () => {
-    const { nombre, tematica, ubicacion, fecha_inicio, fecha_fin } = evento;
+    const { nombre, ubicacion, fecha_inicio, fecha_fin, descripcion } = evento;
 
     // Crear el enlace para Google Calendar para un evento de todo el día
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(nombre)}&details=${encodeURIComponent(tematica)}&location=${encodeURIComponent(ubicacion)}&dates=${fecha_inicio.replace(/-/g, '')}/${fecha_fin.replace(/-/g, '')}`;
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(nombre)}&details=${encodeURIComponent(descripcion)}&location=${encodeURIComponent(ubicacion)}&dates=${fecha_inicio.replace(/-/g, '')}/${fecha_fin.replace(/-/g, '')}`;
 
     // Abrir el enlace en una nueva pestaña
     window.open(googleCalendarUrl, '_blank');
@@ -43,9 +43,12 @@ function Eventcard({ evento }) {
             <Heading size="md" color="gray.700" ml={2}>{evento.nombre}</Heading>
             <Badge colorScheme="blue" borderRadius="full" px={3}>{evento.tematica}</Badge>
           </Box>
-          <Button onClick={handleAddToGoogleCalendar} variant="ghost">
-            <FaCalendarPlus />
-          </Button>
+          {addCalendar && (
+  <Button onClick={handleAddToGoogleCalendar} variant="ghost">
+    <FaCalendarPlus />
+  </Button>
+)}
+
         </Flex>
       </CardHeader>
 

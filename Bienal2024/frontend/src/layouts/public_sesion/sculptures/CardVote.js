@@ -102,7 +102,7 @@ const CardVote = ({ idEscultura, idUsuario }) => {
             {fetchedData.titulo}
           </Text>
           <Image
-            src={fetchedData.url_imagen}
+            src={fetchedData.url_imagen_1}
             alt={fetchedData.titulo}
             objectFit="cover"
             maxH="300px"

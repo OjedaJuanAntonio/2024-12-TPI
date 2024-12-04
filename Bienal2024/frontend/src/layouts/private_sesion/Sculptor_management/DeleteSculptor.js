@@ -20,6 +20,7 @@ import {
   Heading,
   Text,
   Image,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { PinInput, PinInputField } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -32,6 +33,9 @@ const DeleteSculptorManager = () => {
   const [pin, setPin] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
+
+  const modalSize = useBreakpointValue({ base: "full", md: "md" });
+  const pinSize = useBreakpointValue({ base: "md", md: "lg" });
 
   useEffect(() => {
     fetch("http://localhost:8000/escultores/")
@@ -114,7 +118,7 @@ const DeleteSculptorManager = () => {
   };
 
   return (
-    <Box bg="gray.100" minH="100vh" w="100%" p={8}>
+    <Box bg="gray.100" minH="100vh" w="100%" p={4}>
       <Box bg="white" borderRadius="lg" boxShadow="lg" w="100%" p={4} overflowX="auto">
         <Heading textAlign="center" mb={4} fontSize="2xl" color="red.600">
           Eliminación de Escultores
@@ -126,24 +130,30 @@ const DeleteSculptorManager = () => {
             onChange={handleSearch}
             borderRadius="md"
             focusBorderColor="red.400"
-            w="100%"
+            w={{ base: "100%", md: "50%" }}
           />
         </HStack>
-        <Table variant="simple" w="100%">
+        <Table variant="simple" w="100%" sx={{ borderSpacing: "0 5px" }}>
           <Thead bg="red.500">
             <Tr>
-              <Th color="white">Foto</Th>
-              <Th color="white">Nombre</Th>
-              <Th color="white">Apellido</Th>
-              <Th color="white" textAlign="center">
+              <Th color="white" py={2}>
+                Foto
+              </Th>
+              <Th color="white" py={2}>
+                Nombre
+              </Th>
+              <Th color="white" py={2}>
+                Apellido
+              </Th>
+              <Th color="white" py={2} textAlign="center">
                 Acciones
               </Th>
             </Tr>
           </Thead>
           <Tbody>
             {filteredEscultores.map((escultor) => (
-              <Tr key={escultor.id}>
-                <Td>
+              <Tr key={escultor.id} bg="gray.50" _hover={{ bg: "gray.100" }}>
+                <Td py={1}>
                   <Image
                     src={escultor.photo}
                     alt={`${escultor.nombre} ${escultor.apellido}`}
@@ -151,9 +161,9 @@ const DeleteSculptorManager = () => {
                     borderRadius="full"
                   />
                 </Td>
-                <Td>{escultor.nombre}</Td>
-                <Td>{escultor.apellido}</Td>
-                <Td textAlign="center">
+                <Td py={1}>{escultor.nombre}</Td>
+                <Td py={1}>{escultor.apellido}</Td>
+                <Td py={1} textAlign="center">
                   <Button
                     leftIcon={<DeleteIcon />}
                     colorScheme="red"
@@ -170,20 +180,27 @@ const DeleteSculptorManager = () => {
       </Box>
 
       {selectedEscultor && (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size={modalSize}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader textAlign="center">
               Confirmar eliminación de "{selectedEscultor.nombre} {selectedEscultor.apellido}"
             </ModalHeader>
             <ModalBody>
-              <Text mb={4}>Ingrese el PIN para confirmar:</Text>
+              <Text mb={4} textAlign="center">
+                Ingrese el PIN para confirmar:
+              </Text>
               <HStack justifyContent="center">
-                <PinInput value={pin} onChange={(value) => setPin(value)} size="lg" otp>
-                  <PinInputField m={2} />
-                  <PinInputField m={2} />
-                  <PinInputField m={2} />
-                  <PinInputField m={2} />
+                <PinInput
+                  value={pin}
+                  onChange={(value) => setPin(value)}
+                  size={pinSize}
+                  otp
+                >
+                  <PinInputField m={1} />
+                  <PinInputField m={1} />
+                  <PinInputField m={1} />
+                  <PinInputField m={1} />
                 </PinInput>
               </HStack>
             </ModalBody>

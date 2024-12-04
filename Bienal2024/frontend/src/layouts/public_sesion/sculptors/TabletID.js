@@ -1,11 +1,15 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Avatar, Box, Flex, Image, Text } from '@chakra-ui/react';
+import { Avatar, Box, Flex, Image, Text, useBreakpointValue } from '@chakra-ui/react';
 import DynamicQRCode from '../../private_sesion/QRcoding';
 
 const TabletView = () => {
   const location = useLocation();
   const { data } = location.state || { data: null }; // Datos recibidos
+
+  // Ajustar la dirección del diseño según el tamaño de la pantalla
+  const flexDirection = useBreakpointValue({ base: 'column', md: 'row' });
+  const scale = useBreakpointValue({ base: 1, md: 1.5 });
 
   if (!data) {
     return (
@@ -18,19 +22,68 @@ const TabletView = () => {
   }
 
   return (
-    <Flex direction="row" width="100vw" height="100vh" justifyContent="space-between"alignItems="center" padding="50px" background="linear-gradient(to bottom, #c0d9f7, #4b77a3)">
-      <Box width="100%" height="auto" marginBottom="50px" display="flex" flexDirection="column" boxShadow="lg" bg="white">
-        <Box  display="flex" alignItems="center"width="100%" >
-          <Avatar src={data.photo} margin="20px" size="lg" />
-          <Text fontSize="lg">{data.nombre}   {data.apellido}</Text>
-        </Box>
-        <Image src={data.url_imagen_1}  alt={data.titulo}  width="100%" marginBottom="10px"/>
-        <Text fontSize="2xl" textAlign="center" fontWeight="bold" marginBottom="10px">{data.titulo} </Text>
+    <Flex
+      direction={flexDirection}
+      width="100vw"
+      height="100vh"
+      justifyContent="space-between"
+      alignItems="center"
+      padding="20px"
+      background="linear-gradient(to bottom, #c0d9f7, #4b77a3)"
+    >
+      {/* Información del escultor y escultura */}
+      <Box
+        width={{ base: '100%', md: '50%' }}
+        height="auto"
+        marginBottom={{ base: '20px', md: '0' }}
+        display="flex"
+        flexDirection="column"
+        boxShadow="lg"
+        bg="white"
+        borderRadius="lg"
+        padding="20px"
+      >
+        <Flex alignItems="center" marginBottom="20px">
+          <Avatar src={data.photo} size={{ base: 'md', md: 'lg' }} marginRight="20px" />
+          <Text fontSize={{ base: 'md', md: 'lg' }} fontWeight="bold">
+            {data.nombre} {data.apellido}
+          </Text>
+        </Flex>
+        <Image
+          src={data.url_imagen_1}
+          alt={data.titulo}
+          width="100%"
+          height="auto"
+          marginBottom="10px"
+          borderRadius="md"
+        />
+        <Text fontSize={{ base: 'xl', md: '2xl' }} textAlign="center" fontWeight="bold" marginBottom="10px">
+          {data.titulo}
+        </Text>
       </Box>
 
-      <Box width="100%" height="100%" display="flex" flexDirection="column" justifyContent="center"  alignItems="center" transform="scale(1.5)">
-        <Text fontSize="2xl" fontWeight="bold" color="gray.800" marginBottom="20px"> Votar</Text>
-        <DynamicQRCode url="http://localhost:3000/votar" Countdown={10000} data={data.esculturaId} />
+      {/* QR para votar */}
+      <Box
+        width={{ base: '100%', md: '50%' }}
+        height="auto"
+        display="flex"
+        flexDirection="column"
+
+        alignItems="center"
+        transform={`scale(${scale})`}
+
+
+    
+
+      >
+        <Text fontSize={{ base: 'lg', md: '2xl' }} fontWeight="bold" color="gray.800" marginBottom="20px">
+          Votar
+        </Text>
+        <DynamicQRCode
+          url="http://localhost:3000/votar"
+          Countdown={10000}
+          data={data.esculturaId}
+        />
       </Box>
     </Flex>
   );

@@ -11,15 +11,12 @@ import Votacion from './layouts/public_sesion/sculptures/Qrvotes';
 import GestionarEscultores from './layouts/private_sesion/Sculptor_management/SculptorPanel';
 import SculptorRegister from './layouts/private_sesion/Sculptor_management/SculptorRegister';
 import ScuptureRegister from './layouts/private_sesion/Sculpture_management/ScuptureRegister';
-import MainComponent from './layouts/public_sesion/Prueba';
 import TabletView from './layouts/public_sesion/sculptors/TabletID';
 import QrExpirado from './layouts/public_sesion/user_profile/QrExpirado';
-import Error from './layouts/Error';
 import Main from './layouts/public_sesion/main/Main';
 import EditEventManager from "./layouts/private_sesion/Event_management/Edit_Event"
 import DeleteEventManager from "./layouts/private_sesion/Event_management/Delete_event"
 import EventRegister from "./layouts/private_sesion/Event_management/Register_event"
-import SculptureAllList from "./layouts/private_sesion/Allsculptures"
 import Podium from './layouts/private_sesion/Podio';
 import UserRegister from './layouts/private_sesion/AdminRegister'
 import EditSculptorManager from './layouts/private_sesion/Sculptor_management/EditSculptor'
@@ -29,6 +26,9 @@ import EditSculptureManager from './layouts/private_sesion/Sculpture_management/
 import DeleteSculptorManager from './layouts/private_sesion/Sculptor_management/DeleteSculptor';
 import DeleteSculptureManager from './layouts/private_sesion/Sculpture_management/DeleteSculpture';
 import SculptorSculptureList from './layouts/private_sesion/Sculpture_management/SculptureQR';
+
+
+
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -53,13 +53,15 @@ function App() {
 
 function ContentWithRouter() {
     const location = useLocation();
-    const hideNavbarAndFooter = location.pathname === "/tabletview" || location.pathname === '/Qr/expirado' || location.pathname === '/error';
+    const hideNavbarAndFooter =
+    /^\/tabletview\/[^/]+$/.test(location.pathname) ||
+    location.pathname === "/Qr/expirado" 
+  
 
     return (
         <>
             {!hideNavbarAndFooter && <Navbar />}
             <Routes>
-                <Route path="/2/:currentUrl" element={<MainComponent />} />
                 <Route path="/" element={<Main />} />
                 <Route path="/escultor/:id" element={<SculptorProfile />} />
                 <Route path="/esculturas" element={<Sculpturelist />} />
@@ -68,21 +70,19 @@ function ContentWithRouter() {
                 <Route path='/admin/escultores' element={<GestionarEscultores />} />
                 <Route path='/admin/esculturas' element={<GestionarEsculturas />} />
                 <Route path='/esculturas/delete' element={<DeleteSculptureManager />} />
+                <Route path='/esculturas/edit' element={<EditSculptureManager />} />
                 <Route path='/admin/eventos' element={<GestionarEventos />} />
                 <Route path='/escultores/delete' element={<DeleteSculptorManager />} />
                 <Route path='/escultores/edit' element={<EditSculptorManager />} />
                 <Route path='/escultores/tablet' element={<SculptorSculptureList/>} />
-                <Route path='/esculturas/edit' element={<EditSculptureManager />} />
                 <Route path='/escultores/add' element={<SculptorRegister />} />
                 <Route path='/esculturas/add' element={<ScuptureRegister />} />
                 <Route path="/tabletview/:id" element={<TabletView />} /> 
                 <Route path='/Qr/expirado' element={ <QrExpirado/>}/>
-                <Route path='/error' element={<Error/>}/>
                 <Route path='/eventos/edit' element={<EditEventManager/>}/>
                 <Route path='/eventos/delete' element={<DeleteEventManager/>}/>
                 <Route path='/eventos/add' element={<EventRegister/>}/>
-                <Route path='/Todas/esculturas' element={<SculptureAllList/>}/>
-                <Route path='/11' element={<Podium/>}/>
+                <Route path='/admin/top3' element={<Podium/>}/>
                 <Route path='/Admin/addAdm' element={<UserRegister/>}/>
             </Routes>
             {!hideNavbarAndFooter && <Footerr />}

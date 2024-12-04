@@ -112,7 +112,7 @@ const DeleteSculptureManager = () => {
   };
 
   return (
-    <Box bg="gray.100" minH="100vh" w="100%" p={8}>
+    <Box bg="gray.100" minH="100vh" w="100%" p={4}>
       <Box bg="white" borderRadius="lg" boxShadow="lg" w="100%" p={4} overflowX="auto">
         <Heading textAlign="center" mb={4} fontSize="2xl" color="red.600">
           Eliminación de Esculturas
@@ -132,7 +132,7 @@ const DeleteSculptureManager = () => {
             <Tr>
               <Th color="white">Título</Th>
               <Th color="white">Material</Th>
-              <Th color="white">Temática</Th>
+       
               <Th color="white" textAlign="center">
                 Acciones
               </Th>
@@ -143,7 +143,7 @@ const DeleteSculptureManager = () => {
               <Tr key={escultura.id}>
                 <Td>{escultura.titulo}</Td>
                 <Td>{escultura.material_principal}</Td>
-                <Td>{escultura.tematica}</Td>
+
                 <Td textAlign="center">
                   <Button
                     leftIcon={<DeleteIcon />}

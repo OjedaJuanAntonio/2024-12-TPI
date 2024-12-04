@@ -12,8 +12,6 @@ const Profile = () => {
       <Divider mb={6} />
       <Heading size="sm">Información</Heading>
       <Text>{user.name}</Text> 
-      <Heading size="sm" mt={4}>Teléfono</Heading>
-      <Text>{user.phone_number || '-'}</Text> 
       <Heading size="sm" mt={4}>Información de contacto</Heading>
       <Text>{user.email || 'No disponible'}</Text>
       <Button mt={4} colorScheme="teal" size="sm" width="full">Editar perfil</Button>

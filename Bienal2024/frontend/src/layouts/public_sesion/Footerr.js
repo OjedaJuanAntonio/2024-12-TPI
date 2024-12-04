@@ -49,7 +49,7 @@ function Footerr() {
       <Divider orientation="horizontal" height='3px' borderColor="#6BC2E5" my={6} />
       <Box textAlign="center" mt={6} fontSize="sm" color="gray.300">
         <Text>
-          © {new Date().getFullYear()} Ejemplo Inc. Todos los derechos reservados. | 
+          © {new Date().getFullYear()} Bienal Chaco | Todos los derechos reservados al Grupo 12 |
           <Link to="#" color="gray.400" _hover={{ color: '#6BC2E5' }}> Política de Privacidad </Link> | 
           <Link to="#" color="gray.400" _hover={{ color: '#6BC2E5' }}> Términos y Condiciones </Link> 
         </Text>

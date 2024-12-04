@@ -6,7 +6,7 @@ import 'swiper/css/thumbs';
 import 'swiper/css/pagination';
 import 'swiper/css/grid';
 import { Navigation } from 'swiper/modules';
-import { Box, Image, Text, Card,Button } from "@chakra-ui/react";
+import { Box, Image, Text, Card} from "@chakra-ui/react";
 import { EffectCoverflow, Pagination } from 'swiper/modules';
 import { Link } from "react-router-dom";
 
@@ -42,19 +42,24 @@ export function SwipperProfile({ images }) {
 
 
 
-export function SwipperEventcardList({ evento }) {
+  export function SwipperEventcardList({ evento }) {
     return (
         <>
             <Box textAlign="center" py={4}>
-                <Text fontSize="2xl" fontWeight="bold">
-                    Eventos del Día
+                <Text fontSize={{ base: "lg", md: "2xl" }} fontWeight="bold">
+                    Eventos Bienal 2024
                 </Text>
             </Box>
             <Swiper
-                effect={'coverflow'}
+                effect={"coverflow"}
                 grabCursor={true}
                 centeredSlides={true}
-                slidesPerView={3}
+                slidesPerView={1.2} // Permite ver parcialmente las tarjetas laterales
+                breakpoints={{
+                    350: { slidesPerView: 2 }, 
+                    640: { slidesPerView: 3 }, // Más espacio para pantallas medianas
+                    1024: { slidesPerView: 3 }, // Pantallas grandes muestran más tarjetas
+                }}
                 coverflowEffect={{
                     rotate: 50,
                     stretch: 0,
@@ -64,89 +69,113 @@ export function SwipperEventcardList({ evento }) {
                 }}
                 pagination={{ clickable: true }}
                 modules={[EffectCoverflow, Pagination]}
-                style={{ paddingBottom: '5vh' }}
+                style={{ paddingBottom: "5vh" }}
             >
                 {evento.length > 0 ? (
                     <>
                         {/* Muestra los primeros 4 eventos */}
-                        {evento.slice(0, 4).map((event) => (
+                        {evento.slice(0, 3).map((event) => (
                             <SwiperSlide
                                 key={event.id}
                                 style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                 }}
                             >
                                 <Card
                                     direction="column"
                                     overflow="hidden"
                                     variant="outline"
-                                    w="90%" // Ocupa el 90% del ancho
-                                    maxW="300px" // Ancho máximo
-                                    h="350px" // Altura fija
+                                    w={{ base: "80%", md: "90%" }}
+                                    maxW={{ base: "250px", md: "300px" }}
                                     mx="auto"
-                                    p={4}
+                                 
                                     display="flex"
-                                    flexDirection="column"
                                     justifyContent="center"
                                     alignItems="center"
-
-                                    bgSize="cover"
-                                    bgPosition="center"
+           
                                     boxShadow="lg"
-                                    color="white"
                                     borderRadius="lg"
+                                    color="white"
+                                    aspectRatio={{ base: "3 / 4", md: "4 / 5" }}
                                 >
-                                    <Text fontSize="lg" fontWeight="bold" color={"black"}>
-                                        {event.nombre}
-                                    </Text>
-                                    <Text fontSize="sm" mt={2} color={"black"}>
-                                        {event.tematica}
-                                    </Text>
-                                    <Text fontSize="sm" fontStyle="italic" mt={1} color={"black"}>
-                                        {event.ubicacion}
-                                    </Text>
+                                     {/* Imagen */}
+    <Box
+        w="100%"
+        flexBasis="70%" // Imagen ocupa el 70%
+        overflow="hidden"
+    >
+        <Image
+            src={event.img_evento} // Asegúrate de tener una URL de imagen en tus datos
+            alt={event.nombre}
+            w="100%"
+            h="100%"
+            objectFit="cover"
+        />
+    </Box>
+
+    {/* Contenido */}
+    <Box
+        w="100%"
+        flexBasis="30%" // Contenido ocupa el 30%
+        p={2}
+        textAlign="left"
+    >
+        <Text fontSize="lg" fontWeight="bold" color="gray.800" mb={2}>
+            {event.nombre}
+        </Text>
+        <Text fontSize="sm" color="gray.600" mb={3}>
+            {event.tematica}
+        </Text>
+    </Box>
                                 </Card>
                             </SwiperSlide>
                         ))}
                         {/* Último slide: Ver todos */}
                         <SwiperSlide
                             style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
                             }}
                         >
-                            <Card
-                                direction="column"
-                                overflow="hidden"
-                                variant="outline"
-                                w="90%"
-                                maxW="300px"
-                                h="350px"
-                                mx="auto"
-                                p={4}
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                                bg="gray.700"
-                                boxShadow="lg"
-                                borderRadius="lg"
-                                color="white"
-                            >
-                                <Link to="/actividades">
-                                    <Button
-                                        py={2}
-                                        fontSize="md"
-                                        fontWeight="bold"
-                                        textAlign="center"
-                                        colorScheme="blue"
-                                    >
-                                        Ver Todos los Eventos
-                                    </Button>
-                                </Link>
-                            </Card>
+                       <Card
+    as={Link} // Convierte el Card en un enlace
+    to="/actividades" // Especifica el destino
+    direction="column"
+    overflow="hidden"
+    variant="outline"
+    w={{ base: "80%", md: "90%" }}
+    maxW={{ base: "250px", md: "300px" }}
+    mx="auto"
+    p={4}
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    boxShadow="lg"
+    borderRadius="lg"
+    color="white"
+    aspectRatio={{ base: "3 / 4", md: "4 / 5" }}
+    textDecoration="none" // Evita subrayado del texto
+    _hover={{
+        transform: "scale(1.05)", // Animación al pasar el mouse
+        transition: "transform 0.2s ease-in-out",
+        boxShadow: "xl", // Acentuar la sombra
+    }}
+   
+>
+    <Text
+        fontSize={{ base: "md", md: "lg" }}
+        fontWeight="bold"
+        textAlign="center"
+        color="black"
+       
+    >
+        Ver Todos los Eventos
+    </Text>
+</Card>
+
                         </SwiperSlide>
                     </>
                 ) : (

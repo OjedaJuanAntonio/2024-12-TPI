@@ -23,24 +23,27 @@ import {
   HStack,
   Heading,
   Image,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 
 const EditSculptorManager = () => {
-  const [escultores, setEscultores] = useState([]); // Lista completa de escultores
-  const [filteredEscultores, setFilteredEscultores] = useState([]); // Lista filtrada
-  const [searchQuery, setSearchQuery] = useState(""); // Texto del buscador
-  const [selectedEscultor, setSelectedEscultor] = useState(null); // Escultor seleccionado para editar
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado del modal
+  const [escultores, setEscultores] = useState([]);
+  const [filteredEscultores, setFilteredEscultores] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedEscultor, setSelectedEscultor] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
 
+  const modalSize = useBreakpointValue({ base: "full", md: "lg" });
+  const imageSize = useBreakpointValue({ base: "100px", md: "150px" });
+
   useEffect(() => {
-    // Fetch de escultores
     fetch("http://localhost:8000/escultores/")
       .then((response) => response.json())
       .then((data) => {
         setEscultores(data);
-        setFilteredEscultores(data); // Inicialmente sin filtros
+        setFilteredEscultores(data);
       })
       .catch((error) => {
         console.error("Error fetching escultores:", error);
@@ -65,8 +68,8 @@ const EditSculptorManager = () => {
   };
 
   const handleEdit = (escultor) => {
-    setSelectedEscultor(escultor); // Guardar el escultor seleccionado
-    setIsModalOpen(true); // Abrir el modal
+    setSelectedEscultor(escultor);
+    setIsModalOpen(true);
   };
 
   const handleFieldChange = (field, value) => {
@@ -79,16 +82,15 @@ const EditSculptorManager = () => {
   const handleSave = () => {
     if (!selectedEscultor) return;
 
-    // Mapeamos los datos para que coincidan con lo que espera el backend
     const updatedEscultor = {
-      name: selectedEscultor.nombre, // mapear nombre a name
-      lastName: selectedEscultor.apellido, // mapear apellido a lastName
+      name: selectedEscultor.nombre,
+      lastName: selectedEscultor.apellido,
       nacionalidad: selectedEscultor.nacionalidad,
       email: selectedEscultor.email,
-      generalInfo: selectedEscultor.biografia || "", // Si no hay biografía, enviar un string vacío
-      photo: selectedEscultor.photo || "", // Si no hay foto, enviar un string vacío
-      phone: selectedEscultor.telefono || "", // Si no hay teléfono, enviar un string vacío
-      DNI: selectedEscultor.dni || "", // Si no hay DNI, enviar un string vacío
+      generalInfo: selectedEscultor.biografia || "",
+      photo: selectedEscultor.photo || "",
+      phone: selectedEscultor.telefono || "",
+      DNI: selectedEscultor.dni || "",
     };
 
     fetch(`http://localhost:8000/escultores/${selectedEscultor.id}/`, {
@@ -117,7 +119,7 @@ const EditSculptorManager = () => {
             escultor.id === selectedEscultor.id ? data : escultor
           )
         );
-        setIsModalOpen(false); // Cerrar el modal
+        setIsModalOpen(false);
       })
       .catch((error) => {
         console.error("Error al editar el escultor:", error);
@@ -132,13 +134,13 @@ const EditSculptorManager = () => {
   };
 
   return (
-    <Box bg="gray.100" minH="100vh" w="100%" p={8}>
+    <Box bg="gray.100" minH="100vh" w="100%" p={4}>
       <Box
         bg="white"
         borderRadius="lg"
         boxShadow="lg"
         w="100%"
-        p={4}
+        p={3}
         overflowX="auto"
       >
         <Heading textAlign="center" mb={4} fontSize="2xl" color="teal.600">
@@ -151,7 +153,7 @@ const EditSculptorManager = () => {
             onChange={handleSearch}
             borderRadius="md"
             focusBorderColor="teal.400"
-            w="100%"
+            w={{ base: "100%", md: "50%" }}
           />
         </HStack>
         <Table variant="simple" w="100%">
@@ -185,7 +187,7 @@ const EditSculptorManager = () => {
 
       {/* Modal para editar el escultor */}
       {selectedEscultor && (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size={modalSize}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader textAlign="center">Editar Escultor</ModalHeader>
@@ -194,9 +196,8 @@ const EditSculptorManager = () => {
                 <Image
                   src={selectedEscultor.photo}
                   alt={selectedEscultor.nombre}
-                  boxSize="150px"
+                  boxSize={imageSize}
                   borderRadius="md"
-                  mb={4}
                 />
                 <FormControl>
                   <FormLabel>Nombre</FormLabel>
@@ -277,8 +278,5 @@ const EditSculptorManager = () => {
     </Box>
   );
 };
-
-
-
 
 export default EditSculptorManager;

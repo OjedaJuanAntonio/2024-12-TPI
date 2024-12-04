@@ -17,7 +17,7 @@ import {
   MenuItem,
   MenuGroup,
   MenuDivider,
-  Image,
+  Image,useToast
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import Map from './user_profile/Navprofile';
@@ -25,6 +25,7 @@ import Map from './user_profile/Navprofile';
 const Navbar = () => {
   const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   const handleLogout = () => {
     logout({ returnTo: window.location.origin });
@@ -33,7 +34,7 @@ const Navbar = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      console.log("Objeto completo del usuario:", user);
+ 
       const userData = {
         sub: user.sub,
         given_name: user.given_name,
@@ -46,8 +47,8 @@ const Navbar = () => {
       };
 
 
-      localStorage.setItem('authUser', JSON.stringify(userData));
 
+      localStorage.setItem('authUser', JSON.stringify(userData));
 
       fetch('http://localhost:8000/usuarios/', {
         method: 'POST',
@@ -63,14 +64,46 @@ const Navbar = () => {
           return response.json();
         })
         .then((data) => {
+          if (data.message === 'Bienvenida al Usuario') {
+            // Mostrar un toast de bienvenida si el usuario ya existe
+            toast({
+              title: `¡Bienvenido de nuevo, ${data.user_data.name || 'Usuario'}!`,
+              description: 'Nos alegra verte nuevamente.',
+              status: 'success',
+              duration: 5000,
+              isClosable: true,
+              position: 'top',
+            });
+          } else {
+            // Mostrar un toast de éxito para nuevos usuarios
+            toast({
+              title: '¡Registro exitoso!',
+              description: 'Bienvenido al sistema.',
+              status: 'success',
+              duration: 5000,
+              isClosable: true,
+              position: 'top',
+            });
+          }
           console.log('Usuario guardado en el backend:', data);
         })
         .catch((error) => {
-          alert('Error al guardar el usuario en el backend. Por favor, intente nuevamente.');
+          // Mostrar un toast de error
+          toast({
+            title: 'Error al guardar el usuario.',
+            description: 'Por favor, intente nuevamente.',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+            position: 'top',
+          });
           console.error('Error al enviar datos del usuario:', error);
         });
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, toast]);
+
+
+
 
   // Recuperar usuario desde localStorage
   const savedUser = JSON.parse(localStorage.getItem('authUser'));
@@ -80,6 +113,9 @@ const Navbar = () => {
       {children}
     </Text>
   );
+
+  console.log('user?.picture:', user?.picture);
+console.log('savedUser?.picture:', savedUser?.picture);
 
   return (
     <Box bg="black" px={4}>
@@ -109,61 +145,80 @@ const Navbar = () => {
             <Link to="/esculturas">
               <NavLink>Esculturas</NavLink>
             </Link>
-            <Link to="/admin">
-              <NavLink>
-                <strong>Panel de Control</strong>
-              </NavLink>
-            </Link>
+            
 
-            <Link to="/Todas/esculturas">
-              <NavLink>
-                <strong>Esculturas Tablet</strong>
-              </NavLink>
-            </Link>
-            <NavLink>Otras Ediciones</NavLink>
+           
+            <Menu>
+    <MenuButton
+      as={Text} // Se utiliza Text para simular NavLink
+
+      fontSize="md"
+      cursor="pointer"
+    >
+      Otras Ediciones
+    </MenuButton>
+    <MenuList bg="white" color="black" border="1px solid #ddd">
+      <MenuItem as={Link} to="https://www.bienaldelchaco.org/2022/">
+        Edición 2022
+      </MenuItem>
+      <MenuItem as={Link} to="http://www.bienaldelchaco.org/2018/">
+        Edición 2018
+      </MenuItem>
+      <MenuItem as={Link} to="http://www.bienaldelchaco.org/2016/">
+        Edición 2016
+      </MenuItem>
+    </MenuList>
+  </Menu>
           </HStack>
         </HStack>
 
         <Flex alignItems="center">
-          {isAuthenticated || savedUser ? (
-            <Wrap>
-              <Menu>
-                <MenuButton as={Avatar} src={user?.picture || savedUser?.picture} size="md" />
-                <MenuList>
-                  <Text fontSize="md" px={4} py={2}>
-                    ¡Hola, {user?.nickname || savedUser?.nickname}!
-                  </Text>
-                  <Text fontSize="md" px={4} py={2}>
-                    ¡Hola, {user?.nickname || savedUser?.nickname}!
-                  </Text>
-                  <MenuGroup title="Perfil">
-                    <MenuItem>
-                      <Map />
-                    </MenuItem>
-                    <MenuItem onClick={handleLogout} color="red.500" fontStyle="oblique">
-                      Cerrar Sesión
-                    </MenuItem>
-                  </MenuGroup>
-                  <MenuDivider />
-                  <MenuGroup title="Ayuda">
-                    <MenuItem>FAQ</MenuItem>
-                  </MenuGroup>
-                </MenuList>
-              </Menu>
-            </Wrap>
-          ) : (
-            <Wrap>
-              <Menu>
-                <MenuButton as={Avatar} src="https://bit.ly/broken-link" size="md" color="black" />
-                <MenuList>
-                  <MenuGroup>
-                    <MenuItem onClick={loginWithRedirect}>Iniciar Sesión</MenuItem>
-                  </MenuGroup>
-                </MenuList>
-              </Menu>
-            </Wrap>
-          )}
-        </Flex>
+  {isAuthenticated || savedUser ? (
+    <Wrap>
+      <Menu>
+        {/* Validación adicional para determinar qué imagen mostrar */}
+        <MenuButton>
+  <Avatar src={user?.picture || savedUser?.picture || 'https://bit.ly/broken-link'} size="md" />
+</MenuButton>
+
+        <MenuList>
+          <Text fontSize="md" px={4} py={2}>
+            ¡Hola, {user?.nickname || savedUser?.nickname || 'Invitado'}!
+          </Text>
+          <MenuGroup title="Perfil">
+            <MenuItem>
+              <Map />
+            </MenuItem>
+            <MenuItem onClick={handleLogout} color="red.500" fontStyle="oblique">
+              Cerrar Sesión
+            </MenuItem>
+          </MenuGroup>
+          <MenuDivider />
+          <MenuGroup title="Ayuda">
+            <MenuItem>FAQ</MenuItem>
+          </MenuGroup>
+        </MenuList>
+      </Menu>
+    </Wrap>
+  ) : (
+    <Wrap>
+      <Menu>
+        <MenuButton
+          as={Avatar}
+          src="https://bit.ly/broken-link" // Imagen predeterminada para no autenticados
+          size="md"
+          color="black"
+        />
+        <MenuList>
+          <MenuGroup>
+            <MenuItem onClick={loginWithRedirect}>Iniciar Sesión</MenuItem>
+          </MenuGroup>
+        </MenuList>
+      </Menu>
+    </Wrap>
+  )}
+</Flex>
+
       </Flex>
 
       {isOpen && (

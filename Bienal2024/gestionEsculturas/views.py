@@ -2,13 +2,26 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from firebase_admin import db
 from .serializers import EsculturaSerializer
+#from .permissions import IsAdminEsculturasOrReadOnly
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+#from .permissions import HasRole
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 
 ref = db.reference('esculturas')
 
 class EsculturaViewSet(viewsets.ViewSet):
-    """
-    ViewSet para manejar esculturas en Realtime Database.
-    """
+
+    def get(self, request):
+        print("¡Acceso permitido! Eres admin de esculturas.")
+        
+        return Response({"message": "Tienes acceso como admin de esculturas."})
+   
+    #permission_classes = [IsAdminEsculturasOrReadOnly]
+
 
     def list(self, request):
         """
@@ -17,20 +30,18 @@ class EsculturaViewSet(viewsets.ViewSet):
         try:
             esculturas = ref.get()  # Obtiene todas las esculturas de Firebase
             if esculturas:
-                # Convierte el diccionario en una lista de objetos con 'id'
                 esculturas_list = [{'id': key, **value} for key, value in esculturas.items()]
                 
-                # Filtra por id_escultor si se proporciona en los query params
                 id_escultor = request.query_params.get('id_escultor')
                 if id_escultor:
                     esculturas_list = [
                         escultura for escultura in esculturas_list 
                         if escultura.get('id_escultor') == id_escultor
                     ]
-
+                
                 return Response(esculturas_list, status=status.HTTP_200_OK)
             
-            # Si no hay esculturas en la base de datos
+            #print(request.usuarios)
             return Response([], status=status.HTTP_200_OK)
         
         except Exception as e:
@@ -38,7 +49,7 @@ class EsculturaViewSet(viewsets.ViewSet):
 
     def create(self, request):
         """
-        Crea una nueva escultura.
+        Crea una nueva escultura. Solo accesible para 'admin_esculturas'.
         """
         serializer = EsculturaSerializer(data=request.data)
         if serializer.is_valid():
@@ -49,6 +60,7 @@ class EsculturaViewSet(viewsets.ViewSet):
             except Exception as e:
                 return Response({'error': f'Error al crear escultura: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     def retrieve(self, request, pk=None):
         """
@@ -111,3 +123,4 @@ class EsculturaViewSet(viewsets.ViewSet):
             return Response({'error': 'Escultura no encontrada'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': f'Error al eliminar escultura: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

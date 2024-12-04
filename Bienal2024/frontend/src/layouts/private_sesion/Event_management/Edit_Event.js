@@ -1,28 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Input,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Button,
-  useToast,
-  FormControl,
-  FormLabel,
-  VStack,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  HStack,
-  Heading,
-  Image,
-} from "@chakra-ui/react";
+import {Box,Input,Table,Thead,Tbody,Tr,Th,Td,Button,useToast,FormControl,FormLabel,VStack,Modal,ModalOverlay,ModalContent,ModalHeader, ModalBody,ModalFooter,HStack, Heading, Image,} from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 import Uploader from "../Uploader";
 
@@ -39,122 +16,55 @@ const EditEventManager = () => {
   useEffect(() => {
     fetch("http://localhost:8000/eventos/")
       .then((response) => response.json())
-      .then((data) => {
-        setEventos(data);
-        setFilteredEventos(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching eventos:", error);
-        toast({
-          title: "Error",
-          description: "No se pudieron cargar los eventos.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      });
+      .then((data) => { setEventos(data);setFilteredEventos(data); })
+      .catch((error) => { console.error("Error fetching eventos:", error);
+        toast({ title: "Error",position: "top", description: "No se pudieron cargar los eventos.", status: "error",duration: 5000, isClosable: true, });});
   }, [toast]);
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-    setFilteredEventos(
-      eventos.filter((evento) =>
-        evento.nombre.toLowerCase().includes(query)
-      )
+    setFilteredEventos(eventos.filter((evento) =>evento.nombre.toLowerCase().includes(query) )
     );
   };
 
-  const handleEdit = (evento) => {
-    setSelectedEvento(evento);
-    setIsModalOpen(true);
-  };
+  const handleEdit = (evento) => { setSelectedEvento(evento);setIsModalOpen(true);};
 
   const handleFieldChange = (field, value) => {
-    setSelectedEvento((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setSelectedEvento((prev) => ({ ...prev,[field]: value,}));
   };
 
-  const handleImageClick = (imageKey) => {
-    setSelectedImageKey(imageKey);
-    setIsModalOpen(false); // Cierra el modal principal temporalmente
-    setIsUploaderModalOpen(true);
-  };
+  const handleImageClick = (imageKey) => {setSelectedImageKey(imageKey);setIsModalOpen(false);  setIsUploaderModalOpen(true); };
 
-  const handleImageUploaded = (newUrl) => {
-    handleFieldChange(selectedImageKey, newUrl); // Actualiza el campo de imagen en el estado
-    setIsUploaderModalOpen(false);
-    setIsModalOpen(true); // Reabre el modal principal
-  };
+  const handleImageUploaded = (newUrl) => {handleFieldChange(selectedImageKey, newUrl); setIsUploaderModalOpen(false);setIsModalOpen(true); };
 
   const handleSave = () => {
     if (!selectedEvento) return;
 
     fetch(`http://localhost:8000/eventos/${selectedEvento.id}/`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json", },
       body: JSON.stringify(selectedEvento),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
-        toast({
-          title: "Evento actualizado",
-          description: `El evento "${data.nombre}" fue actualizado con éxito.`,
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        setEventos((prev) =>
-          prev.map((evento) =>
-            evento.id === selectedEvento.id ? data : evento
-          )
-        );
-        setFilteredEventos((prev) =>
-          prev.map((evento) =>
-            evento.id === selectedEvento.id ? data : evento
-          )
-        );
+        toast({ title: "Evento actualizado", description: `El evento "${data.nombre}" fue actualizado con éxito.`,position: "top",status: "success", duration: 5000, isClosable: true, });
+        setEventos((prev) => prev.map((evento) =>evento.id === selectedEvento.id ? data : evento));
+        setFilteredEventos((prev) =>prev.map((evento) =>evento.id === selectedEvento.id ? data : evento) );
         setIsModalOpen(false);
       })
       .catch((error) => {
         console.error("Error al editar el evento:", error);
-        toast({
-          title: "Error",
-          description: "No se pudo editar el evento.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
+        toast({ title: "Error",description: "No se pudo editar el evento.",position: "top", status: "error",duration: 5000,isClosable: true,});
       });
   };
 
   return (
     <Box bg="gray.100" minH="100vh" w="100%" p={8}>
-      <Box
-        bg="white"
-        borderRadius="lg"
-        boxShadow="lg"
-        w="100%"
-        p={4}
-        overflowX="auto"
-      >
-        <Heading textAlign="center" mb={4} fontSize="2xl" color="teal.600">
-          Edición de Eventos
-        </Heading>
+      <Box bg="white" borderRadius="lg" boxShadow="lg" w="100%" p={4} overflowX="auto">
+        <Heading textAlign="center" mb={4} fontSize="2xl" color="teal.600">Edición de Eventos </Heading>
         <HStack justifyContent="center" mb={5}>
-          <Input
-            placeholder="Buscar eventos por nombre..."
-            value={searchQuery}
-            onChange={handleSearch}
-            borderRadius="md"
-            focusBorderColor="teal.400"
-            w="100%"
-          />
+          <Input placeholder="Buscar eventos por nombre..." value={searchQuery} onChange={handleSearch} borderRadius="md" focusBorderColor="teal.400" w="100%" />
         </HStack>
         <Table variant="simple" w="100%">
           <Thead bg="teal.500">
@@ -162,9 +72,7 @@ const EditEventManager = () => {
               <Th color="white">Nombre</Th>
               <Th color="white">Temática</Th>
               <Th color="white">Ubicación</Th>
-              <Th color="white" textAlign="center">
-                Acciones
-              </Th>
+              <Th color="white" textAlign="center">Acciones</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -174,14 +82,7 @@ const EditEventManager = () => {
                 <Td>{evento.tematica}</Td>
                 <Td>{evento.ubicacion || "Sin ubicación"}</Td>
                 <Td textAlign="center">
-                  <Button
-                    leftIcon={<EditIcon />}
-                    colorScheme="teal"
-                    size="sm"
-                    onClick={() => handleEdit(evento)}
-                  >
-                    Editar
-                  </Button>
+                  <Button leftIcon={<EditIcon />} colorScheme="teal" size="sm"onClick={() => handleEdit(evento)} >Editar</Button>
                 </Td>
               </Tr>
             ))}
@@ -189,7 +90,6 @@ const EditEventManager = () => {
         </Table>
       </Box>
 
-      {/* Modal de Edición */}
       {selectedEvento && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size="xl">
           <ModalOverlay />
@@ -197,92 +97,46 @@ const EditEventManager = () => {
             <ModalHeader textAlign="center">Editar Evento</ModalHeader>
             <ModalBody>
               <VStack spacing={4}>
-                <Image
-                  src={selectedEvento.img_evento}
-                  alt="Imagen del evento"
-                  boxSize="150px"
-                  borderRadius="md"
-                  onClick={() => handleImageClick("img_evento")}
-                  _hover={{ cursor: "pointer", transform: "scale(1.05)" }}
-                />
+                <Image src={selectedEvento.img_evento}  alt="Imagen del evento"  boxSize="150px"  borderRadius="md"  onClick={() => handleImageClick("img_evento")}  _hover={{ cursor: "pointer", transform: "scale(1.05)" }} />
                 <FormControl>
                   <FormLabel>Nombre</FormLabel>
-                  <Input
-                    value={selectedEvento.nombre}
-                    onChange={(e) =>
-                      handleFieldChange("nombre", e.target.value)
-                    }
-                  />
+                  <Input value={selectedEvento.nombre}  onChange={(e) =>handleFieldChange("nombre", e.target.value) }/>
                 </FormControl>
                 <FormControl>
                   <FormLabel>Temática</FormLabel>
-                  <Input
-                    value={selectedEvento.tematica}
-                    onChange={(e) =>
-                      handleFieldChange("tematica", e.target.value)
-                    }
-                  />
+                  <Input value={selectedEvento.tematica} onChange={(e) => handleFieldChange("tematica", e.target.value)}/>
                 </FormControl>
                 <FormControl>
                   <FormLabel>Ubicación</FormLabel>
-                  <Input
-                    value={selectedEvento.ubicacion || ""}
-                    onChange={(e) =>
-                      handleFieldChange("ubicacion", e.target.value)
-                    }
-                  />
+                  <Input value={selectedEvento.ubicacion || ""} onChange={(e) =>handleFieldChange("ubicacion", e.target.value) } />
                 </FormControl>
                 <HStack spacing={4} width="100%">
                   <FormControl>
                     <FormLabel>Fecha de Inicio</FormLabel>
-                    <Input
-                      type="date"
-                      value={selectedEvento.fecha_inicio || ""}
-                      onChange={(e) =>
-                        handleFieldChange("fecha_inicio", e.target.value)
-                      }
-                    />
+                    <Input type="date" value={selectedEvento.fecha_inicio || ""} onChange={(e) => handleFieldChange("fecha_inicio", e.target.value) }/>
                   </FormControl>
                   <FormControl>
                     <FormLabel>Fecha de Fin</FormLabel>
-                    <Input
-                      type="date"
-                      value={selectedEvento.fecha_fin || ""}
-                      min={selectedEvento.fecha_inicio || ""}
-                      onChange={(e) =>
-                        handleFieldChange("fecha_fin", e.target.value)
-                      }
-                    />
+                    <Input type="date" value={selectedEvento.fecha_fin || ""}min={selectedEvento.fecha_inicio || ""}onChange={(e) => handleFieldChange("fecha_fin", e.target.value) } />
                   </FormControl>
                 </HStack>
               </VStack>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="teal" mr={3} onClick={handleSave}>
-                Guardar
-              </Button>
-              <Button variant="ghost" onClick={() => setIsModalOpen(false)}>
-                Cancelar
-              </Button>
+              <Button colorScheme="teal" mr={3} onClick={handleSave}>Guardar </Button>
+              <Button variant="ghost" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
       )}
 
-      {/* Modal de Uploader */}
-      <Modal
-        isOpen={isUploaderModalOpen}
-        onClose={() => setIsUploaderModalOpen(false)}
-        size="6xl"
-      >
+
+      <Modal isOpen={isUploaderModalOpen} onClose={() => setIsUploaderModalOpen(false)}size="6xl" >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Subir Nueva Imagen</ModalHeader>
           <ModalBody>
-            <Uploader
-              setPhoto={(newUrl) => handleImageUploaded(newUrl)} // Llama a handleImageUploaded
-              label="Subir nueva imagen para el evento"
-            />
+            <Uploader setPhoto={(newUrl) => handleImageUploaded(newUrl)} label="Subir nueva imagen para el evento"/>
           </ModalBody>
         </ModalContent>
       </Modal>

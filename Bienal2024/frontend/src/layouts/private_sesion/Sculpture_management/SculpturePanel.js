@@ -26,6 +26,8 @@ function GestionarEsculturas() {
     hover: { scale: 1.02, transition: { duration: 0.3 } },
     tap: { scale: 0.98, transition: { duration: 0.1 } },
   };
+  const userSub = localStorage.getItem('userSub');
+  console.log('El valor de userSub es:', userSub);
 
   return (
     <Flex

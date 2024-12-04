@@ -16,6 +16,7 @@ class UsuarioViewSet(viewsets.ViewSet):
     def create(self, request):
         """
         Crea un nuevo usuario con los datos proporcionados por Auth0 en Firebase.
+        Si el usuario ya existe, devuelve un mensaje de bienvenida.
         """
         serializer = UsuarioSerializer(data=request.data)
         if serializer.is_valid():
@@ -26,14 +27,11 @@ class UsuarioViewSet(viewsets.ViewSet):
                 existing_user = user_ref.get()
 
                 if existing_user:  # Si el usuario ya existe
-                    # Verificar el tipo de usuario si ya existe
-                    type_user = existing_user.get('type_user', 'normal')
-                    if type_user != 'normal':
-                        return Response(
-                            {"message": "Administrador ya registrado", "type_user": type_user},
-                            status=status.HTTP_400_BAD_REQUEST
-                        )
-                    return Response({"message": "Usuario ya existe"}, status=status.HTTP_200_OK)
+                    # Enviar un mensaje de bienvenida al usuario existente
+                    return Response(
+                        {"message": "Bienvenida al Usuario", "user_data": existing_user},
+                        status=status.HTTP_200_OK
+                    )
 
                 # Crear un nuevo usuario en Firebase
                 user_ref.set(serializer.validated_data)  # Guardar los datos validados en Firebase
