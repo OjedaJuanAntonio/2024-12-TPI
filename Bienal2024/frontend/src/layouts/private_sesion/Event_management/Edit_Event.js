@@ -60,8 +60,8 @@ const EditEventManager = () => {
   };
 
   return (
-    <Box bg="gray.100" minH="100vh" w="100%" p={8}>
-      <Box bg="white" borderRadius="lg" boxShadow="lg" w="100%" p={4} overflowX="auto">
+    <Box bg="gray.100" minH="100vh" w="100%" p={2}>
+      <Box bg="white" borderRadius="lg" boxShadow="lg" w="100%" p={1} overflowX="auto">
         <Heading textAlign="center" mb={4} fontSize="2xl" color="teal.600">Edición de Eventos </Heading>
         <HStack justifyContent="center" mb={5}>
           <Input placeholder="Buscar eventos por nombre..." value={searchQuery} onChange={handleSearch} borderRadius="md" focusBorderColor="teal.400" w="100%" />
@@ -70,7 +70,6 @@ const EditEventManager = () => {
           <Thead bg="teal.500">
             <Tr>
               <Th color="white">Nombre</Th>
-              <Th color="white">Temática</Th>
               <Th color="white">Ubicación</Th>
               <Th color="white" textAlign="center">Acciones</Th>
             </Tr>
@@ -79,7 +78,6 @@ const EditEventManager = () => {
             {filteredEventos.map((evento) => (
               <Tr key={evento.id}>
                 <Td>{evento.nombre}</Td>
-                <Td>{evento.tematica}</Td>
                 <Td>{evento.ubicacion || "Sin ubicación"}</Td>
                 <Td textAlign="center">
                   <Button leftIcon={<EditIcon />} colorScheme="teal" size="sm"onClick={() => handleEdit(evento)} >Editar</Button>

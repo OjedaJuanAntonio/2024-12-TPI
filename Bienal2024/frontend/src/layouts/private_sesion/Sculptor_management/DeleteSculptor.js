@@ -140,10 +140,7 @@ const DeleteSculptorManager = () => {
                 Foto
               </Th>
               <Th color="white" py={2}>
-                Nombre
-              </Th>
-              <Th color="white" py={2}>
-                Apellido
+                Nombre y Apellido
               </Th>
               <Th color="white" py={2} textAlign="center">
                 Acciones
@@ -161,9 +158,9 @@ const DeleteSculptorManager = () => {
                     borderRadius="full"
                   />
                 </Td>
-                <Td py={1}>{escultor.nombre}</Td>
-                <Td py={1}>{escultor.apellido}</Td>
-                <Td py={1} textAlign="center">
+                <Td >{escultor.nombre} {escultor.apellido}</Td>
+        
+                <Td  textAlign="center">
                   <Button
                     leftIcon={<DeleteIcon />}
                     colorScheme="red"

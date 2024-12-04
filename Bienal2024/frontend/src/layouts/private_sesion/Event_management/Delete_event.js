@@ -53,8 +53,8 @@ const DeleteEventManager = () => {
   };
 
   return (
-    <Box bg="gray.100" minH="100vh" w="100%" p={8}>
-      <Box bg="white" borderRadius="lg" boxShadow="lg" w="100%" p={4} overflowX="auto">
+    <Box bg="gray.100" minH="100vh" w="100%" p={2}>
+      <Box bg="white" borderRadius="lg" boxShadow="lg" w="100%" p={2} overflowX="auto">
         <Heading textAlign="center" mb={4} fontSize="2xl" color="red.600"> Eliminación de Eventos </Heading>
         <HStack justifyContent="center" mb={5}>
           <Input placeholder="Buscar eventos por nombre..." value={searchQuery} onChange={handleSearch}  borderRadius="md"focusBorderColor="red.400" w="100%"/>

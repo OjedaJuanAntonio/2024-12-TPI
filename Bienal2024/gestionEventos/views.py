@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from firebase_admin import db
 from .Serializers import EventoSerializer
+from .permissions import IsAdminOfEvents
 
 ref = db.reference('eventos')
 
@@ -9,6 +10,7 @@ class EventoViewSet(viewsets.ViewSet):
     """
     ViewSet para manejar eventos en Realtime Database.
     """
+    permission_classes = [IsAdminOfEvents]  # Aplica el permiso a todas las acciones por defecto
 
     def list(self, request):
         """
@@ -24,6 +26,7 @@ class EventoViewSet(viewsets.ViewSet):
             return Response(eventos, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     def retrieve(self, request, pk=None):
         """

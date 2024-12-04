@@ -21,6 +21,8 @@ const providerConfig = {
     onRedirectCallback: (appState) => {
         history.push(appState?.returnTo || window.location.pathname);
     },
+    cacheLocation: "localstorage", // Almacena tokens en localStorage
+    useRefreshTokens: true, // Permite mantener la sesión activa
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

@@ -2,7 +2,7 @@ from rest_framework.permissions import BasePermission
 from django.http import JsonResponse
 import json
 
-class IsAdminOfSculpture(BasePermission):
+class IsAdminOfSculptors(BasePermission):
     """
     Permiso personalizado:
     - Permite a cualquiera ver la lista de esculturas (list).
@@ -13,14 +13,12 @@ class IsAdminOfSculpture(BasePermission):
         #Permitir a cualquiera acceder a la lista de esculturas
         if view.action == 'list':
             return True
-        
         # Obtener el usuario autenticado
         data = json.loads(request.body)
         type_user = data.get("type_user")
         
-        
         # Para todas las demás acciones, verificar si el usuario es admin
-        if type_user == 'admin_ esculturas' or type_user == 'superuser':
+        if type_user == 'admin_escultores' or type_user == 'superuser':
             return True
 
         # Si no cumple las condiciones, denegar el acceso

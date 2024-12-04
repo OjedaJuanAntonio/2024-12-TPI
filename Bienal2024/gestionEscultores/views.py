@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from firebase_admin import db
 from .serializers import EscultorSerializer
+from .permissions import IsAdminOfSculptors
 
 ref = db.reference('escultores')
 
@@ -24,6 +25,9 @@ class EscultorViewSet(viewsets.ViewSet):
             return Response([], status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    permission_classes = [IsAdminOfSculptors]  # Aplica el permiso a todas las acciones por defecto
+
 
     def create(self, request):
         """

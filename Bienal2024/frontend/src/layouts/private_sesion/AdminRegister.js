@@ -20,21 +20,25 @@ import {
   ModalFooter,
   RadioGroup,
   Radio,
-  HStack,
-  Icon,
-  Stack,
+  Stack, // Importación añadida
   Text,
+  HStack,
+  PinInput,
+  PinInputField,
+  Icon,
+  Heading,
 } from "@chakra-ui/react";
-import { FaHammer } from "react-icons/fa6";
+import { FaHammer } from "react-icons/fa";
 import { LuCalendar } from "react-icons/lu";
-import { FaUser } from "react-icons/fa";
 
 const EditUserManager = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
+  const [pin, setPin] = useState("");
   const toast = useToast();
 
   useEffect(() => {
@@ -44,8 +48,7 @@ const EditUserManager = () => {
         setUsers(data);
         setFilteredUsers(data);
       })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
+      .catch(() => {
         toast({
           title: "Error",
           description: "No se pudieron cargar los usuarios.",
@@ -70,11 +73,24 @@ const EditUserManager = () => {
 
   const handleEdit = (user) => {
     setSelectedUser(user);
-    setIsModalOpen(true);
+    setIsEditModalOpen(true);
   };
 
   const handleSave = () => {
-    if (!selectedUser) return;
+    setIsPinModalOpen(true);
+  };
+
+  const handleConfirmSave = () => {
+    if (pin !== "2024") {
+      toast({
+        title: "PIN incorrecto",
+        description: "El PIN ingresado es incorrecto.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
 
     fetch(`http://localhost:8000/usuarios/${selectedUser.id}/`, {
       method: "PUT",
@@ -93,11 +109,12 @@ const EditUserManager = () => {
           isClosable: true,
         });
 
-        // Recargar la página
+        setIsPinModalOpen(false);
+        setIsEditModalOpen(false);
+        setPin("");
         window.location.reload();
       })
-      .catch((error) => {
-        console.error("Error al editar el usuario:", error);
+      .catch(() => {
         toast({
           title: "Error",
           description: "No se pudo editar el usuario.",
@@ -109,203 +126,169 @@ const EditUserManager = () => {
   };
 
   return (
-    <Box p={4}>
+    <Box  mx="auto">
+      <Heading as="h1" mb={6} textAlign="center" color="teal.600" fontSize={{ base: "lg", md: "2xl" }}>
+        Gestión de Usuarios
+      </Heading>
       <Input
         placeholder="Buscar usuarios por nombre o correo..."
         value={searchQuery}
         onChange={handleSearch}
-        mb={4}
+        mb={6}
+        borderRadius="lg"
+        boxShadow="sm"
+        _focus={{ boxShadow: "outline" }}
       />
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Nombre</Th>
-            <Th>Email</Th>
-            <Th>Rol</Th>
-            <Th>Acciones</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {filteredUsers.map((user) => (
-            <Tr key={user.id}>
-              <Td>{user.name}</Td>
-              <Td>{user.email}</Td>
-              <Td>{user.type_user}</Td>
-              <Td>
-                <Button
-                  colorScheme="blue"
-                  size="sm"
-                  onClick={() => handleEdit(user)}
-                >
-                  Editar
-                </Button>
-              </Td>
+      <Box
+        overflowX="auto"
+        borderRadius="lg"
+        border="1px"
+        borderColor="gray.200"
+        boxShadow="lg"
+        bg="white"
+      >
+        <Table variant="striped" colorScheme="teal" size="sm">
+          <Thead>
+            <Tr>
+              <Th>Nombre</Th>
+              <Th>Email</Th>
+              <Th>Rol</Th>
+              <Th>Acciones</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {filteredUsers.map((user) => (
+              <Tr key={user.id}>
+                <Td>{user.name}</Td>
+                <Td>{user.email}</Td>
+                <Td>{user.type_user}</Td>
+                <Td>
+                  <Button
+                    colorScheme="teal"
+                    size="sm"
+                    onClick={() => handleEdit(user)}
+                  >
+                    Editar
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
 
-      {/* Modal para editar usuario */}
       {selectedUser && (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <ModalOverlay />
-        <ModalContent maxW={{ base: "95%", md: "600px", lg: "800px" }}>
-          <ModalHeader textAlign="center" fontSize="2xl" color="teal.600">
-            Editar Rol del Usuario
-          </ModalHeader>
-          <ModalBody>
-            <FormControl id="role" mt={6} isRequired>
-              <FormLabel fontSize="lg" fontWeight="bold" color="teal.500">
-                Seleccionar Rol
-              </FormLabel>
-              <RadioGroup
-                onChange={(value) =>
-                  setSelectedUser((prev) => ({
-                    ...prev,
-                    type_user: value,
-                  }))
-                }
-                value={selectedUser.type_user}
-              >
-                <Stack
-                  direction={{ base: "column", md: "row" }}
-                  spacing={6}
-                  justifyContent="center"
+        <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} size="lg">
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Editar Rol del Usuario</ModalHeader>
+            <ModalBody>
+              <FormControl id="role" mt={6} isRequired>
+                <FormLabel color="teal.500">Seleccionar Rol</FormLabel>
+                <RadioGroup
+                  onChange={(value) =>
+                    setSelectedUser((prev) => ({
+                      ...prev,
+                      type_user: value,
+                    }))
+                  }
+                  value={selectedUser.type_user}
                 >
-                  {/* Rol: Esculturas */}
-                  <Box
-                    p={6}
-                    borderWidth="2px"
-                    borderRadius="lg"
-                    bg={
-                      selectedUser.type_user === "admin_escultura"
-                        ? "teal.50"
-                        : "white"
-                    }
-                    borderColor={
-                      selectedUser.type_user === "admin_escultura"
-                        ? "teal.300"
-                        : "gray.200"
-                    }
-                    boxShadow="lg"
-                    transition="0.3s"
-                    _hover={{
-                      boxShadow: "xl",
-                      transform: "scale(1.05)",
-                    }}
-                  >
-                    <Radio value="admin_escultura">
-                      <HStack>
-                        <Icon as={FaHammer} color="teal.500" boxSize={6} />
-                        <Text fontWeight="bold" fontSize="lg">
-                          Esculturas
-                        </Text>
-                      </HStack>
-                    </Radio>
-                    <Text mt={3} color="gray.600" fontSize="sm">
-                      Gestiona todas las esculturas del sistema.
-                    </Text>
-                  </Box>
-      
-                  {/* Rol: Eventos */}
-                  <Box
-                    p={6}
-                    borderWidth="2px"
-                    borderRadius="lg"
-                    bg={
-                      selectedUser.type_user === "admin_eventos"
-                        ? "teal.50"
-                        : "white"
-                    }
-                    borderColor={
-                      selectedUser.type_user === "admin_eventos"
-                        ? "teal.300"
-                        : "gray.200"
-                    }
-                    boxShadow="lg"
-                    transition="0.3s"
-                    _hover={{
-                      boxShadow: "xl",
-                      transform: "scale(1.05)",
-                    }}
-                  >
-                    <Radio value="admin_eventos">
-                      <HStack>
-                        <Icon as={LuCalendar} color="teal.500" boxSize={6} />
-                        <Text fontWeight="bold" fontSize="lg">
-                          Eventos
-                        </Text>
-                      </HStack>
-                    </Radio>
-                    <Text mt={3} color="gray.600" fontSize="sm">
-                      Gestiona todos los eventos relacionados con esculturas.
-                    </Text>
-                  </Box>
-      
-                  {/* Rol: Usuario Común */}
-                  <Box
-                    p={6}
-                    borderWidth="2px"
-                    borderRadius="lg"
-                    bg={
-                      selectedUser.type_user === "usuario_comun"
-                        ? "teal.50"
-                        : "white"
-                    }
-                    borderColor={
-                      selectedUser.type_user === "usuario_comun"
-                        ? "teal.300"
-                        : "gray.200"
-                    }
-                    boxShadow="lg"
-                    transition="0.3s"
-                    _hover={{
-                      boxShadow: "xl",
-                      transform: "scale(1.05)",
-                    }}
-                  >
-                    <Radio value="usuario_comun">
-                      <HStack>
-                        <Icon as={FaUser} color="teal.500" boxSize={6} />
-                        <Text fontWeight="bold" fontSize="lg">
-                          Usuario Común
-                        </Text>
-                      </HStack>
-                    </Radio>
-                    <Text mt={3} color="gray.600" fontSize="sm">
-                      Solo tendrá acceso básico como un usuario común.
-                    </Text>
-                  </Box>
-                </Stack>
-              </RadioGroup>
-            </FormControl>
+                  <Stack direction={{ base: "column", md: "row" }} spacing={6}>
+                    <Box
+                      p={4}
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      bg={
+                        selectedUser.type_user === "admin_escultura"
+                          ? "teal.50"
+                          : "white"
+                      }
+                      borderColor={
+                        selectedUser.type_user === "admin_escultura"
+                          ? "teal.300"
+                          : "gray.200"
+                      }
+                      transition="0.3s"
+                    >
+                      <Radio value="admin_escultura">
+                        <HStack>
+                          <Icon as={FaHammer} color="teal.500" boxSize={6} />
+                          <Text fontWeight="bold">Esculturas</Text>
+                        </HStack>
+                      </Radio>
+                      <Text mt={2} color="gray.600" fontSize="sm">
+                        Gestiona todas las esculturas del sistema.
+                      </Text>
+                    </Box>
+
+                    <Box
+                      p={4}
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      bg={
+                        selectedUser.type_user === "admin_eventos"
+                          ? "teal.50"
+                          : "white"
+                      }
+                      borderColor={
+                        selectedUser.type_user === "admin_eventos"
+                          ? "teal.300"
+                          : "gray.200"
+                      }
+                      transition="0.3s"
+                    >
+                      <Radio value="admin_eventos">
+                        <HStack>
+                          <Icon as={LuCalendar} color="teal.500" boxSize={6} />
+                          <Text fontWeight="bold">Eventos</Text>
+                        </HStack>
+                      </Radio>
+                      <Text mt={2} color="gray.600" fontSize="sm">
+                        Gestiona todos los eventos relacionados con esculturas.
+                      </Text>
+                    </Box>
+                  </Stack>
+                </RadioGroup>
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="teal" mr={3} onClick={handleSave}>
+                Guardar
+              </Button>
+              <Button variant="ghost" onClick={() => setIsEditModalOpen(false)}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
+
+      <Modal isOpen={isPinModalOpen} onClose={() => setIsPinModalOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Confirmar Acción</ModalHeader>
+          <ModalBody>
+            <Text mb={4}>Ingrese el PIN para confirmar:</Text>
+            <HStack justify="center">
+              <PinInput value={pin} onChange={(value) => setPin(value)}>
+                <PinInputField />
+                <PinInputField />
+                <PinInputField />
+                <PinInputField />
+              </PinInput>
+            </HStack>
           </ModalBody>
-          <ModalFooter justifyContent="center">
-            <Button
-              colorScheme="teal"
-              size="lg"
-              width="40%"
-              onClick={handleSave}
-              boxShadow="lg"
-              _hover={{ bg: "teal.400" }}
-              mr={3}
-            >
-              Guardar
+          <ModalFooter>
+            <Button colorScheme="red" onClick={handleConfirmSave} mr={3}>
+              Confirmar
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              width="40%"
-              onClick={() => setIsModalOpen(false)}
-              _hover={{ bg: "gray.100" }}
-            >
+            <Button variant="ghost" onClick={() => setIsPinModalOpen(false)}>
               Cancelar
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-      
-      )}
     </Box>
   );
 };

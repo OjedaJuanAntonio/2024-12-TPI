@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from .permissions import IsAdminOfSculpture
+
 
 ref = db.reference('esculturas')
 
@@ -46,6 +48,8 @@ class EsculturaViewSet(viewsets.ViewSet):
         
         except Exception as e:
             return Response({'error': f'Error al obtener esculturas: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    permission_classes = [IsAdminOfSculpture]
 
     def create(self, request):
         """

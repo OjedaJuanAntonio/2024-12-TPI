@@ -22,12 +22,16 @@ if not firebase_admin._apps:
 load_dotenv()
 
 
-SECRET_KEY = 'django-insecure-lkv(3+3j(y2e!(d+oba@cw%a4f90a@qo8v9v&zww@yt4%0m$z!'
+SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
+#'django-insecure-lkv(3+3j(y2e!(d+oba@cw%a4f90a@qo8v9v&zww@yt4%0m$z!'
 
-DEBUG = True
+# DEBUG = True
+DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = []
-
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
