@@ -32,6 +32,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 const Sculpture_register = () => {
   const { user } = useAuth0();
+  console.log(user);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [formData, setFormData] = useState({

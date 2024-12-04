@@ -27,15 +27,11 @@ const providerConfig = {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-<Auth0Provider {...providerConfig}
->    <AuthProvider>
-<ChakraProvider>
+<Auth0Provider {...providerConfig}>
+    <ChakraProvider>
             <App />
-        </ChakraProvider>
-
-</AuthProvider>
-       
-    </Auth0Provider>
+    </ChakraProvider>
+</Auth0Provider>
     );
 
 //esto se encarga registrar el service worker encargado de manejar el cache de la aplicacion

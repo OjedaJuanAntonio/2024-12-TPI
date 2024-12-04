@@ -26,6 +26,7 @@ import EditSculptureManager from './layouts/private_sesion/Sculpture_management/
 import DeleteSculptorManager from './layouts/private_sesion/Sculptor_management/DeleteSculptor';
 import DeleteSculptureManager from './layouts/private_sesion/Sculpture_management/DeleteSculpture';
 import SculptorSculptureList from './layouts/private_sesion/Sculpture_management/SculptureQR';
+import Error from './layouts/public_sesion/Error';
 
 
 
@@ -84,6 +85,8 @@ function ContentWithRouter() {
                 <Route path='/eventos/add' element={<EventRegister/>}/>
                 <Route path='/admin/top3' element={<Podium/>}/>
                 <Route path='/Admin/addAdm' element={<UserRegister/>}/>
+                <Route path='/Error' element={<Error/>}/>
+
             </Routes>
             {!hideNavbarAndFooter && <Footerr />}
         </>

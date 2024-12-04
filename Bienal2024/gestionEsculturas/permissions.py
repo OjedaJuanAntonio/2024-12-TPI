@@ -18,9 +18,9 @@ class IsAdminOfSculpture(BasePermission):
         data = json.loads(request.body)
         type_user = data.get("type_user")
         
-        
+
         # Para todas las demás acciones, verificar si el usuario es admin
-        if type_user == 'admin_ esculturas' or type_user == 'superuser':
+        if type_user == 'admin_esculturas' or type_user == 'superuser':
             return True
 
         # Si no cumple las condiciones, denegar el acceso
