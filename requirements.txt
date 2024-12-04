@@ -49,7 +49,7 @@ psycopg2-binary==2.9.9
 py2flowchart==0.0.2
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
-pycosat==0.6.4
+pycosat
 pycparser==2.20
 pyflowchart==0.3.1
 PyJWT==2.9.0
