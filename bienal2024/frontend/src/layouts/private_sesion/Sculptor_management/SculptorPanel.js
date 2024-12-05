@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
-import Loginbackground from "../../../assets/Loginbackground.webp"; 
+import Loginbackground from '../../../assets/Loginbackground.webp'
 const MotionBox = motion(Box);
 const MotionButton = motion(Button);
 

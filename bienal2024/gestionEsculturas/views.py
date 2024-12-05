@@ -10,6 +10,7 @@ class EsculturaViewSet(viewsets.ViewSet):
     """
     ViewSet para manejar esculturas en Realtime Database.
     """
+    permission_classes = [IsAdminOfSculpture]  # Aplica el permiso a todas las acciones por defecto
     
     def list(self, request):
         """
@@ -24,7 +25,6 @@ class EsculturaViewSet(viewsets.ViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    permission_classes = [IsAdminOfSculpture]  # Aplica el permiso a todas las acciones por defecto
 
     def create(self, request):
         """

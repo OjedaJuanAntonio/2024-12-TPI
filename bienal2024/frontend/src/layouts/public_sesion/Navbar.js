@@ -65,15 +65,23 @@ const Navbar = () => {
         })
         .then((data) => {
           if (data.message === 'Bienvenida al Usuario') {
-            // Mostrar un toast de bienvenida si el usuario ya existe
-            toast({
-              title: `¡Bienvenido de nuevo, ${data.user_data.name || 'Usuario'}!`,
-              description: 'Nos alegra verte nuevamente.',
-              status: 'success',
-              duration: 5000,
-              isClosable: true,
-              position: 'top',
-            });
+            // Verificar si ya se mostró el mensaje
+            const hasShownWelcomeMessage = localStorage.getItem('hasShownWelcomeMessage');
+          
+            if (!hasShownWelcomeMessage) {
+              // Mostrar el mensaje
+              toast({
+                title: `¡Bienvenido de nuevo, ${data.user_data.name || 'Usuario'}!`,
+                description: 'Nos alegra verte nuevamente.',
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+                position: 'top',
+              });
+          
+              // Marcar el mensaje como mostrado
+              localStorage.setItem('hasShownWelcomeMessage', 'true');
+            }
           } else {
             // Mostrar un toast de éxito para nuevos usuarios
             toast({
@@ -114,8 +122,6 @@ const Navbar = () => {
     </Text>
   );
 
-  console.log('user?.picture:', user?.picture);
-console.log('savedUser?.picture:', savedUser?.picture);
 
   return (
     <Box bg="black" px={4}>

@@ -19,7 +19,7 @@ import {
   HStack,
   Heading,
   Text,
-  Image,
+
 } from "@chakra-ui/react";
 import { PinInput, PinInputField } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";

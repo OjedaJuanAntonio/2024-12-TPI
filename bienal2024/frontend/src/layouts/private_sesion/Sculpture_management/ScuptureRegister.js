@@ -30,7 +30,7 @@ import Uploader from '../Uploader';
 import { useAuth0 } from '@auth0/auth0-react';
 
 
-const Sculpture_register = () => {
+const Sculpture_Register = () => {
   const { user } = useAuth0();
   console.log(user);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -206,4 +206,4 @@ const Sculpture_register = () => {
   );
 };
 
-export default Sculpture_register;
+export default Sculpture_Register;

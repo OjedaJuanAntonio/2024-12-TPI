@@ -31,6 +31,13 @@ const CardVote = ({ idEscultura, idUsuario }) => {
         });
     }
   }, [idEscultura]);
+  const authUser = localStorage.getItem('authUser');
+
+
+      const parsedUser = JSON.parse(authUser); // Convertir a objeto
+      const userVote = parsedUser.sub
+ 
+  
 
   const handleRatingChange = (rate) => {
     if (hasVoted) {
@@ -41,12 +48,12 @@ const CardVote = ({ idEscultura, idUsuario }) => {
     // Crear el payload para el voto
     const voteData = {
       id_escultura: idEscultura,
-      id_usuario: 'google-oauth2|106061117643564383144',
+      id_usuario: userVote,
       puntaje: rate,
     };
     console.log(voteData)
     // Enviar el voto al backend
-    fetch(`http://localhost:8000/votos/`, {
+    fetch(`http://localhost:8000/votos/votos/`, {
       method: "POST", // Usar POST para registrar un nuevo voto
       headers: {
         "Content-Type": "application/json",

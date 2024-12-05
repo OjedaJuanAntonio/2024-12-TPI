@@ -9,9 +9,10 @@ import {
   SimpleGrid,
   Heading,
   Text,
+  Select,
   useToast,
 } from "@chakra-ui/react";
-import Select from "../../../../node_modules/react-select/dist";
+
 import { getNames } from "country-list"; // Nombres de países
 import Uploader from "../Uploader"; // Tu componente existente
 import Loginbackground from "../../../assets/Loginbackground.webp";
