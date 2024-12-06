@@ -24,4 +24,3 @@ Creación de una aplicación web multiplataforma para gestionar la Bienal Intern
 - **Backend**: Django con Django Rest Framework.
 - **Frontend**: React y Chakra IU.
 
-/Users/julianaguirre/prueba20noov/2024-12-TPI/bienal2024
