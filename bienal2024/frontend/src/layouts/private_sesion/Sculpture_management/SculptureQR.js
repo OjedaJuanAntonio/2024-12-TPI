@@ -109,7 +109,7 @@ const SculptorSculptureList = () => {
         <Table
           variant="simple"
           w="100%"
-          size={{ base: "sm", md: "md" }} // Tamaño de la tabla cambia según el dispositivo
+          size={{ base: "sm", md: "md" }} 
         >
           <Thead bg="teal.500">
             <Tr>
@@ -135,7 +135,7 @@ const SculptorSculptureList = () => {
                     onClick={() =>
                       handleNavigateToTablet(item)
                     }
-                    size={{ base: "sm", md: "md" }} // Botones más pequeños en móvil
+                    size={{ base: "sm", md: "md" }}
                   >
                     <HStack>
                       <Text>Ir al QR</Text>

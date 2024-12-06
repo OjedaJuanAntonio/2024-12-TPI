@@ -5,10 +5,12 @@ const ContextoUsuario = createContext();
 
 export const ProvedorUsuario = ({ children }) => {
     const [userType, setUserType] = useState(null);
-    const { user } = useAuth0()
+    const { user } = useAuth0();
     const id = user?.sub;  
 
     useEffect(() => {
+        if (!id) return; // Si no hay un id, no hacemos la llamada a la API
+
         async function fetchUserType() {
             try {
                 const response = await fetch(`http://localhost:8000/usuarios/${id}`); // Ajusta según tu API
@@ -18,10 +20,9 @@ export const ProvedorUsuario = ({ children }) => {
                 console.error('Error fetching user type:', error);
             }
         }
+
         fetchUserType();
-    }, []);
-
-
+    }, [id]); // Agregar `id` como dependencia
 
     return (
         <ContextoUsuario.Provider value={{ userType, setUserType }}>

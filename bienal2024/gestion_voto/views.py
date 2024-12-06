@@ -10,8 +10,7 @@ db = firestore.client()
 class VotoViewSet(viewsets.ModelViewSet):
     queryset = [] 
     serializer_class = VotoSerializer
-    # permission_classes = [permissions.IsAuthenticated]  # Solo usuarios autenticados pueden votar
-
+    
     def perform_create(self, serializer):
         usuario = self.request.user
         escultura = serializer.validated_data['escultura']

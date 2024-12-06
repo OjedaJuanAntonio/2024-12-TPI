@@ -2,20 +2,14 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from firebase_admin import db
 from .Serializers import EventoSerializer
-from .permissions import IsAdminOfEvents
 
 ref = db.reference('eventos')
 
 class EventoViewSet(viewsets.ViewSet):
-    """
-    ViewSet para manejar eventos en Realtime Database.
-    """
-    permission_classes = [IsAdminOfEvents]  # Aplica el permiso a todas las acciones por defecto
+
 
     def list(self, request):
-        """
-        Listar todos los eventos desde Realtime Database.
-        """
+       
         try:
             eventos_ref = ref.get()
             eventos = []
@@ -29,9 +23,7 @@ class EventoViewSet(viewsets.ViewSet):
 
 
     def retrieve(self, request, pk=None):
-        """
-        Obtener un evento específico por su ID.
-        """
+     
         try:
             evento_ref = ref.child(pk).get()  
             if not evento_ref:
@@ -42,9 +34,7 @@ class EventoViewSet(viewsets.ViewSet):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def create(self, request):
-        """
-        Crear un nuevo evento en Realtime Database.
-        """
+       
         serializer = EventoSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -56,9 +46,7 @@ class EventoViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk=None):
-        """
-        Reemplazar completamente los datos de un evento existente en Realtime Database.
-        """
+
         try:
             evento_ref = ref.child(pk)
             if not evento_ref.get():
@@ -66,16 +54,14 @@ class EventoViewSet(viewsets.ViewSet):
             serializer = EventoSerializer(data=request.data)
             if serializer.is_valid():
                 data = serializer.validated_data
-                evento_ref.set(data)  # Reemplaza todos los datos existentes
+                evento_ref.set(data) 
                 return Response({'id': pk, **data}, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk=None):
-        """
-        Actualizar parcialmente los datos de un evento existente (PATCH).
-        """
+    
         try:
             evento_ref = ref.child(pk)
             existing_data = evento_ref.get()
@@ -85,17 +71,15 @@ class EventoViewSet(viewsets.ViewSet):
             serializer = EventoSerializer(data=request.data, partial=True)
             if serializer.is_valid():
                 data = serializer.validated_data
-                evento_ref.update(data)  # Actualiza solo los campos proporcionados
-                updated_data = {**existing_data, **data}  # Combina datos existentes y actualizados
+                evento_ref.update(data)  
+                updated_data = {**existing_data, **data} 
                 return Response({'id': pk, **updated_data}, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
-        """
-        Eliminar un evento desde Realtime Database.
-        """
+
         try:
             evento_ref = ref.child(pk)
             if not evento_ref.get():

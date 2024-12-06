@@ -1,7 +1,6 @@
 
 from pathlib import Path
 from urllib.parse import urlparse
-#from decouple import config
 from dotenv import load_dotenv
 import os
 
@@ -24,9 +23,7 @@ load_dotenv()
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
-#'django-insecure-lkv(3+3j(y2e!(d+oba@cw%a4f90a@qo8v9v&zww@yt4%0m$z!'
 
-# DEBUG = True
 DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = []
@@ -44,59 +41,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    #'gestion_voto',
     'gestionEsculturas',
     'gestionEscultores',
     'gestionUsuarios',
     'gestionEventos',
     'gestionSponsors',
-    'gestionVotos',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_framework_simplejwt.token_blacklist',
-    'social_django'
+    'gestionVotos'
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
-
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',  # Usamos JWTAuthentication para validar los tokens
-#     ],
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticated',  # Asegúrate de que el usuario esté autenticado
-#     ],
-# }
-
-
-###          CONFIGURACION JWT          ###########
-
-from datetime import timedelta
-
-SIMPLE_JWT = {
-     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-     'ROTATE_REFRESH_TOKENS': False,
-     'BLACKLIST_AFTER_ROTATION': True,
- }
-
-
-
-        
-SOCIAL_AUTH_AUTH0_SCOPE=[
-    'openid',
-    'profile',
-    'email'
-]
-
 
 
 AUTHENTICATION_BACKENDS={
-    'social_core.backends.auth0.Auth0OAuth2',
     'django.contrib.auth.backends.ModelBackend'
 }
 
@@ -137,7 +91,7 @@ ROOT_URLCONF = 'bienal2024.urls'
 TEMPLATES = [
     {
        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [BASE_DIR / 'templates'],  # Asegúrate de que este directorio esté incluido
+        # 'DIRS': [BASE_DIR / 'templates'],
         'DIRS': [os.path.join(BASE_DIR, 'templates')], 
         'APP_DIRS': True,
         'OPTIONS': {
@@ -150,10 +104,6 @@ TEMPLATES = [
         },
     },
 ]
-
-
-
-SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -181,18 +131,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LOGIN_URL='/login/auth0'
-LOGIN_REDIRECT_URL='/'
-LOGOUT_REDIRECT_URL='/'
 

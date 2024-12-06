@@ -8,7 +8,6 @@ import history from './utils/history';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 
-//Aqui es donde importamos la configuracion para nuestras credenciales de auth0 al momento de iniciar la aplicación
 
 const config = getConfig();
 
@@ -21,8 +20,8 @@ const providerConfig = {
     onRedirectCallback: (appState) => {
         history.push(appState?.returnTo || window.location.pathname);
     },
-    cacheLocation: "localstorage", // Almacena tokens en localStorage
-    useRefreshTokens: true, // Permite mantener la sesión activa
+    cacheLocation: "localstorage", 
+    useRefreshTokens: true, 
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -34,8 +33,6 @@ root.render(
 </Auth0Provider>
     );
 
-//esto se encarga registrar el service worker encargado de manejar el cache de la aplicacion
-//Añadi una nueva configuracion que segun tengo entendido utiliza la estrategia web first(solicita datos en la web y de no conseguirlos muestra los datos almacenados en caché)
 serviceWorkerRegistration.register();
 
 

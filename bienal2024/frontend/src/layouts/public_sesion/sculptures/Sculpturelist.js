@@ -24,8 +24,8 @@ const SculptureList = () => {
   const [esculturas, setEsculturas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredEsculturas, setFilteredEsculturas] = useState([]);
-  const [filter, setFilter] = useState(null); // Filtro por material principal
-  const [order, setOrder] = useState(null); // Orden actual
+  const [filter, setFilter] = useState(null); 
+  const [order, setOrder] = useState(null); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +36,7 @@ const SculptureList = () => {
         );
         const esculturasData = await esculturasResponse.json();
         setEsculturas(esculturasData);
-        setFilteredEsculturas(esculturasData); // Inicializa con todas las esculturas
+        setFilteredEsculturas(esculturasData); 
         setIsLoading(false);
       } catch (error) {
         console.error("Error al cargar los datos:", error);
@@ -49,14 +49,14 @@ const SculptureList = () => {
   useEffect(() => {
     let updatedEsculturas = [...esculturas];
 
-    // Filtrar por material principal
+    
     if (filter) {
       updatedEsculturas = updatedEsculturas.filter(
         (escultura) => escultura.material_principal === filter
       );
     }
 
-    // Ordenar por criterio seleccionado
+    
     if (order) {
       if (order === "AZ") {
         updatedEsculturas.sort((a, b) => a.titulo.localeCompare(b.titulo));
@@ -78,9 +78,9 @@ const SculptureList = () => {
 
   const handleFilterChange = (key, value) => {
     if (key === "categoria") {
-      setFilter(value); // Actualiza el filtro
+      setFilter(value); 
     } else if (key === "orden") {
-      setOrder(value); // Actualiza el orden
+      setOrder(value); 
     }
   };
 
@@ -136,12 +136,12 @@ const SculptureList = () => {
                   navigation={true}
                   modules={[Navigation]}
                   style={{
-                    height: "40vh", // Altura fija
-                    width: "100%", // Ancho completo
+                    height: "40vh", 
+                    width: "100%", 
                   }}
                 >
                   {[escultura.url_imagen_1, escultura.url_imagen_2, escultura.url_imagen_3]
-                    .filter((url) => url) // Filtrar URLs vacías
+                    .filter((url) => url) 
                     .map((url, idx) => (
                       <SwiperSlide
                         key={idx}
@@ -156,9 +156,9 @@ const SculptureList = () => {
                           src={url}
                           fallbackSrc="https://via.placeholder.com/800"
                           style={{
-                            height: "100%", // Ocupa todo el alto del contenedor
-                            width: "auto", // Ajusta el ancho automáticamente
-                            objectFit: "cover", // Recorta las imágenes para cubrir el contenedor
+                            height: "100%", 
+                            width: "auto", 
+                            objectFit: "cover", 
                           }}
                         />
                       </SwiperSlide>

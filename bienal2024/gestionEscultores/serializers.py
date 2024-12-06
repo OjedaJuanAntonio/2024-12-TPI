@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import Escultor, EscultorInvitado
+from .models import Escultor
 
 class EscultorSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='nombre')  

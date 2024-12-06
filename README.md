@@ -12,7 +12,7 @@ Creación de una aplicación web multiplataforma para gestionar la Bienal Intern
 - **Gestión CRUD**: 
   - Eventos, escultores y esculturas.
 - **Interacciones del público**:
-  - Sistema de votaciones y comentarios.
+  - Sistema de votaciones, compartir eventos/esculturas, agregar al mi calendario los eventos.
 - **Control de usuarios**:
   - Diferenciación entre visitantes y organizadores.
 
@@ -22,5 +22,6 @@ Creación de una aplicación web multiplataforma para gestionar la Bienal Intern
 
 ## Tecnologías Utilizadas
 - **Backend**: Django con Django Rest Framework.
-- **Frontend**: React y Tailwind CSS.
-- **Base de Datos**: PostgreSQL.
+- **Frontend**: React y Chakra IU.
+
+/Users/julianaguirre/prueba20noov/2024-12-TPI/bienal2024

@@ -7,9 +7,8 @@ import QrExpirado from "../user_profile/QrExpirado";
 const Votacion = () => {
   const location = useLocation();
 
-  // Extraer el token directamente desde el pathname
   const extractTokenFromPath = () => {
-    const pathParts = location.pathname.split("/"); // Divide el pathname por "/"
+    const pathParts = location.pathname.split("/"); 
     return pathParts[pathParts.length - 1]; // Toma el último segmento como el token
   };
 
@@ -18,6 +17,7 @@ const Votacion = () => {
     const secretKey = new TextEncoder().encode("your_secret_key"); // Clave secreta
     try {
       const { payload } = await jwtVerify(token, secretKey); // Verifica y decodifica el token
+      console.log("JWT decodificado:", payload); // Muestra el payload completo por consola
       return payload.id; // Retorna el ID de la escultura
     } catch (error) {
       console.error("Error verificando el token:", error.message);
@@ -38,11 +38,11 @@ const Votacion = () => {
 
     processToken();          
   }, []);
-  console.log(idEscultura)
+
   return idEscultura ? (
     <CardVote idEscultura={idEscultura} />
   ) : (
-    <QrExpirado/>
+    <QrExpirado />
   );
 };
 

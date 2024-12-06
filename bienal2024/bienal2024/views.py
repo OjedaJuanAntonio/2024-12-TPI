@@ -1,10 +1,19 @@
 from django.shortcuts import render
+from rest_framework import status
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 import datetime
 
-def home(request):
-    fecha = datetime.datetime.now()
-    return render(request, 'home.html',{'fechahoy': fecha})
+@csrf_exempt
+def verif(request):
+    data = json.loads(request.body)
+    type_user = data.get("type_user")
+    is_superuser = type_user == 'superuser' 
+    return JsonResponse(
+        {"is_superuser": is_superuser},
+        status=status.HTTP_200_OK
+    )
 
-def register_view(request):
-    return render(request, 'register.html')
+
 

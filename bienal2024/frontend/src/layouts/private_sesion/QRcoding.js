@@ -5,27 +5,30 @@ import { SignJWT } from "jose";
 const DynamicQRCode = ({ url, Countdown = 10000, data }) => {
   const [qrValue, setQrValue] = useState("");
 
-  // Genera un JWT con el id de la escultura
   const generateJWT = async (payload) => {
-    const secretKey = new TextEncoder().encode("your_secret_key"); // Define una clave segura
+    const secretKey = new TextEncoder().encode("your_secret_key"); 
     const token = await new SignJWT(payload)
-      .setProtectedHeader({ alg: "HS256" }) // Algoritmo de firma
-      .setExpirationTime("1m") // Token válido por 1 minuto
-      .sign(secretKey); // Firma el token con la clave secreta
+      .setProtectedHeader({ alg: "HS256" }) 
+      .setExpirationTime("1m") 
+      .sign(secretKey); 
     return token;
   };
 
   useEffect(() => {
     const updateQRCode = async () => {
-      const token = await generateJWT({ id: data }); // Genera un token con el ID de la escultura
-      const finalUrl = `${url}/${token}`; // Construye la URL final con el token
-      setQrValue(finalUrl); // Establece el valor del QR
+      const payload = { 
+        id: data, 
+      };
+
+      const token = await generateJWT(payload); 
+      const finalUrl = `${url}/${token}`;
+      setQrValue(finalUrl); 
     };
 
-    updateQRCode(); // Genera el QR inicial
-    const interval = setInterval(updateQRCode, Countdown); // Actualiza el QR periódicamente
+    updateQRCode(); 
+    const interval = setInterval(updateQRCode, Countdown); 
 
-    return () => clearInterval(interval); // Limpia el intervalo al desmontar
+    return () => clearInterval(interval); 
   }, [Countdown, url, data]);
 
   return (

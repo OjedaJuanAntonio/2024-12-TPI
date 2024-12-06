@@ -6,14 +6,14 @@ const ProtectedRoute = ({ children, allowedTypes }) => {
     const { userType } = useUser();
 
     if (userType === null) {
-        return <Navigate to="/Error" />; ; // Mostrar un mensaje mientras se carga el tipo de usuario
+        return <Navigate to="/Error" />; ; 
     }
 
     if (!allowedTypes.includes(userType)) {
-        return <Navigate to="/Error" />; // Redirigir si el usuario no tiene acceso
+        return <Navigate to="/Error" />; 
     }
 
-    return children; // Renderizar el contenido si el usuario tiene el tipo correcto
+    return children; 
 };
 
 export default ProtectedRoute;

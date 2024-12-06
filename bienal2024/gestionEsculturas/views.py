@@ -1,8 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from firebase_admin import db
-from .serializers import EsculturaSerializer
-from .permissions import IsAdminOfSculpture  # Importa tu clase de permisos personalizada
+from .serializers import EsculturaSerializer  
 
 ref = db.reference('esculturas')
 
@@ -10,8 +9,6 @@ class EsculturaViewSet(viewsets.ViewSet):
     """
     ViewSet para manejar esculturas en Realtime Database.
     """
-    permission_classes = [IsAdminOfSculpture]  # Aplica el permiso a todas las acciones por defecto
-    
     def list(self, request):
         """
         Obtiene todas las esculturas.
@@ -34,7 +31,7 @@ class EsculturaViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             try:
                 data = serializer.validated_data
-                new_ref = ref.push(data)  # Agrega los datos a Firebase
+                new_ref = ref.push(data)  
                 return Response({'id': new_ref.key, **data}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -62,7 +59,7 @@ class EsculturaViewSet(viewsets.ViewSet):
                 data = serializer.validated_data
                 escultura_ref = ref.child(pk)
                 if escultura_ref.get():
-                    escultura_ref.set(data)  # Reemplaza todos los datos
+                    escultura_ref.set(data)  
                     return Response({'id': pk, **data}, status=status.HTTP_200_OK)
                 return Response({'error': 'Escultura no encontrada'}, status=status.HTTP_404_NOT_FOUND)
             except Exception as e:
@@ -82,8 +79,8 @@ class EsculturaViewSet(viewsets.ViewSet):
             serializer = EsculturaSerializer(data=request.data, partial=True)
             if serializer.is_valid():
                 data = serializer.validated_data
-                escultura_ref.update(data)  # Actualiza solo los campos proporcionados
-                updated_data = {**existing_data, **data}  # Mezcla datos originales y actualizados
+                escultura_ref.update(data) 
+                updated_data = {**existing_data, **data}  
                 return Response({'id': pk, **updated_data}, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

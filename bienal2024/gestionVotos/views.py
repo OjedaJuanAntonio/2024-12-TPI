@@ -8,14 +8,10 @@ from operator import itemgetter
 ref = db.reference('votos')
 
 class VotoViewSet(viewsets.ViewSet):
-    """
-    ViewSet para manejar los votos en Firebase.
-    """
+
 
     def list(self, request):
-        """
-        Obtiene todos los votos registrados desde Firebase Realtime Database.
-        """
+     
         try:
             votos = ref.get()
             if votos:
@@ -26,9 +22,7 @@ class VotoViewSet(viewsets.ViewSet):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def create(self, request):
-        """
-        Crea un nuevo voto para una escultura en Firebase.
-        """
+      
         serializer = VotoSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -40,9 +34,7 @@ class VotoViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
-        """
-        Obtiene un voto específico por ID desde Firebase.
-        """
+      
         try:
             voto = ref.child(pk).get()
             if voto:
@@ -52,9 +44,7 @@ class VotoViewSet(viewsets.ViewSet):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
-        """
-        Elimina un voto específico por ID desde Firebase.
-        """
+       
         try:
             voto_ref = ref.child(pk)
             if voto_ref.get():
@@ -65,16 +55,12 @@ class VotoViewSet(viewsets.ViewSet):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def top_3(self, request):
-        """
-        Obtiene el top 3 de esculturas según el promedio de los puntajes de los votos.
-        """
         try:
             votos = ref.get()
             
             if not votos:
                 return Response({'error': 'No hay votos registrados'}, status=status.HTTP_404_NOT_FOUND)
             
-            # Usamos un defaultdict para contar los votos y acumular los puntajes
             puntajes = defaultdict(int)
             cantidad_votos = defaultdict(int)
             
@@ -82,20 +68,17 @@ class VotoViewSet(viewsets.ViewSet):
                 id_escultura = value['id_escultura']
                 puntaje = value['puntaje']
                 
-                puntajes[id_escultura] += puntaje  # Sumar los puntajes
-                cantidad_votos[id_escultura] += 1  # Contar la cantidad de votos
+                puntajes[id_escultura] += puntaje 
+                cantidad_votos[id_escultura] += 1 
 
-            # Calcular el promedio de puntajes para cada escultura
             promedios = {}
             for escultura, total_puntajes in puntajes.items():
                 cantidad = cantidad_votos[escultura]
-                promedio = total_puntajes / cantidad  # Dividir la suma de puntajes por la cantidad de votos
+                promedio = total_puntajes / cantidad  
                 promedios[escultura] = promedio
             
-            # Ordenar las esculturas por promedio de puntajes
             top_3_esculturas = sorted(promedios.items(), key=itemgetter(1), reverse=True)[:3]
 
-            # Preparar la respuesta con el top 3
             resultado = [{'id_escultura': escultura, 'promedio': promedios[escultura]} for escultura, _ in top_3_esculturas]
 
             return Response(resultado, status=status.HTTP_200_OK)

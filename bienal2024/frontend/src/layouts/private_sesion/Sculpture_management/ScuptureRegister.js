@@ -27,12 +27,8 @@ import {
 import { FaShareAlt } from 'react-icons/fa';
 import Loginbackground from '../../../assets/Loginbackground.webp';
 import Uploader from '../Uploader';
-import { useAuth0 } from '@auth0/auth0-react';
-
 
 const Sculpture_Register = () => {
-  const { user } = useAuth0();
-  console.log(user);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [formData, setFormData] = useState({
@@ -40,7 +36,7 @@ const Sculpture_Register = () => {
     id_evento: '',
     titulo: '',
     intencion: '',
-    material_principal: '', // Cambiado de "tematica" a "material_principal"
+    material_principal: '', 
     url_imagen_1: '',
     url_imagen_2: 'https://i.ibb.co/5KwbzFp/Captura-de-pantalla-2024-12-02-a-la-s-20-01-04.png',
     url_imagen_3: 'https://i.ibb.co/5KwbzFp/Captura-de-pantalla-2024-12-02-a-la-s-20-01-04.png',
@@ -69,19 +65,10 @@ const Sculpture_Register = () => {
   
   const handleSubmit = async () => {
     try {
-      const id = user?.sub;  // Muestra el objeto del usuario completo
-      var savedUser = await fetch(`http://localhost:8000/usuarios/${id}`);
-      savedUser = await savedUser.json(); // Convierte la respuesta a JSON
-      console.log(savedUser.type_user); // Muestra el objeto del usuario completo
-      const updatedFormData = {
-        ...formData,
-        type_user: savedUser.type_user, // Incluye el tipo de usuario
-      };
-      
       const response = await fetch('http://localhost:8000/esculturas/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedFormData),
+        body: JSON.stringify(formData),
       });
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.statusText}`);

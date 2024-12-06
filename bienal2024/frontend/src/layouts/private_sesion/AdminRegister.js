@@ -20,7 +20,7 @@ import {
   ModalFooter,
   RadioGroup,
   Radio,
-  Stack, // Importación añadida
+  Stack,
   Text,
   HStack,
   PinInput,
@@ -103,7 +103,7 @@ const EditUserManager = () => {
       .then((data) => {
         toast({
           title: "Usuario actualizado",
-          description: `El usuario "${data.name}" fue actualizado con éxito.`,
+          description: `El usuario  fue actualizado con éxito.`,
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -126,7 +126,7 @@ const EditUserManager = () => {
   };
 
   return (
-    <Box  mx="auto">
+    <Box mx="auto">
       <Heading as="h1" mb={6} textAlign="center" color="teal.600" fontSize={{ base: "lg", md: "2xl" }}>
         Gestión de Usuarios
       </Heading>
@@ -178,7 +178,7 @@ const EditUserManager = () => {
       </Box>
 
       {selectedUser && (
-        <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} size="lg">
+        <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} size="xl">
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Editar Rol del Usuario</ModalHeader>
@@ -200,18 +200,18 @@ const EditUserManager = () => {
                       borderWidth="1px"
                       borderRadius="lg"
                       bg={
-                        selectedUser.type_user === "admin_escultura"
+                        selectedUser.type_user === "admin_esculturas"
                           ? "teal.50"
                           : "white"
                       }
                       borderColor={
-                        selectedUser.type_user === "admin_escultura"
+                        selectedUser.type_user === "admin_esculturas"
                           ? "teal.300"
                           : "gray.200"
                       }
                       transition="0.3s"
                     >
-                      <Radio value="admin_escultura">
+                      <Radio value="admin_esculturas">
                         <HStack>
                           <Icon as={FaHammer} color="teal.500" boxSize={6} />
                           <Text fontWeight="bold">Esculturas</Text>
@@ -246,6 +246,33 @@ const EditUserManager = () => {
                       </Radio>
                       <Text mt={2} color="gray.600" fontSize="sm">
                         Gestiona todos los eventos relacionados con esculturas.
+                      </Text>
+                    </Box>
+
+                    <Box
+                      p={4}
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      bg={
+                        selectedUser.type_user === "normal"
+                          ? "teal.50"
+                          : "white"
+                      }
+                      borderColor={
+                        selectedUser.type_user === "normal"
+                          ? "teal.300"
+                          : "gray.200"
+                      }
+                      transition="0.3s"
+                    >
+                      <Radio value="normal">
+                        <HStack>
+                          <Icon as={FaHammer} color="teal.500" boxSize={6} />
+                          <Text fontWeight="bold">Normal</Text>
+                        </HStack>
+                      </Radio>
+                      <Text mt={2} color="gray.600" fontSize="sm">
+                        Rol básico sin privilegios de gestión.
                       </Text>
                     </Box>
                   </Stack>

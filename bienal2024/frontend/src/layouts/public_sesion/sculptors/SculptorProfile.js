@@ -6,16 +6,15 @@ import { useLocation } from 'react-router-dom';
 import { HashLoader } from 'react-spinners';
 
 const SculptorProfile = () => {
-  const location = useLocation(); // Inicializa location
-  const id = location.pathname.split('/').pop(); // Extrae el ID del pathname
-  const { escultor } = location.state || {}; // Maneja casos donde state sea undefined
+  const location = useLocation(); 
+  const id = location.pathname.split('/').pop(); 
+  const { escultor } = location.state || {}; 
 
   const [loading, setLoading] = useState(true);
   const [sculptures, setSculptures] = useState([]);
   const [sculpturesLoading, setSculpturesLoading] = useState(true);
 
   useEffect(() => {
-    // Simula un delay inicial para cargar el perfil
     const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -23,7 +22,6 @@ const SculptorProfile = () => {
   useEffect(() => {
     const fetchSculptures = async () => {
       try {
-        // Mantenemos el ID tal cual está, sin modificar
         const correctedId = id; 
         console.log('ID del escultor utilizado:', correctedId);
   
@@ -32,7 +30,6 @@ const SculptorProfile = () => {
           const data = await response.json();
           console.log('Respuesta de la API:', data);
   
-          // Establecemos las esculturas directamente desde la respuesta
           setSculptures(data);
         } else {
           console.error('Error al obtener esculturas:', response.statusText);
@@ -48,13 +45,11 @@ const SculptorProfile = () => {
   }, [id]);
   
 
-  // Extrae y transforma todas las imágenes
-// Extrae y transforma todas las imágenes
 const sculptureImages = sculptures.flatMap((sculpture) => [
   { url: sculpture.url_imagen_1 },
   { url: sculpture.url_imagen_2 },
   { url: sculpture.url_imagen_3 },
-]).filter((image) => image.url); // Filtra cualquier valor undefined o null
+]).filter((image) => image.url);
 
 
 
@@ -110,7 +105,6 @@ const sculptureImages = sculptures.flatMap((sculpture) => [
         <Heading fontSize="xl" mb={2}>Obras:</Heading>
       </Box>
 
-      {/* Pasa solo las imágenes a SwipperProfile */}
       <SwipperProfile images={sculptureImages} />
     </>
   );

@@ -84,7 +84,7 @@ const EditSculptureManager = () => {
 
   const handleImageClick = (imageKey) => {
     setSelectedImageKey(imageKey);
-    setIsModalOpen(false); // Cierra el modal principal temporalmente
+    setIsModalOpen(false); 
     setIsUploaderModalOpen(true);
   };
 
@@ -187,7 +187,6 @@ const EditSculptureManager = () => {
         </Table>
       </Box>
 
-      {/* Modal de Edición */}
       {selectedEscultura && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size={modalSize}>
           <ModalOverlay />
@@ -249,7 +248,6 @@ const EditSculptureManager = () => {
         </Modal>
       )}
 
-      {/* Modal de Uploader */}
       <Modal
         isOpen={isUploaderModalOpen}
         onClose={() => setIsUploaderModalOpen(false)}
@@ -263,7 +261,7 @@ const EditSculptureManager = () => {
               setPhoto={(newUrl) => {
                 handleFieldChange(selectedImageKey, newUrl);
                 setIsUploaderModalOpen(false);
-                setIsModalOpen(true); // Reabre el modal principal
+                setIsModalOpen(true); 
               }}
               label={`Subir nueva imagen para ${selectedImageKey}`}
             />

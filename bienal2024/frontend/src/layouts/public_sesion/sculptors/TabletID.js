@@ -5,12 +5,11 @@ import DynamicQRCode from '../../private_sesion/QRcoding';
 
 const TabletView = () => {
   const location = useLocation();
-  const { data } = location.state || { data: null }; // Datos recibidos
+  const { data } = location.state || { data: null };
 
-  // Ajustar la dirección del diseño según el tamaño de la pantalla
   const flexDirection = useBreakpointValue({ base: 'column', md: 'row' });
   const scale = useBreakpointValue({ base: 1, md: 1.5 });
-
+  console.log(data)
   if (!data) {
     return (
       <Flex justifyContent="center" alignItems="center" height="100vh" background="linear-gradient(to bottom, #c0d9f7, #4b77a3)">
@@ -31,7 +30,6 @@ const TabletView = () => {
       padding="20px"
       background="linear-gradient(to bottom, #c0d9f7, #4b77a3)"
     >
-      {/* Información del escultor y escultura */}
       <Box
         width={{ base: '100%', md: '50%' }}
         height="auto"
@@ -62,7 +60,6 @@ const TabletView = () => {
         </Text>
       </Box>
 
-      {/* QR para votar */}
       <Box
         width={{ base: '100%', md: '50%' }}
         height="auto"

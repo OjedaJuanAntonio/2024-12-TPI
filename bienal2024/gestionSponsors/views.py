@@ -3,18 +3,10 @@ from rest_framework.response import Response
 from firebase_admin import db
 from .serializers import SponsorSerializer
 
-# Inicializar referencia a la base de datos
 ref = db.reference('sponsors')
 
 class SponsorViewSet(viewsets.ViewSet):
-    """
-    ViewSet para manejar sponsors en Realtime Database.
-    """
-
     def list(self, request):
-        """
-        Obtiene todos los sponsors desde Firebase Realtime Database.
-        """
         try:
             sponsors = ref.get()
             if sponsors:
@@ -27,9 +19,6 @@ class SponsorViewSet(viewsets.ViewSet):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def create(self, request):
-        """
-        Crea un nuevo sponsor en Firebase Realtime Database.
-        """
         serializer = SponsorSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -41,9 +30,6 @@ class SponsorViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
-        """
-        Obtiene un sponsor específico por su ID.
-        """
         try:
             sponsor = ref.child(pk).get()
             if sponsor:
@@ -53,9 +39,6 @@ class SponsorViewSet(viewsets.ViewSet):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):
-        """
-        Actualiza un sponsor existente en Firebase Realtime Database.
-        """
         serializer = SponsorSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -70,9 +53,6 @@ class SponsorViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
-        """
-        Elimina un sponsor por su ID.
-        """
         try:
             sponsor_ref = ref.child(pk)
             if sponsor_ref.get():

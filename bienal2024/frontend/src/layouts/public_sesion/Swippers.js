@@ -26,10 +26,10 @@ export function SwipperProfile({ images }) {
                 <Image
                   src={img.url}
                   alt={`Escultura ${index + 1}`}
-                  objectFit="cover" // Mantiene la imagen recortada para llenar el contenedor
+                  objectFit="cover" 
                   width="100%"
-                  height="100%" // Asegura que la imagen llene el contenedor
-                  fallbackSrc="https://via.placeholder.com/800" // Imagen de respaldo en caso de que falte la original
+                  height="100%" 
+                  fallbackSrc="https://via.placeholder.com/800" 
                 />
               </Box>
             </SwiperSlide>
@@ -54,11 +54,11 @@ export function SwipperProfile({ images }) {
                 effect={"coverflow"}
                 grabCursor={true}
                 centeredSlides={true}
-                slidesPerView={1.2} // Permite ver parcialmente las tarjetas laterales
+                slidesPerView={1.2} 
                 breakpoints={{
                     350: { slidesPerView: 2 }, 
-                    640: { slidesPerView: 3 }, // Más espacio para pantallas medianas
-                    1024: { slidesPerView: 3 }, // Pantallas grandes muestran más tarjetas
+                    640: { slidesPerView: 3 }, 
+                    1024: { slidesPerView: 3 }, 
                 }}
                 coverflowEffect={{
                     rotate: 50,
@@ -73,7 +73,6 @@ export function SwipperProfile({ images }) {
             >
                 {evento.length > 0 ? (
                     <>
-                        {/* Muestra los primeros 4 eventos */}
                         {evento.slice(0, 3).map((event) => (
                             <SwiperSlide
                                 key={event.id}
@@ -103,11 +102,11 @@ export function SwipperProfile({ images }) {
                                      {/* Imagen */}
     <Box
         w="100%"
-        flexBasis="70%" // Imagen ocupa el 70%
+        flexBasis="70%" 
         overflow="hidden"
     >
         <Image
-            src={event.img_evento} // Asegúrate de tener una URL de imagen en tus datos
+            src={event.img_evento} 
             alt={event.nombre}
             w="100%"
             h="100%"
@@ -115,10 +114,9 @@ export function SwipperProfile({ images }) {
         />
     </Box>
 
-    {/* Contenido */}
     <Box
         w="100%"
-        flexBasis="30%" // Contenido ocupa el 30%
+        flexBasis="30%" 
         p={2}
         textAlign="left"
     >
@@ -141,8 +139,8 @@ export function SwipperProfile({ images }) {
                             }}
                         >
                        <Card
-    as={Link} // Convierte el Card en un enlace
-    to="/actividades" // Especifica el destino
+    as={Link} 
+    to="/actividades" 
     direction="column"
     overflow="hidden"
     variant="outline"
@@ -157,11 +155,11 @@ export function SwipperProfile({ images }) {
     borderRadius="lg"
     color="white"
     aspectRatio={{ base: "3 / 4", md: "4 / 5" }}
-    textDecoration="none" // Evita subrayado del texto
+    textDecoration="none" 
     _hover={{
-        transform: "scale(1.05)", // Animación al pasar el mouse
+        transform: "scale(1.05)", 
         transition: "transform 0.2s ease-in-out",
-        boxShadow: "xl", // Acentuar la sombra
+        boxShadow: "xl", 
     }}
    
 >

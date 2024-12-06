@@ -6,7 +6,7 @@ const RutaProtegida = ({ children, allowedTypes }) => {
     const { userType } = useUser();
 
     if (userType === null) {
-        return <div>juliangay</div>; // Mostrar un mensaje mientras se carga el tipo de usuario
+        return <Navigate to="/Error" />; // Mostrar un mensaje mientras se carga el tipo de usuario
     }
 
     if (!allowedTypes.includes(userType)) {

@@ -20,7 +20,6 @@ function FilterBar({ onFilterChange }) {
 
       {location.pathname === "/esculturas" && (
         <>
-          {/* Filtro por categoría */}
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Categoría
@@ -34,7 +33,6 @@ function FilterBar({ onFilterChange }) {
             </MenuList>
           </Menu>
 
-          {/* Ordenar */}
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Ordenar
@@ -63,7 +61,6 @@ function FilterBar({ onFilterChange }) {
 
     
 
-          {/* Filtro por fecha */}
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Fecha

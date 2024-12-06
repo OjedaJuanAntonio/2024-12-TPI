@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Box, Image, Text, Center, Spinner } from "@chakra-ui/react";
+import { Box, Image, Text, Center, Spinner, useToast } from "@chakra-ui/react";
 import StarRating from "./Starranking";
 
-const CardVote = ({ idEscultura, idUsuario }) => {
+const CardVote = ({ idEscultura }) => {
   const [fetchedData, setFetchedData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [hasVoted, setHasVoted] = useState(false);
+  const [userVote, setUserVote] = useState(null);
+  
+  const toast = useToast(); 
 
   useEffect(() => {
     if (idEscultura) {
@@ -31,30 +34,60 @@ const CardVote = ({ idEscultura, idUsuario }) => {
         });
     }
   }, [idEscultura]);
-  const authUser = localStorage.getItem('authUser');
 
-
-      const parsedUser = JSON.parse(authUser); // Convertir a objeto
-      const userVote = parsedUser.sub
- 
-  
+  useEffect(() => {
+    const authUser = localStorage.getItem("authUser");
+    if (authUser) {
+      try {
+        const parsedUser = JSON.parse(authUser);
+        if (parsedUser && parsedUser.sub) {
+          setUserVote(parsedUser.sub);
+        } else {
+          setError("El token de usuario no contiene el campo 'sub'.");
+        }
+      } catch (e) {
+        setError("Error al parsear el usuario desde el localStorage.");
+        console.error(e);
+      }
+    } else {
+      setError("Debes iniciar sesión para poder votar");
+    }
+  }, []); // Esto se ejecuta solo una vez al cargar el componente
 
   const handleRatingChange = (rate) => {
     if (hasVoted) {
-      alert("Ya votaste por esta escultura.");
+      // Si ya votaste, mostramos el mensaje de error como un Toast
+      toast({
+        title: "Ya votaste",
+        description: "Solo puedes votar una vez por escultura.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
 
-    // Crear el payload para el voto
+    if (!userVote) {
+      toast({
+        title: "Error",
+        description: "No se encontró el usuario. Por favor, inicia sesión.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     const voteData = {
       id_escultura: idEscultura,
       id_usuario: userVote,
       puntaje: rate,
     };
-    console.log(voteData)
-    // Enviar el voto al backend
+
+    console.log(voteData);
+
     fetch(`http://localhost:8000/votos/votos/`, {
-      method: "POST", // Usar POST para registrar un nuevo voto
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -68,11 +101,28 @@ const CardVote = ({ idEscultura, idUsuario }) => {
       })
       .then((responseData) => {
         console.log("Voto registrado con éxito:", responseData);
-        setHasVoted(true); // Indicar que el usuario ya votó
+        setHasVoted(true);
+   
+        toast({
+          title: "Voto registrado",
+          description: "Gracias por votar.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position:'top'
+        });
       })
       .catch((error) => {
         console.error("Error al enviar el voto:", error);
-        alert("Ocurrió un error al enviar tu voto. Intenta nuevamente.");
+        toast({
+          title: "Error",
+          description: "Solo puedes votar una vez por escultura",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position:'top'
+
+        });
       });
   };
 
@@ -87,7 +137,7 @@ const CardVote = ({ idEscultura, idUsuario }) => {
   if (error) {
     return (
       <Center minH="100vh">
-        <Text color="red.500">Error al cargar la escultura.</Text>
+        <Text color="red.500">{error}</Text>
       </Center>
     );
   }
@@ -121,7 +171,7 @@ const CardVote = ({ idEscultura, idUsuario }) => {
             <StarRating onRatingChange={handleRatingChange} />
           ) : (
             <Text color="green.500" fontSize="lg" mt={4}>
-              ¡Gracias por votar Bienal!
+              ¡Gracias por en la Bienal 2024!
             </Text>
           )}
         </Box>

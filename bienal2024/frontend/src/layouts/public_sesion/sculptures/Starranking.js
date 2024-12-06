@@ -9,7 +9,7 @@ const StarRating = ({ onRatingChange }) => {
   const handleRating = (rate) => {
     setRating(rate);
     if (onRatingChange) {
-      onRatingChange(rate); // Llama a la función callback
+      onRatingChange(rate); 
     }
   };
 

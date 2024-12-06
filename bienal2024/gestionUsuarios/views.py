@@ -9,39 +9,28 @@ ref = db.reference('usuarios')
 logger = logging.getLogger(__name__)
 
 class UsuarioViewSet(viewsets.ViewSet):
-    """
-    ViewSet para manejar usuarios autenticados desde Auth0, usando exclusivamente Firebase.
-    """
 
     def create(self, request):
-        """
-        Crea un nuevo usuario con los datos proporcionados por Auth0 en Firebase.
-        Si el usuario ya existe, devuelve un mensaje de bienvenida.
-        """
+     
         serializer = UsuarioSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                # Verificar si el usuario ya existe en Firebase (por sub)
                 sub = serializer.validated_data['sub']
                 user_ref = ref.child(sub)
                 existing_user = user_ref.get()
 
-                if existing_user:  # Si el usuario ya existe
-                    # Enviar un mensaje de bienvenida al usuario existente
+                if existing_user:  
                     return Response(
                         {"message": "Bienvenida al Usuario", "user_data": existing_user},
                         status=status.HTTP_200_OK
                     )
 
-                # Crear un nuevo usuario en Firebase
-                user_ref.set(serializer.validated_data)  # Guardar los datos validados en Firebase
+                user_ref.set(serializer.validated_data) 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except Exception as e:
-                # Log del error para depuración
                 logger.error(f"Error al crear usuario en Firebase: {e}")
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # Log de errores de validación
         logger.error(f"Errores de validación: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -82,16 +71,14 @@ class UsuarioViewSet(viewsets.ViewSet):
                 user_ref = ref.child(pk)
                 existing_user = user_ref.get()
 
-                if not existing_user:  # Si el usuario no existe
+                if not existing_user: 
                     return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-                # Actualizar el usuario con los datos proporcionados
                 user_ref.update(serializer.validated_data)
                 return Response({"message": "Usuario actualizado correctamente"}, status=status.HTTP_200_OK)
             except Exception as e:
                 logger.error(f"Error al actualizar usuario con ID {pk} en Firebase: {e}")
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # Log de errores de validación
         logger.error(f"Errores de validación: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

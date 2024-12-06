@@ -1,9 +1,7 @@
 from rest_framework import serializers
 
 class UsuarioSerializer(serializers.Serializer):
-    """
-    Serializer para validar y manejar los datos de un usuario autenticado desde Auth0.
-    """
+
     sub = serializers.CharField(max_length=255)  
     name = serializers.CharField(max_length=255) 
     email = serializers.EmailField(max_length=255)

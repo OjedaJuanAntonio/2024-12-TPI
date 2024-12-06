@@ -13,8 +13,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import { getNames } from "country-list"; // Nombres de países
-import Uploader from "../Uploader"; // Tu componente existente
+import { getNames } from "country-list"; 
+import Uploader from "../Uploader"; 
 import Loginbackground from "../../../assets/Loginbackground.webp";
 import "animate.css";
 

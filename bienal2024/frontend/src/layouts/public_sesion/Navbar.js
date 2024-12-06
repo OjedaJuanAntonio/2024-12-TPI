@@ -14,24 +14,26 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  MenuItem,
+  MenuItem, 
   MenuGroup,
   MenuDivider,
   Image,useToast
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import Map from './user_profile/Navprofile';
+import { useUser } from '../../context/ContextoUsuario';
 
 const Navbar = () => {
   const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const { userType } = useUser();
 
   const handleLogout = () => {
     logout({ returnTo: window.location.origin });
-    localStorage.removeItem('authUser'); // Elimina el usuario guardado
+    localStorage.removeItem('authUser'); 
   };
-
+  
   useEffect(() => {
     if (isAuthenticated && user) {
  
@@ -65,11 +67,11 @@ const Navbar = () => {
         })
         .then((data) => {
           if (data.message === 'Bienvenida al Usuario') {
-            // Verificar si ya se mostró el mensaje
+            
             const hasShownWelcomeMessage = localStorage.getItem('hasShownWelcomeMessage');
           
             if (!hasShownWelcomeMessage) {
-              // Mostrar el mensaje
+              
               toast({
                 title: `¡Bienvenido de nuevo, ${data.user_data.name || 'Usuario'}!`,
                 description: 'Nos alegra verte nuevamente.',
@@ -79,11 +81,11 @@ const Navbar = () => {
                 position: 'top',
               });
           
-              // Marcar el mensaje como mostrado
+              
               localStorage.setItem('hasShownWelcomeMessage', 'true');
             }
           } else {
-            // Mostrar un toast de éxito para nuevos usuarios
+            
             toast({
               title: '¡Registro exitoso!',
               description: 'Bienvenido al sistema.',
@@ -96,7 +98,7 @@ const Navbar = () => {
           console.log('Usuario guardado en el backend:', data);
         })
         .catch((error) => {
-          // Mostrar un toast de error
+          
           toast({
             title: 'Error al guardar el usuario.',
             description: 'Por favor, intente nuevamente.',
@@ -110,10 +112,10 @@ const Navbar = () => {
     }
   }, [isAuthenticated, user, toast]);
 
-  const isAdmin = true;
-  const getAdminRoute="/top3"
 
-  // Recuperar usuario desde localStorage
+
+
+  
   const savedUser = JSON.parse(localStorage.getItem('authUser'));
 
   const NavLink = ({ children }) => (
@@ -121,8 +123,8 @@ const Navbar = () => {
       {children}
     </Text>
   );
-
-
+  console.log(userType)
+  
   return (
     <Box bg="black" px={4}>
       <Flex h={16} alignItems="center" justifyContent="space-between">
@@ -152,15 +154,33 @@ const Navbar = () => {
               <NavLink>Esculturas</NavLink>
             </Link>
             
-            {isAdmin && (
-        <Link to={getAdminRoute}>
-          <NavLink>Panel de control</NavLink>
-        </Link>
-      )}
+            <HStack as="nav" spacing={4}>
+            {userType === 'admin_esculturas' && (
+              <Link to="/admin/esculturas">
+                <NavLink>Panel del control</NavLink>
+              </Link>
+            )}
+            {userType === 'admin_eventos' && (
+              <Link to="/admin/eventos">
+                <NavLink>Panel del control</NavLink>
+              </Link>
+            )}
+            {userType === 'admin_escultores' && (
+              <Link to="/admin/escultores">
+                <NavLink>Panel del control</NavLink>
+              </Link>
+            )}
+            {userType === 'superuser' && (
+              <Link to="/admin/superuser">
+                <NavLink>Panel del control</NavLink>
+              </Link>
+            )}
+          </HStack>
+      
            
             <Menu>
     <MenuButton
-      as={Text} // Se utiliza Text para simular NavLink
+      as={Text} 
 
       fontSize="md"
       cursor="pointer"
@@ -215,7 +235,7 @@ const Navbar = () => {
       <Menu>
         <MenuButton
           as={Avatar}
-          src="https://bit.ly/broken-link" // Imagen predeterminada para no autenticados
+          src="https://bit.ly/broken-link" 
           size="md"
           color="black"
         />

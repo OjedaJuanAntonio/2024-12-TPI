@@ -26,7 +26,7 @@ const Uploader = ({ setPhoto, label, isRequired }) => {
       await uploadBytes(fileRef, file);
       const downloadURL = await getDownloadURL(fileRef);
       setUploadedImage(downloadURL);
-      if (setPhoto) setPhoto(downloadURL); // Notificar al padre si es necesario
+      if (setPhoto) setPhoto(downloadURL); 
     } catch (error) {
       console.error("Error al subir la imagen:", error);
     } finally {

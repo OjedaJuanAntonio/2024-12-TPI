@@ -22,7 +22,7 @@ export function register(config) {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
 
       if (isLocalhost) {
-        // Esto es localhost. Comprueba si hay un service worker funcionando en el servidor.
+        
         checkValidServiceWorker(swUrl, config);
 
         navigator.serviceWorker.ready.then(() => {
@@ -31,7 +31,7 @@ export function register(config) {
           );
         });
       } else {
-        // Registra el service worker
+        
         registerValidSW(swUrl, config);
       }
     });
@@ -66,23 +66,23 @@ function registerValidSW(swUrl, config) {
         };
       };
 
-      // Network First fetch strategy
+      
       self.addEventListener('fetch', (event) => {
         event.respondWith(
           fetch(event.request)
             .then((response) => {
-              // Si la solicitud tiene éxito, guarda en caché y devuelve la respuesta
+              
               const responseClone = response.clone();
               caches.open('app-cache').then((cache) => cache.put(event.request, responseClone));
               return response;
             })
             .catch(() => {
-              // Si la red falla, busca en el caché
+              
               return caches.match(event.request).then((cachedResponse) => {
                 if (cachedResponse) {
                   return cachedResponse;
                 } else {
-                  // Alternativamente, muestra un archivo por defecto si no está en caché
+                  
                   return caches.match('/offline.html');
                 }
               });

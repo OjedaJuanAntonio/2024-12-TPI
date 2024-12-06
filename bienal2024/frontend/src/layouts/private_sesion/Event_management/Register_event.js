@@ -45,7 +45,6 @@ const EventRegister = () => {
     );
   };
 
-  console.log(formData)
 
   const handleUploaderChange = (key, url) => {
     setFormData({ ...formData, [key]: url });

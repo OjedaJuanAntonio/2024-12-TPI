@@ -29,8 +29,8 @@ export function Mainvideo1() {
         autoPlay 
         loop 
         muted 
-        controls={false} // Desactiva los controles
-        playsInline // Previene la pantalla completa en móviles
+        controls={false} 
+        playsInline 
         position="absolute"
         top={0}
         left={0}

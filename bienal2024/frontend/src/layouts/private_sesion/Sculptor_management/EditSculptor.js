@@ -185,7 +185,6 @@ const EditSculptorManager = () => {
         </Table>
       </Box>
 
-      {/* Modal para editar el escultor */}
       {selectedEscultor && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size={modalSize}>
           <ModalOverlay />

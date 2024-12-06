@@ -8,6 +8,7 @@ from gestionEsculturas.views import EsculturaViewSet
 from gestionVotos.views import VotoViewSet
 from gestionSponsors.views import SponsorViewSet
 from gestionUsuarios.views import UsuarioViewSet
+from .views import verif
 
 
 router_voto = DefaultRouter()
@@ -33,14 +34,13 @@ router_usuarios.register(r'usuarios', UsuarioViewSet, basename='usuario')
 
 
 
-# Definir las URLs del proyecto
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('social_django.urls')),  
     path('user/', include('gestionUsuarios.urls')), 
     path('evento/', include('gestionEventos.Urls')), 
     path('votos/', include('gestionVotos.urls')),
-    # Integración con DRF usando routers
+    path('ver/', verif , name='verif'),
     *router_escultores.urls,  
     *router_esculturas.urls,  
     *router_eventos.urls,     
